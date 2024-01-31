@@ -36,4 +36,5 @@ void Sensor::updateValue(float newValue) {
 
 void Sensor::setCalibrationOffset(float newOffset) {
     calibrationOffset = newOffset;
-    // Set a new calibration offset. May 
+    // Set a new calibration offset. May require hardware interfacing.
+}
