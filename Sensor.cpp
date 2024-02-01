@@ -4,11 +4,18 @@
 
 #include "Sensor.h"
 
+
+//
 Sensor::Sensor(int labelID, int pinID, int pinDigital, int pinPWM, std::string unit, 
                float rangeMin, float rangeMax, float calibrationOffset)
-    : labelID(labelID), pinID(pinID), pinDigital(pinDigital), pinPWM(pinPWM),
-      unit(std::move(unit)), rangeMin(rangeMin), rangeMax(rangeMax), 
-      calibrationOffset(calibrationOffset), value(0.0f) {
+    :labelID(labelID),                                       // Sensor ID Number 
+    pinID(pinID), 
+    pinDigital(pinDigital), 
+    pinPWM(pinPWM),
+    unit(std::move(unit)), 
+    rangeMin(rangeMin),                                      // Maximum Acceptable reading for a sensor before safety procedures are triggered
+    rangeMax(rangeMax),                                      // Minimum for safety
+    calibrationOffset(calibrationOffset), value(0.0f) {
     // Constructor implementation
     // This is where we might initialize hardware interfaces, if required.
 }
