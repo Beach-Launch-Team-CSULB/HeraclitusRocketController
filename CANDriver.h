@@ -1,14 +1,26 @@
-#include <FlexCAN_T4.h>
+#ifndef CANDRIVER_H
+#define CANDRIVER_H
+
+#include <FlexCAN.h>
+#include Config.h
+
+// struct data
 
 class CANDriver {
     private:
-        bool isFD
+        FlexCAN CANBus;
+        // message queue, array of x length
+        
     public:
-        CANDriver(bool)
-        // returnVal write(uint8_t)
-        // returnVal read(uint8_t)
-        bool getIsFD()
-}
+        CANDriver();
+        
+        void packageValveIgniterData(); 
+        void packageSensorData();
+        void packageRocketState(); 
+        void packageTimerData(); 
+        void packageOperatorMessage();
 
-// This software needs to have support for both CAN2.0 and CANFD. 
-// The imported library has support for both
+        int readMessage();
+};
+
+#endif
