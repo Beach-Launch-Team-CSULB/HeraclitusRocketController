@@ -2,7 +2,7 @@
 #define IGNITER_H
 #include <Arduino.h>
 
-class Rocket{ 
+class Igniter{ 
     private: 
         int id;
         int pinID;
@@ -16,6 +16,7 @@ class Rocket{
         bool getIgniterOn();
         int setPinDigital();
         int setPWM();
+        int setIgniterOn();
 };
 
 #endif
