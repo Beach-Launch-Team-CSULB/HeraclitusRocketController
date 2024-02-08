@@ -35,7 +35,7 @@ int Igniter::setPinDigital() {
     //code here
 }
 
-int Igniter::setPWM() {
+int Igniter::setPinPWM() {
     //code here
 }
 

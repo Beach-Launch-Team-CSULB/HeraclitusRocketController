@@ -15,7 +15,7 @@ class Igniter{
         int getPinPWM();
         bool getIgniterOn();
         int setPinDigital();
-        int setPWM();
+        int setPinPWM();
         int setIgniterOn();
 };
 
