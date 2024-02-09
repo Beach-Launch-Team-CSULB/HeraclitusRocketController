@@ -9,6 +9,7 @@ class Igniter{
         int pinDigital;
         int pinPWM;
     public:
+        Igniter(int id, int pinID, int pinDigital, int pinPWM);
         int getID();
         int getPinID();
         int getPinDigital();

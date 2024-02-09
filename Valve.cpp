@@ -1,9 +1,4 @@
-#ifndef VALVE_H
-#define VALVE_H
-#include <Arduino.h>
-
-class Valve{ 
-  #include "valve.h"
+#include "Valve.h"
 
     // Constructor
     Valve::Valve(int id, int pinID, int pinDigital, int pinPWM) {
@@ -49,6 +44,4 @@ class Valve{
         //code here
     }
 
-};
 
-#endif

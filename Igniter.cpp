@@ -1,5 +1,5 @@
 #include "Igniter.h"
-class Ignter{
+#include <iostream>
 
 //constructor
 Igniter::Igniter(int id, int pinID, int pinDigital, int pinPWM) {
@@ -43,4 +43,3 @@ int Igniter::setIgniterOn() {
     //code here
 }
 
-}
