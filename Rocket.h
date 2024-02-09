@@ -2,6 +2,7 @@
 #define ROCKET_H 
 #include <Arduino.h>
 #include <VehicleState.cpp>
+#include <IntervalTimer.h>
 
 class Rocket{ 
     public: 
@@ -14,6 +15,7 @@ class Rocket{
         int valveRead(int);
         int toggleIgnition(int);
         int toggleValvue(int);
+        
 };
 
 #endif

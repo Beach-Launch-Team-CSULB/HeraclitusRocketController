@@ -2,20 +2,22 @@
 #define IGNITER_H
 #include <Arduino.h>
 
-class Rocket{ 
+class Igniter{ 
     private: 
         int id;
         int pinID;
         int pinDigital;
         int pinPWM;
     public:
+        Igniter(int id, int pinID, int pinDigital, int pinPWM);
         int getID();
         int getPinID();
         int getPinDigital();
         int getPinPWM();
         bool getIgniterOn();
         int setPinDigital();
-        int setPWM();
+        int setPinPWM();
+        int setIgniterOn();
 };
 
 #endif
