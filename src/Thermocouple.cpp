@@ -1,6 +1,8 @@
 #ifndef THERMOCOUPLE_H
 #define THERMOCOUPLE_H
 
+// THERMOCOUPLE in TemperatureSensorClass.h
+
 #include "Sensor.h" // Ensure this path is correct based on your project structure
 #include <string>
 
