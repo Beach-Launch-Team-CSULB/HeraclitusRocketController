@@ -2,32 +2,33 @@
 #include <iostream>
 
 //constructor
-Igniter::Igniter(int id, int pinID, int pinDigital, int pinPWM) {
+Igniter::Igniter(int id, int pinID, int pinDigital, int pinPWM, bool igniterOn) {
     this->id = id;
     this->pinID = pinID;
     this->pinDigital = pinDigital;
     this->pinPWM = pinPWM;
+    this->igniterOn = igniterOn;
 }
 
 // Getters
 int Igniter::getID() {
-    //code here
+    return this->id;
 }
 
 int Igniter::getPinID() {
-    //code here
+    return this->pinID;
 }
 
 int Igniter::getPinDigital() {
-    //code here
+    return this->pinDigital;
 }
 
 int Igniter::getPinPWM() {
-    //code here
+    return this->pinPWM;
 }
 
 bool Igniter::getIgniterOn() {
-    //code here
+    return this->igniterOn;
 }
 
 // Setters
