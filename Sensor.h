@@ -30,7 +30,7 @@ public:
 
     // Pure virtual functions for sensor data operations
     virtual float readData() = 0;
-    virtual int writeData(float data) = 0;
+    virtual float writeData(float data) = 0;
 
     // Accessors and mutators
     float getMin() const { return rangeMin; }

@@ -23,7 +23,7 @@ public:
                  float calibrationOffset = 0.0f);
 
     float readData() override;
-    int writeData(float data) override;
+    float writeData(float data) override;
 
     ThermocoupleType getType() const;
 };

@@ -16,9 +16,9 @@ float Thermocouple::readData() {
     return 0.0f; // Placeholder return
 }
 
-int Thermocouple::writeData(float data) {
+float Thermocouple::writeData(float data) {
     // Write data to thermocouple. Interface with hardware here.
-    return 0; // Placeholder return
+    return data; // Placeholder return
 }
 
 ThermocoupleType Thermocouple::getType() const {

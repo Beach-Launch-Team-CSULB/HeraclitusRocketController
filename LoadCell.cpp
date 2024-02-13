@@ -15,7 +15,7 @@ float LoadCell::readData() {
     return 0.0f; // Placeholder return
 }
 
-int LoadCell::writeData(float data) {
+float LoadCell::writeData(float data) {
     // Write data to load cell. Interface with hardware here.
-    return 0; // Placeholder return
+    return data; // Placeholder return
 }

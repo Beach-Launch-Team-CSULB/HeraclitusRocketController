@@ -13,7 +13,7 @@ public:
              float rangeMax, float calibrationOffset = 0.0f);
 
     float readData() override;
-    int writeData(float data) override;
+    float writeData(float data) override;
 };
 
 #endif // LOAD_CELL_H

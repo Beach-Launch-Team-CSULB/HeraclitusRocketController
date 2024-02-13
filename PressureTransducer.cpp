@@ -16,7 +16,7 @@ float PressureTransducer::readData() {
     return 0.0f; // Placeholder return
 }
 
-int PressureTransducer::writeData(float data) {
+float PressureTransducer::writeData(float data) {
     // Write data to pressure transducer. Interface with hardware here.
-    return 0; // Placeholder return
+    return data; // Placeholder return
 }
