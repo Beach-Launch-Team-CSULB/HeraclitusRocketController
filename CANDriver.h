@@ -2,7 +2,8 @@
 #define CANDRIVER_H
 
 #include <FlexCAN.h>
-#include Config.h
+#include <Config.h>
+#include  <VehicleState.h>
 
 class CANDriver {
     private:
