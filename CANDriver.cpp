@@ -1,7 +1,7 @@
 #include "CANDriver.h"
 
 CANDriver::CANDriver() {
-    Can0.begin();
+    Can0.begin()
 }
 
 int CANDriver::readMessage() {
