@@ -6,8 +6,6 @@
 
 class CANDriver {
     private:
-        FlexCAN CANBus;
-        //mstStruct msgReadQueue[20]; // Not a ring buffer
         void writeMessage();
         
     public:

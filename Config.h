@@ -1,2 +1,3 @@
 #define NUM_VALVES 10
-#define NUL_IGNITERS 2
+#define NUM_IGNITERS 2
+
