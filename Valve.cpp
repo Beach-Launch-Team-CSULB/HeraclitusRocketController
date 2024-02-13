@@ -12,35 +12,35 @@
 
     // Getters
     int Valve::getID() {
-        //code here
+        return this->id;
     }
 
     int Valve::getPinID() {
-        //code here
+        return this->pinID;
     }
 
     int Valve::getPinDigital() {
-        //code here
+        return this->pinDigital;
     }
 
     int Valve::getPinPWM() {
-        //code here
+        return this->pinPWM;
     }
 
     bool Valve::getValveOpen() {
-        //code here
+        return this->valveOpen;
     }
 
     // Setters
-    int Valve::setPinDigital() {
+    bool Valve::setPinDigital(int newPinDigital) {
         //code here
     }
 
-    int Valve::setPinPWM() {
+    bool Valve::setPinPWM(int newPWMPin) {
         //code here
     }
 
-    int Valve::setValveOpen() {
+    bool Valve::setValveOpen(bool isopen) {
         //code here
     }
 

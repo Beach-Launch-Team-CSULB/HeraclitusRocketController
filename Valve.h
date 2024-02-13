@@ -16,9 +16,9 @@ class Valve{
         int getPinDigital();
         int getPinPWM();
         bool getValveOpen();
-        int setPinDigital();
-        int setPinPWM();
-        int setValveOpen();
+        bool setPinDigital(int);
+        bool setPinPWM(int);
+        bool setValveOpen(bool);
 };
 
 #endif
