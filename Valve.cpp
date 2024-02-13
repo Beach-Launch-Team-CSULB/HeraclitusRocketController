@@ -40,7 +40,7 @@
         //code here
     }
 
-    bool Valve::setValveOpen(bool isopen) {
+    bool Valve::setValveOpen(bool ValveOpenInput) {
         //code here
     }
 
