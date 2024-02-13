@@ -12,36 +12,26 @@ class Sensor {
 protected:
     int labelID;
     int pinID;
-    int pinDigital;
-    int pinPWM;
     std::string unit;
     float rangeMin;
     float rangeMax;
     float calibrationOffset;
-    float value;
+    float value = 0.0f; // Explicit initialization
 
 public:
-    // Constructor with default calibrationOffset parameter
-    Sensor(int label, int pinID, int pinDigital, int pinPWM, std::string unit, 
-           float rangeMin, float rangeMax, float calibrationOffset = 0.0f);
+    Sensor(int label, int pin, const std::string& unit, float min, float max, float offset = 0.0f)
+    : labelID(label), pinID(pin), unit(unit), rangeMin(min), rangeMax(max), calibrationOffset(offset), value(0.0f) {}
 
-    // Virtual destructor for proper cleanup of derived types
     virtual ~Sensor() {}
 
-    // Pure virtual functions for sensor data operations
     virtual float readData() = 0;
-    virtual float writeData(float data) = 0;
+    // Removed writeData or renamed to a more suitable method name
 
-    // Accessors and mutators
+    // Accessors and potentially setters if mutable operations needed
     float getMin() const { return rangeMin; }
-    float getMax() const { return rangeMax; }
-    std::string getUnit() const { return unit; }
-    float getValue() const { return value; }
-    
-    // Method to update sensor value - could be the same as readData in implementation
-    virtual void updateValue(float newValue) { value = newValue; }
-    
-    // Method to set calibration offset
+    // Additional accessors for labelID, pinID, etc.
+
+    virtual void updateValue() = 0; // Pure virtual if it needs to be implemented by all derived classes
     void setCalibrationOffset(float newOffset) { calibrationOffset = newOffset; }
 };
 
