@@ -1,7 +1,8 @@
 #ifndef ROCKET_H
 #define ROCKET_H 
+
 #include <Arduino.h>
-#include <VehicleState.cpp>
+#include <VehicleState.h>
 #include <IntervalTimer.h>
 
 class Rocket{ 
@@ -14,7 +15,7 @@ class Rocket{
         int ignitionRead(int);
         int valveRead(int);
         int toggleIgnition(int);
-        int toggleValvue(int);
+        int toggleValue(int);
         
 };
 
