@@ -7,15 +7,21 @@
 
 class Rocket{ 
     public: 
-        IntervalTimer sensorTimer;
-        IntervalTimer launchTimer; 
         VehicleState state;
         bool executingCommand;
+
         int sensorRead(int);
         int ignitionRead(int);
         int valveRead(int);
-        int toggleIgnition(int);
-        int toggleValue(int);
+
+        int setIgnitionOn(int);
+        int setValveOn(int);
+
+        int getExecuting(bool);
+    private:
+        bool createValve(int);
+        bool createIgnition(int);
+        bool createSensor(int);
         
 };
 

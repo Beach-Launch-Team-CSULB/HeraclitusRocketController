@@ -1,5 +1,6 @@
 #ifndef VEHICLE_STATE
 #define VEHICLE_STATE
+
 enum VehicleState{
     TEST,               // All Igniter and Valves Controllable 
     PASSIVE,            // Everything
