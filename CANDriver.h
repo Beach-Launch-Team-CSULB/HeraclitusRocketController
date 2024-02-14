@@ -3,7 +3,7 @@
 
 #include <FlexCAN.h>
 #include <Config.h>
-#include  <VehicleState.h>
+#include <VehicleState.h>
 
 class CANDriver {
     private:

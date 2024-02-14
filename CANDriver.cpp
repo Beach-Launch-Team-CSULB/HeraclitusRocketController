@@ -5,7 +5,9 @@ CANDriver::CANDriver() {
 }
 
 int CANDriver::readMessage() {
-    CAN_message_t msg;
-    Can0.read(msg);
-    return msg.id;
+    while (Can0.available()) {
+        CAN_message_t msg;
+        Can0.read(msg);
+        return msg.id;
+    }
 }
