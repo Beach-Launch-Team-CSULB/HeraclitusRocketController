@@ -33,7 +33,13 @@
 
     // Setters
     bool Valve::setPinDigital(int newPinDigital) {
-        //code here
+        
+        this->pinDigital = newPinDigital;
+
+        if(this->pinDigital == newPinDigital){
+            return true;
+        }
+        else {return false;}
     }
 
     bool Valve::setPinPWM(int newPWMPin) {

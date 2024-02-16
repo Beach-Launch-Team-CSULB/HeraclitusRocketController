@@ -5,25 +5,24 @@
 Rocket::Rocket() {}
 
 // Method definitions
-int Rocket::sensorRead(int sensorReading) {
+int Rocket::sensorRead(int sensorID) {
     // Reads values from a sensor 
-
 }
 
-int Rocket::ignitionRead(int ignitionReading) {
+int Rocket::ignitionRead(int igniterID) {
     // Reads values from igniters
 }
 
-int Rocket::valveRead(int valveReading) {
+int Rocket::valveRead(int valveID) {
     // Reads values from valves 
 }
 
-int Rocket::setIgnitionOn(int ignitionOn) {
+int Rocket::setIgnitionOn(int isignitionOn) {
     // Implementation for toggling ignition
     
 }
 
-int Rocket::setValveOn(int valveOpen) {
+int Rocket::setValveOn(int isvalveOpen) {
     //
 }
 
