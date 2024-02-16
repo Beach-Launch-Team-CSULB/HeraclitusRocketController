@@ -29,11 +29,6 @@ public:
         return pressure;
     }
 
-    // Implementing updateValue() to update the sensor's current value
-    void updateValue() override {
-        value = readData(); // Update the sensor value by reading new data
-    }
-
     void setSampleRate(uint32_t rate) {
         sampleRate = rate;
     }
