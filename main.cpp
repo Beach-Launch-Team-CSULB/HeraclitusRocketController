@@ -2,9 +2,11 @@
 #include <iostream>
 #include <array>
 #include <unordered_map>
+#include "Rocket.h"
 
 class Main {
     EventManager eventManager;
+    Rocket rocket; 
 
     void processCommand() {
         // If a command is valid and no other command is currently executing
@@ -54,12 +56,13 @@ class Main {
         }
         else { 
             return false;
-        }
-        
+        } 
     }
 
     Event collectSensorData() {
-        // Implementation depends on how sensor data is collected
+        int sensorReading = rocket.sensorRead();
+        Event sensorDataEvent(sensorReading); 
+        return sensorDataEvent;
     }
 
     void returnSensorData(Event& event) {
@@ -67,19 +70,23 @@ class Main {
     }
 
     int pollLoxPressure() {
-        // Implementation depends on how LOX pressure is polled
+        const int loxPressureSensorId = /* appropriate sensor ID */;
+        int loxPressure = rocket.sensorRead(loxPressureSensorId);
+        return loxPressure;
     }
 
-    bool loxPressureTooHigh(int pressure) {
-        // Implementation depends on the threshold for LOX pressure
+    bool loxPressureTooHigh(int loxPressure) {
+        const int pressureThreshold = /* define your threshold */;
+        return pressure > pressureThreshold;
     }
 
     void executeVentCommand() {
         // Implementation depends on how the vent command is executed
+        rocket.toggleValve(ventID, true);
     }
 
     void confirmUpdateStatus() {
-        // Implementation depends on how the system confirms update statuses
+        // if message is received from rocket, then we give thumbs up
     }
 
 };
