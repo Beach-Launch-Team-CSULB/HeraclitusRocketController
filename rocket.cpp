@@ -1,4 +1,4 @@
-#include "Rocket.h"
+#include <Rocket.h>
 #include <iostream>
 
 // Constructor definition
@@ -30,15 +30,15 @@ bool Rocket::getExecuting(){
     return this->executingCommand;
 }
 
-int Rocket::createValve(int valveID){
+bool Rocket::createValve(int valveID){
     // Creates a valve object
 }
 
-int Rocket::createIgnition(int valveID){
+bool Rocket::createIgnition(int valveID){
     // Creates an Igniter Object
 }
 
-int Rocket::createSensor(int valveID){
+bool Rocket::createSensor(int valveID){
     // Create a Sensor 
 
 }

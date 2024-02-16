@@ -17,7 +17,7 @@ class Rocket{
         int setIgnitionOn(int);
         int setValveOn(int);
 
-        int getExecuting(bool);
+        bool getExecuting();
     private:
         bool createValve(int);
         bool createIgnition(int);
