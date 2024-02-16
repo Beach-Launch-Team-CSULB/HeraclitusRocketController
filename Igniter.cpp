@@ -2,44 +2,48 @@
 #include <iostream>
 
 //constructor
-Igniter::Igniter(int id, int pinID, int pinDigital, int pinPWM) {
+Igniter::Igniter(int id, int pinID, int pinDigital, int pinPWM, bool igniterOn, bool defaultStateOn) {
     this->id = id;
     this->pinID = pinID;
     this->pinDigital = pinDigital;
     this->pinPWM = pinPWM;
+    this->igniterOn = igniterOn;
+    this->defaultStateOn = defaultStateOn;
 }
 
 // Getters
 int Igniter::getID() {
-    //code here
+    return this->id;
 }
 
 int Igniter::getPinID() {
-    //code here
+    return this->pinID;
 }
 
 int Igniter::getPinDigital() {
-    //code here
+    return this->pinDigital;
 }
 
 int Igniter::getPinPWM() {
-    //code here
+    return this->pinPWM;
 }
 
 bool Igniter::getIgniterOn() {
-    //code here
+    return this->igniterOn;
 }
 
 // Setters
-int Igniter::setPinDigital() {
-    //code here
+bool Igniter::setPinDigital(int pinDigital) {
+    this->pinDigital = pinDigital;
 }
 
-int Igniter::setPinPWM() {
+bool Igniter::setPinPWM(int pinPWM) {
     //code here
+    
 }
 
-int Igniter::setIgniterOn() {
+bool Igniter::setIgniterOn(bool isignitionOn){
     //code here
+    
 }
 

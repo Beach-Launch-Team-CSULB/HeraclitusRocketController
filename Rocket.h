@@ -1,20 +1,35 @@
 #ifndef ROCKET_H
 #define ROCKET_H 
+
 #include <Arduino.h>
-#include <VehicleState.cpp>
+#include <VehicleState.h>
 #include <IntervalTimer.h>
 
 class Rocket{ 
-    public: 
-        IntervalTimer sensorTimer;
-        IntervalTimer launchTimer; 
+
+    public:
+        // Internal Variables 
         VehicleState state;
         bool executingCommand;
+
+        // Output 
         int sensorRead(int);
         int ignitionRead(int);
         int valveRead(int);
-        int toggleIgnition(int);
-        int toggleValvue(int);
+        
+        // Commands 
+        int setIgnitionOn(int);
+        int setValveOn(int);
+
+        // Execution Check
+        bool getExecuting();
+    
+    private:
+
+        // Object creation 
+        bool createValves(int);
+        bool createIgniters(int);
+        bool createSensors(int,int);
         
 };
 
