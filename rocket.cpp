@@ -1,8 +1,16 @@
 #include <Rocket.h>
+#include <Valve.h>
+#include <Igniter.h>
+#include <Thermocouple.h>
+#include <LoadCell.h>
+#include <PressureTransducer.h>
 #include <iostream>
 
 // Constructor definition
-Rocket::Rocket() {}
+Rocket::Rocket(){
+    
+    //Igniter igniter(igniterID,int 11,pinDigital,pinPWM,igniterOn,defaultStateON);
+}
 
 // Method definitions
 int Rocket::sensorRead(int sensorID) {
@@ -19,7 +27,6 @@ int Rocket::valveRead(int valveID) {
 
 int Rocket::setIgnitionOn(int isignitionOn) {
     // Implementation for toggling ignition
-    
 }
 
 int Rocket::setValveOn(int isvalveOpen) {
@@ -30,15 +37,3 @@ bool Rocket::getExecuting(){
     return this->executingCommand;
 }
 
-bool Rocket::createValve(int valveID){
-    // Creates a valve object
-}
-
-bool Rocket::createIgnition(int valveID){
-    // Creates an Igniter Object
-}
-
-bool Rocket::createSensor(int valveID){
-    // Create a Sensor 
-
-}

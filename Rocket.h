@@ -6,22 +6,30 @@
 #include <IntervalTimer.h>
 
 class Rocket{ 
-    public: 
+
+    public:
+        // Internal Variables 
         VehicleState state;
         bool executingCommand;
 
+        // Output 
         int sensorRead(int);
         int ignitionRead(int);
         int valveRead(int);
-
+        
+        // Commands 
         int setIgnitionOn(int);
         int setValveOn(int);
 
+        // Execution Check
         bool getExecuting();
+    
     private:
-        bool createValve(int);
-        bool createIgnition(int);
-        bool createSensor(int);
+
+        // Object creation 
+        bool createValves(int);
+        bool createIgniters(int);
+        bool createSensors(int,int);
         
 };
 

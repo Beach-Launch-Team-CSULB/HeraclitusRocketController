@@ -2,12 +2,13 @@
 #include <iostream>
 
 //constructor
-Igniter::Igniter(int id, int pinID, int pinDigital, int pinPWM, bool igniterOn) {
+Igniter::Igniter(int id, int pinID, int pinDigital, int pinPWM, bool igniterOn, bool defaultStateOn) {
     this->id = id;
     this->pinID = pinID;
     this->pinDigital = pinDigital;
     this->pinPWM = pinPWM;
     this->igniterOn = igniterOn;
+    this->defaultStateOn = defaultStateOn;
 }
 
 // Getters
@@ -32,15 +33,17 @@ bool Igniter::getIgniterOn() {
 }
 
 // Setters
-int Igniter::setPinDigital() {
-    //code here
+bool Igniter::setPinDigital(int pinDigital) {
+    this->pinDigital = pinDigital;
 }
 
-int Igniter::setPinPWM() {
+bool Igniter::setPinPWM(int pinPWM) {
     //code here
+    
 }
 
-int Igniter::setIgniterOn() {
+bool Igniter::setIgniterOn(bool isignitionOn){
     //code here
+    
 }
 
