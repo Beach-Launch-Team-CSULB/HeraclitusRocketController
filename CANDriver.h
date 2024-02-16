@@ -1,25 +1,39 @@
+// 2/10/2024
+
 #ifndef CANDRIVER_H
 #define CANDRIVER_H
 
-#include <FlexCAN.h>
-#include Config.h
+//#include <Arduino.h>
+//#include <FlexCAN.h>
+#include <iostream>
+#include <vector>
+//#include <stdint.h>
 
-class CANDriver {
+#include "Config.h"
+#include "Valve.h"
+#include "Igniter.h"
+
+
+class CANDriver 
+{
     private:
-        FlexCAN CANBus;
-        //mstStruct msgReadQueue[20]; // Not a ring buffer
-        void writeMessage();
+        FlexCAN CANBus;                     // Is this necessary?
+        std::vector<uint8_t> commands;
         
     public:
-        CANDriver();
         
-        void sendValveIgniterData(int* valves[], int NUM_VALVES, int NUM_IGNITERS); 
-        void sendSensorData(int sensorID, float sensorData);
-        void sendRocketState(VehicleState rocketState); 
-        void sendTimerData(int timerReading); 
-        void sendOperatorMessage(int messageID);
+        // If we are able to set up the .begin and all that here within the CANDriver.cpp - that would be cool.
+        // Otherwise it would probably need to happen in main.
+        //CANDriver();
 
-        int readMessage();
+        // Would be RocketState rocketState instead of uint8_t rocketState.
+        void sendStateReport(int time, uint8_t rocketState, Valve valves[], Igniter igniters[], bool Prop);
+        void sendSensorData(int sensorID, float sensorData1, float sensorData2, float SensorData3, float SensorData4);
+
+        //int readMessage();
+        //^ .push_back() into commands vector
+
+        //void sendOperatorMessage(int messageID);
 };
 
 #endif
