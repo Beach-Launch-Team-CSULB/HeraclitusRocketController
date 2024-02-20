@@ -17,19 +17,19 @@ int Rocket::sensorRead(int sensorID) {
     // Reads values from a sensor 
 }
 
-int Rocket::ignitionRead(int igniterID) {
+bool Rocket::ignitionRead(int igniterID) {
     // Reads values from igniters
 }
 
-int Rocket::valveRead(int valveID) {
+bool Rocket::valveRead(int valveID) {
     // Reads values from valves 
 }
 
-int Rocket::setIgnitionOn(int isignitionOn) {
+bool Rocket::setIgnitionOn(int isignitionOn) {
     // Implementation for toggling ignition
 }
 
-int Rocket::setValveOn(int isvalveOpen) {
+bool Rocket::setValveOn(int isvalveOpen) {
     //
 }
 

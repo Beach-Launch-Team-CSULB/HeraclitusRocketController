@@ -14,12 +14,12 @@ class Rocket{
 
         // Output 
         int sensorRead(int);
-        int ignitionRead(int);
-        int valveRead(int);
+        bool ignitionRead(int);
+        bool valveRead(int);
         
         // Commands 
-        int setIgnitionOn(int);
-        int setValveOn(int);
+        bool setIgnitionOn(int);
+        bool setValveOn(int);
 
         // Execution Check
         bool getExecuting();
