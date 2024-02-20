@@ -8,8 +8,9 @@
 
 // Constructor definition
 Rocket::Rocket(){
+    //Creates all components on construction 
     
-    //Igniter igniter(igniterID,int 11,pinDigital,pinPWM,igniterOn,defaultStateON);
+    //Igniter igniter(int igniterID,int 11,pinDigital,pinPWM,igniterOn,defaultStateON);
 }
 
 // Method definitions
@@ -25,11 +26,11 @@ bool Rocket::valveRead(int valveID) {
     // Reads values from valves 
 }
 
-bool Rocket::setIgnitionOn(int isignitionOn) {
+bool Rocket::setIgnitionOn(int igniterID, bool isignitionOn) {
     // Implementation for toggling ignition
 }
 
-bool Rocket::setValveOn(int isvalveOpen) {
+bool Rocket::setValveOn(int igniterID,bool isvalveOpen) {
     //
 }
 

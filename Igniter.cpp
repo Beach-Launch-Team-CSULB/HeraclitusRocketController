@@ -38,12 +38,19 @@ bool Igniter::setPinDigital(int pinDigital) {
 }
 
 bool Igniter::setPinPWM(int pinPWM) {
-    //code here
-    
+    this->pinPWM = pinPWM;
 }
 
 bool Igniter::setIgniterOn(bool isignitionOn){
-    //code here
-    
+    if(isignitionOn == true){
+        digitalWrite(this->pinDigital,1);
+        digitalWrite(this->pinPWM,1);
+        return true;
+    }
+    if(isignitionOn == false){
+        digitalWrite(this->pinDigital,0);
+        digitalWrite(this->pinPWM,0);
+        return true;
+    }
 }
 

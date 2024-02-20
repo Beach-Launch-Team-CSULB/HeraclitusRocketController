@@ -18,18 +18,13 @@ class Rocket{
         bool valveRead(int);
         
         // Commands 
-        bool setIgnitionOn(int);
-        bool setValveOn(int);
+        bool setIgnitionOn(int,bool);
+        bool setValveOn(int,bool);
 
         // Execution Check
         bool getExecuting();
     
-    private:
-
-        // Object creation 
-        bool createValves(int);
-        bool createIgniters(int);
-        bool createSensors(int,int);
+   
         
 };
 

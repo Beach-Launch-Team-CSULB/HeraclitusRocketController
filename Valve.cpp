@@ -1,4 +1,4 @@
-#include "Valve.h"
+#include <Valve.h>
 
     // Constructor
     Valve::Valve(int id, int pinID, int pinDigital, int pinPWM) {
@@ -33,9 +33,7 @@
 
     // Setters
     bool Valve::setPinDigital(int newPinDigital) {
-        
         this->pinDigital = newPinDigital;
-
         if(this->pinDigital == newPinDigital){
             return true;
         }
@@ -47,7 +45,16 @@
     }
 
     bool Valve::setValveOpen(bool ValveOpenInput) {
-        //code here
+        if(ValveOpenInput == true){
+            digitalWrite(this->pinDigital,1);
+            digitalWrite(this->pinPWM,1);
+            return true;
+        }
+        if(ValveOpenInput == false){
+            digitalWrite(this->pinDigital,0);
+            digitalWrite(this->pinPWM,0);
+            return true;
+        }
     }
 
 
