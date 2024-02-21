@@ -7,7 +7,7 @@ Igniter::Igniter(int id, int pinID, int pinDigital) {
     this->pinID = pinID;
     this->pinDigital = pinDigital;
     //this->pinPWM = pinPWM;
-    this->igniterOn = igniterOn;
+    this->igniterOn = false;
 }
 
 // Getters
