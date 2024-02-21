@@ -5,6 +5,7 @@
 #include <LoadCell.h>
 #include <PressureTransducer.h>
 #include <iostream>
+#include <Config.h>
 
 // Constructor definition
 Rocket::Rocket(){

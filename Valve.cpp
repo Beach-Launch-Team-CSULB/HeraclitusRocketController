@@ -41,7 +41,11 @@
     }
 
     bool Valve::setPinPWM(int newPWMPin) {
-        //code here
+        this->pinPWM = newPWMPin;
+        if(this->pinPWM == newPWMPin){
+            return true;
+        }
+        else {return false;}
     }
 
     bool Valve::setValveOpen(bool ValveOpenInput) {
@@ -54,6 +58,8 @@
             digitalWrite(this->pinDigital,0);
             digitalWrite(this->pinPWM,0);
             return true;
+        }else{
+            return false;
         }
     }
 

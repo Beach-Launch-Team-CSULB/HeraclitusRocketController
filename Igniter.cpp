@@ -33,12 +33,20 @@ bool Igniter::getIgniterOn() {
 }
 
 // Setters
-bool Igniter::setPinDigital(int pinDigital) {
-    this->pinDigital = pinDigital;
+bool Igniter::setPinDigital(int newPinDigital) {
+    this->pinDigital = newPinDigital;
+    if(this->pinDigital == newPinDigital){
+        return true;
+    }
+    else {return false;}
 }
 
-bool Igniter::setPinPWM(int pinPWM) {
-    this->pinPWM = pinPWM;
+bool Igniter::setPinPWM(int newPinPWM) {
+    this->pinDigital = newPinPWM;
+    if(this->pinDigital == newPinPWM){
+        return true;
+    }
+    else {return false;}
 }
 
 bool Igniter::setIgniterOn(bool isignitionOn){
