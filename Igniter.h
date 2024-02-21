@@ -7,15 +7,15 @@ class Igniter{
         int id;
         int pinID;
         int pinDigital;
-        int pinPWM;
+        //int pinPWM;
         bool igniterOn;
         bool defaultStateOn;
     public:
-        Igniter(int id, int pinID, int pinDigital, int pinPWM, bool igniterOn, bool defaultStateOn);
+        Igniter(int id, int pinID, int pinDigital);
         int getID();
         int getPinID();
         int getPinDigital();
-        int getPinPWM();
+        //int getPinPWM();
         bool getIgniterOn();
         bool setPinDigital(int);
         bool setPinPWM(int);
