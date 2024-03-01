@@ -5,11 +5,13 @@
 #include <LoadCell.h>
 #include <PressureTransducer.h>
 #include <iostream>
+#include <Config.h>
 
 // Constructor definition
 Rocket::Rocket(){
+    //Creates all components on construction 
     
-    //Igniter igniter(igniterID,int 11,pinDigital,pinPWM,igniterOn,defaultStateON);
+    //Igniter igniter(int igniterID,int 11,pinDigital,pinPWM,igniterOn,defaultStateON);
 }
 
 // Method definitions
@@ -17,19 +19,19 @@ int Rocket::sensorRead(int sensorID) {
     // Reads values from a sensor 
 }
 
-int Rocket::ignitionRead(int igniterID) {
+bool Rocket::ignitionRead(int igniterID) {
     // Reads values from igniters
 }
 
-int Rocket::valveRead(int valveID) {
+bool Rocket::valveRead(int valveID) {
     // Reads values from valves 
 }
 
-int Rocket::setIgnitionOn(int isignitionOn) {
+bool Rocket::setIgnitionOn(int igniterID, bool isignitionOn) {
     // Implementation for toggling ignition
 }
 
-int Rocket::setValveOn(int isvalveOpen) {
+bool Rocket::setValveOn(int igniterID,bool isvalveOpen) {
     //
 }
 

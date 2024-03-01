@@ -1,13 +1,16 @@
-#include "Valve.h"
+#include <Valve.h>
 
     // Constructor
-    Valve::Valve(int id, int pinID, int pinDigital, int pinPWM) {
+    Valve::Valve(int id, int pinID, int pinDigital) {
         // Initialize member variables
         this->id = id;
         this->pinID = pinID;
         this->pinDigital = pinDigital;
-        this->pinPWM = pinPWM;
-        this->valveOpen = false; // Assuming valve starts closed by default
+        //this->pinPWM = pinPWM;
+        this->valveOpen = false; // All valve default states are closed 
+
+        // setting pinmode to 
+
     }
 
     // Getters
@@ -22,10 +25,10 @@
     int Valve::getPinDigital() {
         return this->pinDigital;
     }
-
+    /*
     int Valve::getPinPWM() {
         return this->pinPWM;
-    }
+    }*/
 
     bool Valve::getValveOpen() {
         return this->valveOpen;
@@ -33,21 +36,32 @@
 
     // Setters
     bool Valve::setPinDigital(int newPinDigital) {
-        
         this->pinDigital = newPinDigital;
-
         if(this->pinDigital == newPinDigital){
             return true;
         }
         else {return false;}
     }
-
+    /*
     bool Valve::setPinPWM(int newPWMPin) {
-        //code here
-    }
+        this->pinPWM = newPWMPin;
+        if(this->pinPWM == newPWMPin){
+            return true;
+        }
+        else {return false;}
+    }*/
 
     bool Valve::setValveOpen(bool ValveOpenInput) {
-        //code here
+        if(ValveOpenInput == true){
+            digitalWrite(this->pinDigital,1);
+            return true;
+        }
+        if(ValveOpenInput == false){
+            digitalWrite(this->pinDigital,0);
+            return true;
+        }else{
+            return false;
+        }
     }
 
 
