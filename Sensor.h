@@ -1,22 +1,19 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 
-#include <string>
 
-// Sensor class definition
 class Sensor {
 protected:
     int labelID;
     int pinID;
-    std::string unit;
     float rangeMin;
     float rangeMax;
     float calibrationOffset;
     float value = 0.0f; // Explicit initialization
 
 public:
-    Sensor(int label, int pin, const std::string& unit, float min, float max, float offset = 0.0f)
-    : labelID(label), pinID(pin), unit(unit), rangeMin(min), rangeMax(max), calibrationOffset(offset), value(0.0f) {}
+    Sensor(int label, int pin, float min, float max, float offset = 0.0f)
+    : labelID(label), pinID(pin), rangeMin(min), rangeMax(max), calibrationOffset(offset), value(0.0f) {}
 
     virtual ~Sensor() {}
 
@@ -36,6 +33,8 @@ public:
     virtual float getValue() const { return value; }
 
     void setCalibrationOffset(float newOffset) { calibrationOffset = newOffset; }
+
+    void calibrate();
 };
 
 #endif // SENSOR_H
