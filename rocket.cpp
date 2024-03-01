@@ -7,6 +7,8 @@
 #include <iostream>
 #include <Config.h>
 
+
+
 // Constructor definition
 Rocket::Rocket(){
     //Creates all components on construction 
@@ -39,3 +41,23 @@ bool Rocket::getExecuting(){
     return this->executingCommand;
 }
 
+bool Rocket::initializeValves(){
+    for(i = 0; i < NUM_VALVES; i++)
+    {
+
+    }
+}
+
+bool Rocket::initializeSensors(){
+    //for(i = 0; i < ; i++)
+    {
+        
+    }
+}
+
+bool Rocket::initializeIgnitors(){
+    for(i = 0; i < NUM_IGNITERS; i++)
+    {
+        
+    }
+}

@@ -70,20 +70,20 @@
 // all on Alara HP Channel 2
 
 #define IGN1_ID         10  // Igniter A / ENG-IGNA
-#define IGN1_Pin_WTE    5
-#define IGN1_Pin_GRN    26
+#define IGN1_PIN_WTE    5
+#define IGN1_PIN_GRN    26
 
 #define IGN2_ID         11  // Igniter B / ENG-IGNB
-#define IGN2_Pin_RED    7 
-#define IGN2_Pin_BLK    27
+#define IGN2_PIN_RED    7 
+#define IGN2_PIN_BLK    27
 
 #define HV_ID           20  // High Vent valve / SV HI PRES V 
-#define HV_Pin_RED      3    
-#define HV_Pin_BLK      21
+#define HV_PIN_RED      3    
+#define HV_PIN_BLK      21
 
 #define HP_ID           21  // High Press valve / SV HI PRES  
-#define HP_Pin_RED      2
-#define HP_Pin_BLK      20
+#define HP_PIN_RED      2
+#define HP_PIN_BLK      20
 
 #define LDV_ID          22  // Lox Dome Vent valve / SV DREG LV
 #define LDV_PIN_RED     10
@@ -91,31 +91,37 @@
 
 #define FDV_ID          23  // Fuel Dome Vent valve / SV DREG F V 
 #define FDV_PIN_RED     
-#define PIN_RED          
+#define FDV_PIN_BLK     
 
 #define LDR_ID          24  // Lox Dome Reg valve / SV DREG LV 
 #define LDR_PIN_RED     5
-#define PIN_RED    
+#define LDR_PIN_BLK     
 
 #define FDR_ID          25  // Fuel Dome Reg valve /  SV DREG F
 #define FDR_PIN_RED     
-#define PIN_RED    
+#define FDR_PIN_BLK    
 
 #define LV_ID           26  // Lox Vent valve / SV LOX V
 #define LV_PIN_RED
-#define PIN_RED     
+#define LV_PIN_BLK     
 
 #define FV_ID           27  // Fuel Vent valve / SV FUEL V 
 #define FV_PIN_RED
-#define PIN_RED        
+#define FV_PIN_BLK        
 
 #define LMV_ID          28  // Lox Main valve / SV MV LOX
 #define LMV_PIN_RED
-#define PIN_RED          
+#define LMV_PIN_BLK          
 
 #define FMV_ID          29  // Fuel Main valve / SV MV FUEL 
-#define PIN_RED     
+#define FMV_PIN_RED     
+#define FMV_PIN_BLK
 
+//Prop Node Initialization Information
+
+
+
+//Engine Node Initialization Information
 
 
 /*****************************************CAN DBC (Database File)****************************************
