@@ -1,8 +1,8 @@
-// Pseudocode for the 'Main' section of the rocket event-handling system
 #include <iostream>
 #include <array>
 #include <unordered_map>
 #include "Rocket.h"
+#include "CANDriver.h"
 
 class Main {
     EventManager eventManager;

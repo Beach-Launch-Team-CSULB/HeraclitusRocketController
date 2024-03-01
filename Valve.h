@@ -1,24 +1,22 @@
 #ifndef VALVE_H
 #define VALVE_H
 #include <Arduino.h>
-//#include <extendedIO/extendedIO.h>
 
 class Valve{ 
     private: 
         int id;
         int pinID;
         int pinDigital;
-        //int pinPWM;
         bool valveOpen;
+
     public:
-        Valve(int id, int pinID, int pinDigital);
+        Valve(int id, int pinID, int pinDigital) 
+            : id(id), pinID(pinID), pinDigital(pinDigital), valveOpen(false) {}
         int getID();
         int getPinID();
         int getPinDigital();
-        //int getPinPWM();
         bool getValveOpen();
         bool setPinDigital(int);
-        //bool setPinPWM(int);
         bool setValveOpen(bool);
 };
 
