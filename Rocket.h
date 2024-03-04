@@ -24,7 +24,10 @@ class Rocket{
         // Execution Check
         bool getExecuting();
     
-   
+   private:
+        bool initializeValves();
+        bool initializeSensors();
+        bool initializeIgnitors();
         
 };
 
