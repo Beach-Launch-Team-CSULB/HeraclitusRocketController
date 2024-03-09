@@ -8,10 +8,9 @@ class LoadCell : public Sensor {
 
     public:
         // Using Sensor's constructor initialization list
-        LoadCell(int label, int pin, float min, float max, float offset = 0.0f)
-        : Sensor(label, pin, min, max, offset) {}
+        LoadCell(int labelID, int pinID, float linCoM, float linCoB);
 
-        virtual ~LoadCell() {}
+        //virtual ~LoadCell() {}
 
 };
 

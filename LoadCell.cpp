@@ -1,7 +1,9 @@
 #include "LoadCell.h" // Include the header file for the LoadCell class
 
-void LoadCell::calibrate() override {
-    return;
+
+// Using Sensor's constructor initialization list
+LoadCell::LoadCell(int labelID, int pinID, float linCoM, float linCoB)
+    : Sensor(labelID, pinID, linCoM, linCoB){
 }
 
-float LoadCell::readData() override {}
+//float LoadCell::readData() override {}

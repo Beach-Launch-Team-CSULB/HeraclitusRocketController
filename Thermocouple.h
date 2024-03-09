@@ -2,7 +2,7 @@
 #define THERMOCOUPLE_H
 
 #include "Sensor.h"
-#include <string>
+//#include <string>
 
 // Different types of thermocouples to support different temperature ranges and characteristics.
 enum class ThermocoupleType {
@@ -14,17 +14,18 @@ enum class ThermocoupleType {
 class Thermocouple : public Sensor {
     private:
         ThermocoupleType thermocoupleType;
+        float rangeMin;
+        float rangeMax;
 
     public:
         // Constructor
-        Thermocouple(int labelID, int pinID, float rangeMin, float rangeMax,
-                    ThermocoupleType type, float calibrationOffset = 0.0f)
-            : Sensor(labelID, pinID, rangeMin, rangeMax, calibrationOffset), thermocoupleType(type) {
-        }
+        Thermocouple(int labelID, int pinID, float linCoM, float linCoB, //Sensor fields
+                     ThermocoupleType type, float min, float max); //Thermocouple fields
 
-        ThermocoupleType getType() const {
-            return thermocoupleType;
-        }
+        ThermocoupleType getType() const;
+        float getRangeMin() const;
+        float getRangeMax() const;
+
 
 };
 
