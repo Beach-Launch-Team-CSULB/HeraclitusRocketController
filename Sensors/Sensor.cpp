@@ -49,3 +49,9 @@ void Sensor::setCalibrationParameters(float linCoM, float linCoB)
 //Getters for the linear coefficients
 float Sensor::getCalibrationSlope() {return linCoefM;}
 float Sensor::getCalibrationIntercept() {return linCoefB;}
+
+//Optional function demonstrating how bitmasks can be used
+bool Sensor::hasID(int id)
+{
+    return id & labelID;
+}
