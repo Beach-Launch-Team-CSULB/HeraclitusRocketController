@@ -6,16 +6,21 @@
 
 enum E_PressureUnit {psi, atm};
 
+define DEFAULT_PRESSURE_UNIT = E_PressureUnit.psi
+
+
 class PressureTransducer : public Sensor {
     private:
     E_PressureUnit outputUnit;
 
     public:
-        // Using Sensor's constructor initialization list
+        //Constructor used by rocketdriver
         PressureTransducer(int labelID, int pinID, float linCoM, float linCoB);
-            //: Sensor(labelID, pinID, linCoM, linCoB){}
 
-        //~PressureTransducer();
+        //Constructor used for uncalibrated sensors
+        PressureTransducer(int labelID, int pinID);
+
+
 
         E_PressureUnit getUnitEnum();
         void changeOutputUnit(E_PressureUnit newUnitSystem);

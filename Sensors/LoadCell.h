@@ -7,10 +7,11 @@
 class LoadCell : public Sensor {
 
     public:
-        // Using Sensor's constructor initialization list
+        //Constructor used by rocketdriver
         LoadCell(int labelID, int pinID, float linCoM, float linCoB);
 
-        //virtual ~LoadCell() {}
+        //Constructor used for uncalibrated sensors
+        LoadCell(int labelID, int pinID);
 
 };
 

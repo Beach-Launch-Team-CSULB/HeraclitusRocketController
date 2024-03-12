@@ -13,7 +13,7 @@ Thermocouple::Thermocouple(int labelID, int pinID, float linCoM, float linCoB)
 
 //Constructor used for uncalibrated sensors
 Thermocouple::Thermocouple(int labelID, int pinID)
-            :Sensor(labelID, pinID, 1.0f, 0.0f),
+            :Sensor(labelID, pinID),
             thermocoupleType(DEFAULT_THERMOCOUPLE_TYPE){setMyRange();}
 
 //Getters for the range of values tolerated by the thermocouple

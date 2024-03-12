@@ -1,9 +1,10 @@
 #include "LoadCell.h" // Include the header file for the LoadCell class
 
 
-// Using Sensor's constructor initialization list
+//Constructor used by rocketdriver
 LoadCell::LoadCell(int labelID, int pinID, float linCoM, float linCoB)
-    : Sensor(labelID, pinID, linCoM, linCoB){
-}
+    : Sensor(labelID, pinID, linCoM, linCoB){}
 
-//float LoadCell::readData() override {}
+//Constructor used for uncalibrated sensors
+LoadCell::LoadCell(int labelID, int pinID)
+    : Sensor(labelID, pinID){}
