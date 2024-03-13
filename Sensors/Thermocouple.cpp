@@ -1,4 +1,5 @@
 #include "Thermocouple.h"
+// 3/12/2024 Depreciated: See Trauma Response
 
 //Constructor used by rocketdriver
 Thermocouple::Thermocouple(int labelID, int pinID, float linCoM, float linCoB,
