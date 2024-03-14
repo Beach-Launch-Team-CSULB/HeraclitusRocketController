@@ -1,7 +1,7 @@
 #ifndef THERMOCOUPLE_H
 #define THERMOCOUPLE_H
 
-#include "Sensor.h"
+#include "Sensor.hpp"
 #include <string>
 
 // Different types of thermocouples to support different temperature ranges and characteristics.

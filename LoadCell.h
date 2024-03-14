@@ -1,7 +1,7 @@
 #ifndef PRESSURE_TRANSDUCER_H
 #define PRESSURE_TRANSDUCER_H
 
-#include "Sensor.h"
+#include "Sensor.hpp"
 #include <Arduino.h>
 
 class LoadCell : public Sensor {

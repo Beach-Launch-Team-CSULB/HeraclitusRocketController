@@ -1,13 +1,12 @@
-#include <Valve.h>
-
+#include "Valve.h"
 
     // Getters
     int Valve::getID() {
         return this->id;
     }
 
-    int Valve::getPinID() {
-        return this->pinID;
+    int Valve::getPinPMW() {
+        return this->pinPMW;
     }
 
     int Valve::getPinDigital() {

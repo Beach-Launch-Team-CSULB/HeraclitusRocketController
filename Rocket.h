@@ -6,11 +6,14 @@
 #include "VehicleState.h"
 
 class Rocket{ 
-
-    public:
-        // Internal Variables 
+    private: 
         VehicleState state;
         bool executingCommand;
+        int ALARA; // 0 = Lower , 1 = Upper  
+
+    public:
+        // Constructor 
+        Rocket(int ALARA) : ALARA(ALARA){}
 
         // Output 
         int sensorRead(int);
@@ -25,9 +28,11 @@ class Rocket{
         bool getExecuting();
     
    private:
-        bool initializeValves();
+        bool initializeIgniters();
+        bool initializeUpperValves();
+        bool initializeLowerValves();
         bool initializeSensors();
-        bool initializeIgnitors();
+      
         
 };
 
