@@ -2,8 +2,8 @@
 #define ROCKET_H 
 
 #include <Arduino.h>
-#include <VehicleState.h>
 #include <IntervalTimer.h>
+#include "VehicleState.h"
 
 class Rocket{ 
 

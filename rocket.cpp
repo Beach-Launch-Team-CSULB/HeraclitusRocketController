@@ -1,19 +1,18 @@
-#include <Rocket.h>
-#include <Valve.h>
-#include <Igniter.h>
-#include <Thermocouple.h>
-#include <LoadCell.h>
-#include <PressureTransducer.h>
+
 #include <iostream>
-#include <Config.h>
-
-
+#include "Rocket.h"
+#include "Valve.h"
+#include "Igniter.h"
+#include "Thermocouple.h"
+#include "LoadCell.h"
+#include "PressureTransducer.h"
+#include "Config.h"
 
 // Constructor definition
 Rocket::Rocket(){
-    //Creates all components on construction 
-    
-    //Igniter igniter(int igniterID,int 11,pinDigital,pinPWM,igniterOn,defaultStateON);
+    // Create Igniter Objects 
+    initializeIgniters()
+
 }
 
 // Method definitions
@@ -41,12 +40,19 @@ bool Rocket::getExecuting(){
     return this->executingCommand;
 }
 
-bool Rocket::initializeValves(){
-    for(i = 0; i < NUM_VALVES; i++)
-    {
 
-    }
+bool Rocket::initializeIgniters(){
+    Igniter Igniter1(IGN1_ID, IGN1_PIN_PWM,IGN1_PIN_DIG);
+    Igniter Igniter2(IGN2_ID, IGN2_PIN_PWM,IGN2_PIN_DIG); 
+    return true;
 }
+
+bool Rocket::initializeValves(){
+    Valve 
+    return true;
+}
+
+
 
 bool Rocket::initializeSensors(){
     //for(i = 0; i < ; i++)
@@ -55,9 +61,4 @@ bool Rocket::initializeSensors(){
     }
 }
 
-bool Rocket::initializeIgnitors(){
-    for(i = 0; i < NUM_IGNITERS; i++)
-    {
-        
-    }
-}
+

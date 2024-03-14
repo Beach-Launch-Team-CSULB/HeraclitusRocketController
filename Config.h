@@ -66,56 +66,72 @@
 #define SENS_9_12_ENGINE  ((uint32_t) 135)
 #define SENS_13_16_ENGINE ((uint32_t) 136)
 
-// Valve & Igniter Pin #s and IDs, 
-// all on Alara HP Channel 2
 
-#define IGN1_ID         10  // Igniter A / ENG-IGNA
-#define IGN1_PIN_WTE    5
-#define IGN1_PIN_GRN    26
+
+// Igniter Digital Pin Designations and IDs | ALARA LOWER 
+
+#define IGN1_ID         10  // Igniter A / ENG-IGNA / ALARA Lower
+#define IGN1_PIN_DIG    83  // Teensy 3.6 MCU Pin: PTC16
+#define IGN1_PIN_PWM    2 
+
 
 #define IGN2_ID         11  // Igniter B / ENG-IGNB
-#define IGN2_PIN_RED    7 
-#define IGN2_PIN_BLK    27
+#define IGN2_PIN_DIG    81  // ALARA: DIG5 | Teensy 3.6 MCU Pin: PTC16
+#define IGN2_PIN_PWM    10  // In Dan's Code they are both 2?  
+      
 
-#define HV_ID           20  // High Vent valve / SV HI PRES V 
-#define HV_PIN_RED      3    
-#define HV_PIN_BLK      21
+// Valve Digital Pin Designations and IDs | ALARA LOWER 
 
-#define HP_ID           21  // High Press valve / SV HI PRES  
-#define HP_PIN_RED      2
-#define HP_PIN_BLK      20
+#define HP_ID           20  // High Press valve / SV HI PRES  
+#define HP_PIN_DIG      87  // ALARA: DIG1 | Teensy 3.6 MCU Pin: PTD4/LLWU_P14
+#define HP_PIN_PWM      5
 
-#define LDV_ID          22  // Lox Dome Vent valve / SV DREG LV
-#define LDV_PIN_RED     10
-#define LDV_PIN_BLK     28
+#define HV_ID           21  // High Vent valve / SV HI PRES V 
+#define HV_PIN_DIG      86  // ALARA: DIG2 | Teensy 3.6 MCU Pin: PTC19
+#define HV_PIN_PWM      6
 
-#define FDV_ID          23  // Fuel Dome Vent valve / SV DREG F V 
-#define FDV_PIN_RED     
-#define FDV_PIN_BLK     
+#define FMV_ID          22  // Fuel Main valve / SV MV FUEL 
+#define FMV_PIN_DIG     85  // ALARA: DIG3 | Teensy 3.6 MCU Pin: PTC18
+#define FMV_PIN_PWM     8  
 
-#define LDR_ID          24  // Lox Dome Reg valve / SV DREG LV 
-#define LDR_PIN_RED     5
-#define LDR_PIN_BLK     
+#define LMV_ID          23  // Lox Main valve / SV MV LOX
+#define LMV_PIN_DIG     84  // ALARA: DIG4 | Teensy 3.6 MCU Pin: PTC17
+#define LMV_PIN_PWM     7
 
-#define FDR_ID          25  // Fuel Dome Reg valve /  SV DREG F
-#define FDR_PIN_RED     
-#define FDR_PIN_BLK    
+// Valve Digital Pin Designations and IDs | ALARA UPPER 
 
-#define LV_ID           26  // Lox Vent valve / SV LOX V
-#define LV_PIN_RED
-#define LV_PIN_BLK     
+#define LV_ID           24  // Lox Vent valve / SV LOX V
+#define LV_PIN_DIG      87  // ALARA: DIG1 | Teensy 3.6 MCU Pin: PTD4/LLWU_P14
+#define LV_PIN_PWM      5
+
+#define LDV_ID          25  // Lox Dome Vent valve / SV DREG L
+#define LDV_PIN_DIG     85  // ALARA: DIG3 | Teensy 3.6 MCU Pin: PTC18
+#define LDV_PIN_PWM     8
+
+#define LDR_ID          26  // Lox Dome Reg valve / SV DREG LV
+#define LDR_PIN_DIG     84  // ALARA: DIG4 | Teensy 3.6 MCU Pin: PTC17
+#define LDR_PIN_PWM     7
 
 #define FV_ID           27  // Fuel Vent valve / SV FUEL V 
-#define FV_PIN_RED
-#define FV_PIN_BLK        
+#define FV_PIN_DIG      83  // ALARA: DIG5 | Teensy 3.6 MCU Pin: PTC16
+#define FV_PIN_PWM      2
 
-#define LMV_ID          28  // Lox Main valve / SV MV LOX
-#define LMV_PIN_RED
-#define LMV_PIN_BLK          
+#define FDV_ID          28  // Fuel Dome Vent valve / SV DREG F V 
+#define FDV_PIN_DIG     81  // ALARA: DIG7 | Teensy 3.6 MCU Pin: PTC14
+#define FDV_PIN_PWM     10
 
-#define FMV_ID          29  // Fuel Main valve / SV MV FUEL 
-#define FMV_PIN_RED     
-#define FMV_PIN_BLK
+#define FDR_ID          29  // Fuel Dome Reg valve /  SV DREG F
+#define FDR_PIN_DIG     80  // ALARA: DIG8 | Teensy 3.6 MCU Pin: PTC13
+#define FDR_PIN_PWM     9
+
+
+
+
+
+
+
+ 
+
 
 //Prop Node Initialization Information
 

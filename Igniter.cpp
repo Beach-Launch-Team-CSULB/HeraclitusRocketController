@@ -7,8 +7,8 @@ int Igniter::getID() {
     return this->id;
 }
 
-int Igniter::getPinID() {
-    return this->pinID;
+int Igniter::getPinPWM() {
+    return this->pinPWM;
 }
 
 int Igniter::getPinDigital() {
@@ -31,10 +31,12 @@ bool Igniter::setPinDigital(int newPinDigital) {
 bool Igniter::setIgniterOn(bool isignitionOn){
     if(isignitionOn == true){
         digitalWrite(this->pinDigital,1);
+        digitalWrite(this->pinPWM,1);
         return true;
     }
     if(isignitionOn == false){
         digitalWrite(this->pinDigital,0);
+        digitalWrite(this->pinPWM,0);
         return true;
     }
 }
