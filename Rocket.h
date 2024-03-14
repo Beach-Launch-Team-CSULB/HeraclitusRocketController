@@ -3,13 +3,17 @@
 
 #include <Arduino.h>
 #include <IntervalTimer.h>
+#include <map>
 #include "VehicleState.h"
 
 class Rocket{ 
     private: 
         VehicleState state;
         bool executingCommand;
-        int ALARA; // 0 = Lower , 1 = Upper  
+        int ALARA;                      // 0 = Lower , 1 = Upper  
+        std::map<int, Igniter> igniterMap;
+        std::map<int, Valve> valveMap;
+        std::map<int, Sensor> sensorMap;
 
     public:
         // Constructor 

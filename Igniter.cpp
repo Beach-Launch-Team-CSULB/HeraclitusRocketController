@@ -37,6 +37,6 @@ bool Igniter::setIgniterOn(bool isignitionOn){
     if(isignitionOn == false){
         digitalWrite(this->pinDigital,0);
         digitalWrite(this->pinPWM,0);
-        return true;
+        return false;
     }
 }
