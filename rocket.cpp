@@ -47,6 +47,7 @@ bool Rocket::getExecuting(){
 
 
 bool Rocket::initializeIgniters(){
+    
     Igniter Igniter1(IGN1_ID, IGN1_PIN_PWM,IGN1_PIN_DIG);
     Igniter Igniter2(IGN2_ID, IGN2_PIN_PWM,IGN2_PIN_DIG); 
 

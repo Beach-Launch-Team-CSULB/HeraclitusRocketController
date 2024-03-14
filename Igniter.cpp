@@ -1,4 +1,5 @@
 #include "Igniter.h"
+#include "ExtendedIO.h"
 #include <iostream>
 
 
@@ -29,13 +30,14 @@ bool Igniter::setPinDigital(int newPinDigital) {
 }
 
 bool Igniter::setIgniterOn(bool isignitionOn){
+    
     if(isignitionOn == true){
-        digitalWrite(this->pinDigital,1);
+        digitalWriteExtended(this->pinDigital,1);
         digitalWrite(this->pinPWM,1);
         return true;
     }
     if(isignitionOn == false){
-        digitalWrite(this->pinDigital,0);
+        digitalWriteExtended(this->pinDigital,0);
         digitalWrite(this->pinPWM,0);
         return false;
     }

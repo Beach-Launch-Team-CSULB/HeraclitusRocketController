@@ -1,12 +1,13 @@
 #include "Valve.h"
+#include "ExtendedIO.h"
 
     // Getters
     int Valve::getID() {
         return this->id;
     }
 
-    int Valve::getPinPMW() {
-        return this->pinPMW;
+    int Valve::getPinPWM() {
+        return this->pinPWM;
     }
 
     int Valve::getPinDigital() {
@@ -28,11 +29,13 @@
 
     bool Valve::setValveOpen(bool ValveOpenInput) {
         if(ValveOpenInput == true){
-            digitalWrite(this->pinDigital,1);
+            digitalWriteExtended(this->pinDigital,1);
+            digitalWrite(this->pinPWM,0);
             return true;
         }
         if(ValveOpenInput == false){
-            digitalWrite(this->pinDigital,0);
+            digitalWriteExtended(this->pinDigital,0);
+            digitalWrite(this->pinPWM,0);
             return true;
         }
         return false;

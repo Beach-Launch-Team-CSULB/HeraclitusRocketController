@@ -5,15 +5,15 @@
 class Valve{ 
     private: 
         int id;
-        int pinPMW;
+        int pinPWM;
         int pinDigital;
         bool valveOpen;
 
     public:
-        Valve(int id, int pinPMW, int pinDigital) 
-            : id(id), pinPMW(pinPMW), pinDigital(pinDigital), valveOpen(false) {}
+        Valve(int id, int pinPWM, int pinDigital) 
+            : id(id), pinPWM(pinPWM), pinDigital(pinDigital), valveOpen(false) {}
         int getID();
-        int getPinPMW();
+        int getPinPWM();
         int getPinDigital();
         bool getValveOpen();
         bool setPinDigital(int);
