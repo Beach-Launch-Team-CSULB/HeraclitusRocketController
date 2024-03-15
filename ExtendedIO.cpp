@@ -4,7 +4,7 @@
 
 
 std::map<int, void*> pin_address_map;
-pin_address_map.
+//pin_address_map.
 
 
 void ExtendedIO::pinModeExtended(int pin, int value) {
