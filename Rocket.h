@@ -11,16 +11,12 @@
 
 
 class Rocket{ 
-    private: 
-        VehicleState state;
-        bool executingCommand;
-        int ALARA;                      // 0 = Lower , 1 = Upper  
+    public:
+
         std::map<int, Igniter> igniterMap;
         std::map<int, Valve> valveMap;
         std::map<int, Sensor> sensorMap;
-        //Sensor* sensorArray[8];
 
-    public:
         // Constructor 
         Rocket(int ALARA);
 
@@ -37,13 +33,18 @@ class Rocket{
         // Execution Check
         bool getExecuting();
     
-   private:
+   private: 
+        VehicleState state;
+        bool executingCommand;
+        int ALARA;                      // 0 = Lower , 1 = Upper  
+       
+        //Sensor* sensorArray[8];
         bool initializeIgniters();
         bool initializeUpperValves();
         bool initializeLowerValves();
         bool initializeUpperSensors();
         bool initializeLowerSensors();
-      
+    
 };
 
 #endif
