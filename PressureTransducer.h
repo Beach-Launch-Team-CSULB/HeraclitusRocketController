@@ -7,7 +7,7 @@
 
 enum E_PressureUnit {psi, atm};
 
-define DEFAULT_PRESSURE_UNIT = E_PressureUnit.psi
+#define DEFAULT_PRESSURE_UNIT psi
 
 
 class PressureTransducer : public Sensor {
