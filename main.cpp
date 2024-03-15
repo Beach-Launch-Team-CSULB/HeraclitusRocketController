@@ -4,7 +4,7 @@
 #include "Rocket.h"
 #include "CANDriver.h"
 
-class Main {
+/*class Main {
     EventManager eventManager;
     Rocket rocket; 
 
@@ -70,13 +70,13 @@ class Main {
     }
 
     int pollLoxPressure() {
-        const int loxPressureSensorId = /* appropriate sensor ID */;
+        const int loxPressureSensorId = /* appropriate sensor ID ;
         int loxPressure = rocket.sensorRead(loxPressureSensorId);
         return loxPressure;
     }
 
     bool loxPressureTooHigh(int loxPressure) {
-        const int pressureThreshold = /* define your threshold */;
+        const int pressureThreshold = /* define your threshold ;
         return pressure > pressureThreshold;
     }
 
@@ -111,3 +111,4 @@ int main() {
 
     }
 }
+*/

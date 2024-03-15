@@ -140,6 +140,81 @@
 
 
 
+// Pressure Transducer Sesnor Pin Designations, IDs, and Calibration Values
+// (sensors are currently uncalibrated)
+
+//Upper Prop Node:
+#define PT_LOX_HIGH_ID          (1<<0) //00000000 00000001  Upper A22
+#define PT_LOX_HIGH_PIN         A22
+#define PT_LOX_HIGH_CAL_M       1.0f
+#define PT_LOX_HIGH_CAL_B       0.0f
+
+#define PT_FUEL_HIGH_ID         (1<<1) //00000000 00000010  Upper A21
+#define PT_FUEL_HIGH_PIN        A21
+#define PT_FUEL_HIGH_CAL_M      1.0f
+#define PT_FUEL_HIGH_CAL_B      0.0f
+
+#define PT_LOX_DOME_ID          (1<<2) //00000000 00000100  Upper A3
+#define PT_LOX_DOME_PIN         A3
+#define PT_LOX_DOME_CAL_M       1.0f
+#define PT_LOX_DOME_CAL_B       0.0f
+
+#define PT_FUEL_DOME_ID         (1<<3) //00000000 00001000  Upper A2
+#define PT_FUEL_DOME_PIN        A2
+#define PT_FUEL_DOME_CAL_M      1.0f
+#define PT_FUEL_DOME_CAL_B      0.0f
+
+#define PT_LOX_TANK_1_ID        (1<<4) //00000000 00010000  Upper A14
+#define PT_LOX_TANK_1_PIN       A14
+#define PT_LOX_TANK_1_CAL_M     1.0f
+#define PT_LOX_TANK_1_CAL_B     0.0f
+
+#define PT_LOX_TANK_2_ID        (1<<5) //00000000 00100000  Upper A11
+#define PT_LOX_TANK_2_PIN       A11
+#define PT_LOX_TANK_2_CAL_M     1.0f
+#define PT_LOX_TANK_2_CAL_B     0.0f
+
+#define PT_FUEL_TANK_1_ID       (1<<6) //00000000 01000000  Upper A15
+#define PT_FUEL_TANK_1_PIN      A15
+#define PT_FUEL_TANK_1_CAL_M    1.0f
+#define PT_FUEL_TANK_1_CAL_B    0.0f
+
+#define PT_FUEL_TANK_2_ID       (1<<7) //00000000 10000000  Upper A10
+#define PT_FUEL_TANK_2_PIN      A10
+#define PT_FUEL_TANK_2_CAL_M    1.0f
+#define PT_FUEL_TANK_2_CAL_B    0.0f
+
+//Lower Engine Node:
+#define PT_PNUEMATICS_ID        (1<<8) //00000001 00000000  Lower A15
+#define PT_PNUEMATICS_PIN       A15
+#define PT_PNUEMATICS_CAL_M     1.0f
+#define PT_PNUEMATICS_CAL_B     0.0f
+
+#define PT_LOX_INLET_ID         (1<<9) //00000010 00000000  Lower A21
+#define PT_LOX_INLET_PIN        A21
+#define PT_LOX_INLET_CAL_M      1.0f
+#define PT_LOX_INLET_CAL_B      0.0f
+
+#define PT_FUEL_INLET_ID        (1<<10) //00000100 00000000  Lower A22
+#define PT_FUEL_INLET_PIN       A22
+#define PT_FUEL_INLET_CAL_M     1.0f
+#define PT_FUEL_INLET_CAL_B     0.0f
+
+#define PT_FUEL_INJECTOR_ID     (1<<11) //00001000 00000000  Lower A14
+#define PT_FUEL_INJECTOR_PIN    A14
+#define PT_FUEL_INJECTOR_CAL_M  1.0f
+#define PT_FUEL_INJECTOR_CAL_B  0.0f
+
+#define PT_CHAMBER_1_ID         (1<<12) //00010000 00000000  Lower A10
+#define PT_CHAMBER_1_PIN        A10
+#define PT_CHAMBER_1_CAL_M      1.0f
+#define PT_CHAMBER_1_CAL_B      0.0f
+
+#define PT_CHAMBER_2_ID         (1<<13) //00100000 00000000  Lower A11
+#define PT_CHAMBER_2_PIN        A11
+#define PT_CHAMBER_2_CAL_M      1.0f
+#define PT_CHAMBER_2_CAL_B      0.0f
+
 
 //Prop Node Initialization Information
 
@@ -218,18 +293,18 @@
  *
  *       #1      PT High Lox Side
  *       #2      PT High Fuel Side
- *       #3      PT Lox Tank 1
- *       #4      PT Lox Tank 2
+ *       #3      PT Lox Dome
+ *       #4      PT Fuel Dome
  * 
- *       #5      PT Fuel Tank 1
- *       #6      PT Fuel Tank 2
- *       #7      PT Lox Dome
- *       #8      PT Fuel Dome
+ *       #5      PT Lox Tank 1
+ *       #6      PT Lox Tank 2
+ *       #7      PT Fuel Tank 1
+ *       #8      PT Fuel Tank 2
  * 
- *       #9      PT Fuel Inlet
- *       #10     PT Fuel Injector
- *       #11     PT Lox Inlet
- *       #12     PT Main Pneumatics
+ *       #9      PT Pneumatics
+ *       #10     PT Lox Inlet
+ *       #11     PT Fuel Inlet
+ *       #12     PT Fuel Injector
  * 
  *       #13     PT Chamber 1
  *       #14     PT Chamber 2
