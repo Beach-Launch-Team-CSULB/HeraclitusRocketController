@@ -1,5 +1,5 @@
 #include "Thermocouple.h"
-// 3/12/2024 Depreciated: See Trauma Response
+/* 3/12/2024 Depreciated: See Trauma Response
 
 //Constructor used by rocketdriver
 Thermocouple::Thermocouple(int labelID, int pinID, float linCoM, float linCoB,
@@ -47,3 +47,4 @@ void Thermocouple::setRange(ThermocoupleType currentType)
         break;
     }
 }
+*/

@@ -14,14 +14,20 @@ Rocket::Rocket(int ALARA){
     if (ALARA == 0){                             // Lower ALARA Setup 
         initializeIgniters();
         initializeLowerValves();
+        initializeLowerSensors();
     }
     if (ALARA == 1){                             // Upper ALARA Setup
         initializeUpperValves();
+        initializeUpperSensors();
     }
 }
 
-int Rocket::sensorRead(int sensorID) {
-    // Reads values from a sensor 
+float Rocket::sensorRead(Sensor sensor) {
+    return sensor.readDataRaw();
+}
+
+float Rocket::sensorRead(int sensorId) {
+    //return sensor.readDataRaw();
 }
 
 bool Rocket::ignitionRead(int igniterID) {

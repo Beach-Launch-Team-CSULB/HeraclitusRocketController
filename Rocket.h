@@ -18,14 +18,15 @@ class Rocket{
         std::map<int, Igniter> igniterMap;
         std::map<int, Valve> valveMap;
         //std::map<int, Sensor> sensorMap;
-        Sensor sensorArray[];
+        Sensor sensorArray[8];
 
     public:
         // Constructor 
         Rocket(int ALARA);
 
         // Output 
-        int sensorRead(int);
+        float sensorRead(Sensor);
+        float sensorRead(int);
         bool ignitionRead(int);
         bool valveRead(int);
         
