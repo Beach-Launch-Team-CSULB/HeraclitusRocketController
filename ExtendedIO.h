@@ -3,8 +3,8 @@
 
 class ExtendedIO { 
     public:
-        void pinModeExtended();
-        void digitalWriteExtended();
+        static void pinModeExtended(int pin, int value);
+        static void digitalWriteExtended(int pin, int value);
 };
 
 #endif

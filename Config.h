@@ -128,17 +128,13 @@
 #define FDR_PIN_PWM     9
 
 // Pin Addresses 
-#define std::map<int, reinterpret_cast<void*>;
-
+#define PTC14 reinterpret_cast<void*>(4004_B044) //80
+#define PTC14 reinterpret_cast<void*>(4004_B038) //81
 #define PTC16 reinterpret_cast<void*>(4004_B040) //83
-#define PTC14 reinterpret_cast<void*>(4004_B038) //
-#define PTC10 reinterpret_cast<void*>(4004_B028) //
-
-#define PTC16 reinterpret_cast<void*>(4004_B040) //
-#define PTC16 reinterpret_cast<void*>(4004_B040) //
-#define PTC16 reinterpret_cast<void*>(4004_B040) //
-
-
+#define PTC17 reinterpret_cast<void*>(4004_B044) //84
+#define PTC18 reinterpret_cast<void*>(4004_B040) //85
+#define PTC19 reinterpret_cast<void*>(4004_B04C) //86
+#define PTD10 reinterpret_cast<void*>(4004_B028) //87
 
 // Pressure Transducer Sesnor Pin Designations, IDs, and Calibration Values
 // (sensors are currently uncalibrated)
