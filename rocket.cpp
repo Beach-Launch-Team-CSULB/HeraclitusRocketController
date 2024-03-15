@@ -4,9 +4,7 @@
 #include "Rocket.h"
 #include "Valve.h"
 #include "Igniter.h"
-#include "Sensor.hpp"
-#include "Thermocouple.h"
-#include "LoadCell.h"
+#include "Sensor.h"
 #include "PressureTransducer.h"
 #include "Config.h"
 
