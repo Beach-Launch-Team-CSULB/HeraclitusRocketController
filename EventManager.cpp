@@ -1,4 +1,4 @@
-#include "EventManager.h"
+/*#include "EventManager.h"
 
 EventManager::EventManager()
 {}
@@ -19,3 +19,4 @@ void EventManager::popEvent() {
     this->taskQueue.pop();
 }
 
+*/

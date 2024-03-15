@@ -1,4 +1,4 @@
-#include "Event.h"
+/*#include "Event.h"
 
 Event::Event(std::string name, int id, State state, int priority = 0)
     :name(name),
@@ -31,3 +31,4 @@ void Event::setPriority(int priority) {
     this->priority = priority;
 }
 
+*/

@@ -1,4 +1,4 @@
-#ifndef EVENTMANAGER_H
+/*#ifndef EVENTMANAGER_H
 #define EVENTMANAGER_H
 
 #include <string>
@@ -18,4 +18,4 @@ private:
 
 
 
-#endif // EventManager_H
+#endif // EventManager_H*/
