@@ -25,7 +25,7 @@ class Rocket{
         Rocket(int ALARA);
 
         // Output 
-        float sensorRead(Sensor);
+        //float sensorRead(Sensor);
         float sensorRead(int);
         bool ignitionRead(int);
         bool valveRead(int);
