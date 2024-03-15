@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include "Rocket.h"
 #include "CANDriver.h"
+#include "Arduino.h"
 
 #include <unistd.h> // For sleep function
 #include <SD.h>
@@ -15,10 +16,7 @@ sd_write = true;
 
 void setup() {
     Serial.begin(9600);
-    while (!Serial) {
-        ; // wait for serial port to connect. Needed for native USB port only
-    }
-    if (!SD.begin(chipSelect)) {
+    if (!SD.begin(BUILTIN_SDCARD)) {
         sd_write = false;
     }
     Rocket myRocket = Rocket(alara);
@@ -40,7 +38,7 @@ void loop() {
     if (sd_write) {
         File onBoardLog = SD.open(fileLogName, FILE_WRITE);
         for (const auto& sensor : myRocket.sensorArray) {
-            onBoardLog.println(/*sensorRead*/);
+            onBoardLog.println(sensor);
         }
     }
 }
