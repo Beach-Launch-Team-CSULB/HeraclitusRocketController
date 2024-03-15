@@ -11,7 +11,7 @@
 
 int alara = 0;
 File onBoardLog;
-std::string fileLogName = "SoftwareTest-03-15-2024.txt";
+std::string fileLogName = "SoftwareTest_03-15-2024.txt";
 sd_write = true;
 
 void setup() {
@@ -37,8 +37,8 @@ void loop() {
     }
     if (sd_write) {
         File onBoardLog = SD.open(fileLogName, FILE_WRITE);
-        for (const auto& sensor : myRocket.sensorArray) {
-            onBoardLog.println(sensor);
+        for (const auto& sensor : myRocket.sensorMap) {
+            onBoardLog.println(myRocket.sensorRead(sensor.first));
         }
     }
 }
