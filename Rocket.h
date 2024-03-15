@@ -13,7 +13,8 @@ class Rocket{
         int ALARA;                      // 0 = Lower , 1 = Upper  
         std::map<int, Igniter> igniterMap;
         std::map<int, Valve> valveMap;
-        std::map<int, Sensor> sensorMap;
+        //std::map<int, Sensor> sensorMap;
+        Sensor sensorArray[];
 
     public:
         // Constructor 
@@ -35,9 +36,9 @@ class Rocket{
         bool initializeIgniters();
         bool initializeUpperValves();
         bool initializeLowerValves();
-        bool initializeSensors();
+        bool initializeUpperSensors();
+        bool initializeLowerSensors();
       
-        
 };
 
 #endif
