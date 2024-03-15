@@ -4,6 +4,47 @@
 #include "Rocket.h"
 #include "CANDriver.h"
 
+#include <unistd.h> // For sleep function
+#include <SD.h>
+#include <SPI.h>
+
+int alara = 0;
+File onBoardLog;
+std::string fileLogName = "SoftwareTest-03-15-2024.txt";
+sd_write = true;
+
+void setup() {
+    Serial.begin(9600);
+    while (!Serial) {
+        ; // wait for serial port to connect. Needed for native USB port only
+    }
+    if (!SD.begin(chipSelect)) {
+        sd_write = false;
+    }
+    Rocket myRocket = Rocket(alara);
+}
+
+void loop() {
+    for (const auto& pair : myRocket.igniterMap) {
+        myRocket.setIgniterOn(pair.first, true);
+        sleep(1);
+        myRocket.setIgniterOn(pair.first, false);
+        sleep(1);
+    }
+    for (const auto& pair : myRocket.valveMap) {
+        myRocket.setValveOn(pair.first, true);
+        sleep(1);
+        myRocket.setValveOn(pair.first, false);
+        sleep(1);
+    }
+    if (sd_write) {
+        File onBoardLog = SD.open(fileLogName, FILE_WRITE);
+        for (const auto& sensor : myRocket.sensorArray) {
+            onBoardLog.println(/*sensorRead*/);
+        }
+    }
+}
+
 /*class Main {
     EventManager eventManager;
     Rocket rocket; 
