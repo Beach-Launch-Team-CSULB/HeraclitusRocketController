@@ -2,11 +2,15 @@
 
 //Constructor used by rocketdriver
 Sensor::Sensor(int label, int pin, float linCoM, float linCoB)
-    : labelID(label), pinID(pin), linCoefM(linCoM), linCoefB(linCoB), value(0.0f) {}
+    : labelID(label), pinID(pin), linCoefM(linCoM), linCoefB(linCoB) 
+    {
+        value = 0.0f;
+    }
 
-//Constructor for uncalibrated sensors
+/*Constructor for uncalibrated sensors
 Sensor::Sensor(int label, int pin)
     : labelID(label), pinID(pin), linCoefM(1.0f), linCoefB(0.0f), value(0.0f) {}
+*/
 
 //Returns the last value taken by the sensor
 float Sensor::getLastValue() const { return value; }

@@ -1,10 +1,12 @@
+#include "Arduino.h"
 #include <iostream>
 #include <array>
 #include <unordered_map>
 #include "Rocket.h"
 #include "CANDriver.h"
-#include "Arduino.h"
 #include "Sensor.h"
+#include "Valve.h"
+#include "Igniter.h"
 #include <unistd.h> // For sleep function
 #include <SD.h>
 #include <SPI.h>
@@ -13,7 +15,7 @@ int alara = 0;
 File onBoardLog;
 char* fileLogName = "SoftwareTest-03-15-2024.txt";
 bool sd_write = true;
-Rocket myRocket = NULL;
+Rocket myRocket = Rocket(alara);
 
 void setup() {
     Serial.begin(9600);
@@ -24,6 +26,26 @@ void setup() {
 }
 
 void loop() {
+
+    std::map<int, Igniter>::iterator it  = myRocket.igniterMap.begin(); 
+    while (it != myRocket.igniterMap.end()) {
+        //myRocket.setIgnitionOn(it->first, true);
+        //sleep(1);
+        //myRocket.setIgnitionOn(it->first, false);
+        //sleep(1);
+        it++;
+    }
+
+    if(myRocket.getExecuting())
+    {
+        return;
+    }
+
+    myRocket.setValveOn(LV_ID, true);
+    //float test = myRocket.sensorRead(PT_LOX_TANK_1_ID);
+
+
+    /*
     for (const auto& pair : myRocket.igniterMap) {
         myRocket.setIgnitionOn(pair.first, true);
         sleep(1);
@@ -42,6 +64,7 @@ void loop() {
             onBoardLog.println(myRocket.sensorRead(sensor.first));
         }
     }
+    */
 }
 
 /*class Main {
