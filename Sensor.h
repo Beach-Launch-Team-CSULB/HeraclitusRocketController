@@ -15,6 +15,7 @@ private:
 
 public:
     //Optional Constructor for an uncalibrated sensor
+    Sensor();
     Sensor(int label, int pin);
     
     //Primary Constructor for sensors

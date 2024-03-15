@@ -1,6 +1,11 @@
 #include "Valve.h"
 #include "ExtendedIO.h"
 
+    // Constructor
+    Valve::Valve(int id, int pinPWM, int pinDigital) 
+        : id(id), pinPWM(pinPWM), pinDigital(pinDigital), valveOpen(false) {}
+
+
     // Getters
     int Valve::getID() {
         return this->id;

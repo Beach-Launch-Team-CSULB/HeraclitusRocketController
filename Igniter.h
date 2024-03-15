@@ -11,6 +11,7 @@ class Igniter{
         bool defaultStateOn;
 
     public:
+        Igniter();
         Igniter(int id, int pinPWM, int pinDigital)
             : id(id), pinPWM(pinPWM), pinDigital(pinDigital), igniterOn(false) {}
         int getID();
