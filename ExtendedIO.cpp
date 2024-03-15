@@ -1,10 +1,14 @@
+#include <map>
 #include "ExtendedIO.h"
 #include "iostream"
 #include "Config.h"
 
+std::map<int, void*> ExtendedIO::pin_address_map;
 
-std::map<int, void*> pin_address_map;
-//pin_address_map.
+void initilizePins(){
+    ExtendedIO::pin_address_map.insert({IGN1_ID, PTC16}); 
+
+}
 
 
 void ExtendedIO::pinModeExtended(int pin, int value) {
