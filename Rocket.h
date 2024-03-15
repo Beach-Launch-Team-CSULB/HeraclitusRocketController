@@ -7,7 +7,7 @@
 #include "VehicleState.h"
 #include "Igniter.h"
 #include "Valve.h"
-#include "Sensor.hpp"
+#include "Sensor.h"
 
 
 class Rocket{ 
@@ -17,8 +17,8 @@ class Rocket{
         int ALARA;                      // 0 = Lower , 1 = Upper  
         std::map<int, Igniter> igniterMap;
         std::map<int, Valve> valveMap;
-        //std::map<int, Sensor> sensorMap;
-        Sensor sensorArray[8];
+        std::map<int, Sensor> sensorMap;
+        //Sensor* sensorArray[8];
 
     public:
         // Constructor 

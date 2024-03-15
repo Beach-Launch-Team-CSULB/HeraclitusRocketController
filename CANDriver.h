@@ -4,7 +4,7 @@
 #define CANDRIVER_H
 
 //#include <Arduino.h>
-//#include <FlexCAN.h>
+#include <FlexCAN.h>
 #include <iostream>
 #include <vector>
 //#include <stdint.h>

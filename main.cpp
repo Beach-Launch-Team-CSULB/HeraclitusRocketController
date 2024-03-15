@@ -4,7 +4,7 @@
 #include "Rocket.h"
 #include "CANDriver.h"
 #include "Arduino.h"
-
+#include "Sensor.h"
 #include <unistd.h> // For sleep function
 #include <SD.h>
 #include <SPI.h>
@@ -12,7 +12,7 @@
 int alara = 0;
 File onBoardLog;
 std::string fileLogName = "SoftwareTest-03-15-2024.txt";
-sd_write = true;
+bool sd_write = true;
 
 void setup() {
     Serial.begin(9600);
