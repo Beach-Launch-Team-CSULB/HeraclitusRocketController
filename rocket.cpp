@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <map>
+#include <utility>
 #include "Rocket.h"
 #include "Valve.h"
 #include "Igniter.h"
@@ -21,12 +22,12 @@ Rocket::Rocket(int ALARA){
     }
 }
 
-float Rocket::sensorRead(Sensor sensor) {
+/*float Rocket::sensorRead(Sensor sensor) {
     return sensor.readDataRaw();
-}
+}*/
 
 float Rocket::sensorRead(int sensorId) {
-    //return sensor.readDataRaw();
+    return sensorMap[sensorId].getCurrentValue();
 }
 
 bool Rocket::ignitionRead(int igniterID) {
@@ -55,8 +56,9 @@ bool Rocket::initializeIgniters(){
     Igniter Igniter1(IGN1_ID, IGN1_PIN_PWM,IGN1_PIN_DIG);
     Igniter Igniter2(IGN2_ID, IGN2_PIN_PWM,IGN2_PIN_DIG); 
 
-    igniterMap.insert(std::make_pair(IGN1_ID,Igniter1));
-    igniterMap.insert(std::make_pair(IGN2_ID,Igniter2));
+
+    igniterMap.insert({IGN1_ID, Igniter1});
+    igniterMap.insert({IGN2_ID, Igniter2});
 
     return true;
 }
@@ -67,10 +69,11 @@ bool Rocket::initializeUpperValves(){
     Valve FMV(FMV_ID,FMV_PIN_PWM,FMV_PIN_DIG);  // Fuel Main Valve
     Valve LMV(LMV_ID,LMV_PIN_PWM,LMV_PIN_DIG);  // Lox Main Valve
 
-    valveMap.insert(std::make_pair(HP_ID,HP));
-    valveMap.insert(std::make_pair(HV_ID,HV));
-    valveMap.insert(std::make_pair(FMV_ID,FMV));
-    valveMap.insert(std::make_pair(LMV_ID,LMV));
+    
+    valveMap.insert({HP_ID, HP});
+    valveMap.insert({HV_ID, HV});
+    valveMap.insert({FMV_ID, FMV});
+    valveMap.insert({LMV_ID, LMV});
 
     return true;
 }
@@ -83,43 +86,41 @@ bool Rocket::initializeLowerValves(){
     Valve FDV(FDV_ID,FDV_PIN_PWM,FDV_PIN_DIG);  // Fuel Dome Vent Valve
     Valve FDR(FDR_ID,FDR_PIN_PWM,FDR_PIN_DIG);  // Fuel Dome Reg Valve
 
-    valveMap.insert(std::make_pair(LV_ID,LV));
-    valveMap.insert(std::make_pair(LDV_ID,LDV));
-    valveMap.insert(std::make_pair(LDR_ID,LDR));
-    valveMap.insert(std::make_pair(FV_ID,FV));
-    valveMap.insert(std::make_pair(FDV_ID,FDV));
-    valveMap.insert(std::make_pair(FDR_ID,FDR));
+    valveMap.insert({LV_ID, LV});
+    valveMap.insert({LDV_ID, LDV});
+    valveMap.insert({LDR_ID, LDR});
+    valveMap.insert({FV_ID, FV});
+    valveMap.insert({FDV_ID, FDV});
+    valveMap.insert({FDR_ID, FDR});
 
     return true;
 }
 
 bool Rocket::initializeUpperSensors()
 {
-    sensorArray = 
-    {
-        Sensor(PT_LOX_HIGH_ID, PT_LOX_HIGH_PIN, PT_LOX_HIGH_CAL_M, PT_LOX_HIGH_CAL_B),
-        Sensor(PT_FUEL_HIGH_ID, PT_FUEL_HIGH_PIN, PT_FUEL_HIGH_CAL_M, PT_FUEL_HIGH_CAL_B),
-        Sensor(PT_LOX_DOME_ID, PT_LOX_DOME_PIN, PT_LOX_DOME_CAL_M, PT_LOX_DOME_CAL_B),
-        Sensor(PT_FUEL_DOME_ID, PT_FUEL_DOME_PIN, PT_FUEL_DOME_CAL_M, PT_FUEL_DOME_CAL_B),
-        Sensor(PT_LOX_TANK_1_ID, PT_LOX_TANK_1_PIN, PT_LOX_TANK_1_CAL_M, PT_LOX_TANK_1_CAL_B),
-        Sensor(PT_LOX_TANK_2_ID, PT_LOX_TANK_2_PIN, PT_LOX_TANK_2_CAL_M, PT_LOX_TANK_2_CAL_B),
-        Sensor(PT_FUEL_TANK_2_ID, PT_FUEL_TANK_2_PIN, PT_FUEL_TANK_2_CAL_M, PT_FUEL_TANK_2_CAL_B)
-    };
+    
+    sensorMap.insert({PT_LOX_HIGH_ID, Sensor(PT_LOX_HIGH_ID, PT_LOX_HIGH_PIN, PT_LOX_HIGH_CAL_M, PT_LOX_HIGH_CAL_B)});
+    sensorMap.insert({PT_FUEL_HIGH_ID, Sensor(PT_FUEL_HIGH_ID, PT_FUEL_HIGH_PIN, PT_FUEL_HIGH_CAL_M, PT_FUEL_HIGH_CAL_B)});
+    sensorMap.insert({PT_LOX_DOME_ID, Sensor(PT_LOX_DOME_ID, PT_LOX_DOME_PIN, PT_LOX_DOME_CAL_M, PT_LOX_DOME_CAL_B)});
+    sensorMap.insert({PT_FUEL_DOME_ID, Sensor(PT_FUEL_DOME_ID, PT_FUEL_DOME_PIN, PT_FUEL_DOME_CAL_M, PT_FUEL_DOME_CAL_B)});
+    sensorMap.insert({PT_LOX_TANK_1_ID, Sensor(PT_LOX_TANK_1_ID, PT_LOX_TANK_1_PIN, PT_LOX_TANK_1_CAL_M, PT_LOX_TANK_1_CAL_B)});
+    sensorMap.insert({PT_LOX_TANK_2_ID, Sensor(PT_LOX_TANK_2_ID, PT_LOX_TANK_2_PIN, PT_LOX_TANK_2_CAL_M, PT_LOX_TANK_2_CAL_B),});
+    sensorMap.insert({PT_FUEL_TANK_1_ID, Sensor(PT_FUEL_TANK_1_ID, PT_FUEL_TANK_1_PIN, PT_FUEL_TANK_1_CAL_M, PT_FUEL_TANK_1_CAL_M)});
+    sensorMap.insert({PT_FUEL_TANK_2_ID, Sensor(PT_FUEL_TANK_2_ID, PT_FUEL_TANK_2_PIN, PT_FUEL_TANK_2_CAL_M, PT_FUEL_TANK_2_CAL_B)});
+    
 
     return true;
 }
 
 bool Rocket::initializeLowerSensors()
 {
-    sensorArray =
-    {
-        Sensor(PT_PNUEMATICS_ID, PT_PNUEMATICS_PIN, PT_PNUEMATICS_CAL_M, PT_PNUEMATICS_CAL_B),
-        Sensor(PT_LOX_INLET_ID, PT_LOX_INLET_PIN, PT_LOX_INLET_CAL_M, PT_LOX_INLET_CAL_B),
-        Sensor(PT_FUEL_INLET_ID, PT_FUEL_INLET_PIN, PT_FUEL_INLET_CAL_M, PT_FUEL_INLET_CAL_B),
-        Sensor(PT_FUEL_INJECTOR_ID, PT_FUEL_INJECTOR_PIN, PT_FUEL_INJECTOR_CAL_M, PT_FUEL_INJECTOR_CAL_B),
-        Sensor(PT_CHAMBER_1_ID, PT_CHAMBER_1_PIN, PT_CHAMBER_1_CAL_M, PT_CHAMBER_1_CAL_B),
-        Sensor(PT_CHAMBER_2_ID, PT_CHAMBER_2_PIN, PT_CHAMBER_2_CAL_M, PT_CHAMBER_2_CAL_B)
-    };
+    sensorMap.insert({PT_PNUEMATICS_ID, Sensor(PT_PNUEMATICS_ID, PT_PNUEMATICS_PIN, PT_PNUEMATICS_CAL_M, PT_PNUEMATICS_CAL_B)});
+    sensorMap.insert({PT_LOX_INLET_ID, Sensor(PT_LOX_INLET_ID, PT_LOX_INLET_PIN, PT_LOX_INLET_CAL_M, PT_LOX_INLET_CAL_B)});
+    sensorMap.insert({PT_FUEL_INLET_ID, Sensor(PT_FUEL_INLET_ID, PT_FUEL_INLET_PIN, PT_FUEL_INLET_CAL_M, PT_FUEL_INLET_CAL_B)});
+    sensorMap.insert({PT_FUEL_INJECTOR_ID, Sensor(PT_FUEL_INJECTOR_ID, PT_FUEL_INJECTOR_PIN, PT_FUEL_INJECTOR_CAL_M, PT_FUEL_INJECTOR_CAL_B)});
+    sensorMap.insert({PT_CHAMBER_1_ID, Sensor(PT_CHAMBER_1_ID, PT_CHAMBER_1_PIN, PT_CHAMBER_1_CAL_M, PT_CHAMBER_1_CAL_B)});
+    sensorMap.insert({PT_CHAMBER_2_ID, Sensor(PT_CHAMBER_2_ID, PT_CHAMBER_2_PIN, PT_CHAMBER_2_CAL_M, PT_CHAMBER_2_CAL_B)});
+    
 
     return true;
 }

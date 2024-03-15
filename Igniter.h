@@ -5,8 +5,8 @@
 class Igniter{ 
     private: 
         int id;
-        int pinDigital;
         int pinPWM;
+        int pinDigital;
         bool igniterOn;
         bool defaultStateOn;
 

@@ -1,5 +1,8 @@
 // 2/10/2024
 
+#include <map>
+#include <string.h>
+
 // Valves & Igniters
 #define NUM_VALVES 10
 #define NUM_IGNITERS 2
@@ -71,19 +74,19 @@
 // Igniter Digital Pin Designations and IDs | ALARA LOWER 
 
 #define IGN1_ID         10  // Igniter A / ENG-IGNA / ALARA Lower
-#define IGN1_PIN_DIG    83  // Teensy 3.6 MCU Pin: PTC16
+#define IGN1_PIN_DIG    83  //ALARA: DIG5 | Teensy 3.6 MCU Pin: PTC16
 #define IGN1_PIN_PWM    2 
 
 
 #define IGN2_ID         11  // Igniter B / ENG-IGNB
-#define IGN2_PIN_DIG    81  // ALARA: DIG5 | Teensy 3.6 MCU Pin: PTC16
+#define IGN2_PIN_DIG    81  // ALARA: DIG5 | Teensy 3.6 MCU Pin: PTC14
 #define IGN2_PIN_PWM    10  // In Dan's Code they are both 2?  
       
 
 // Valve Digital Pin Designations and IDs | ALARA LOWER 
 
 #define HP_ID           20  // High Press valve / SV HI PRES  
-#define HP_PIN_DIG      87  // ALARA: DIG1 | Teensy 3.6 MCU Pin: PTD4/LLWU_P14
+#define HP_PIN_DIG      87  // ALARA: DIG1 | Teensy 3.6 MCU Pin: PTD10
 #define HP_PIN_PWM      5
 
 #define HV_ID           21  // High Vent valve / SV HI PRES V 
@@ -101,7 +104,7 @@
 // Valve Digital Pin Designations and IDs | ALARA UPPER 
 
 #define LV_ID           24  // Lox Vent valve / SV LOX V
-#define LV_PIN_DIG      87  // ALARA: DIG1 | Teensy 3.6 MCU Pin: PTD4/LLWU_P14
+#define LV_PIN_DIG      87  // ALARA: DIG1 | Teensy 3.6 MCU Pin: PTD10
 #define LV_PIN_PWM      5
 
 #define LDV_ID          25  // Lox Dome Vent valve / SV DREG L
@@ -124,6 +127,18 @@
 #define FDR_PIN_DIG     80  // ALARA: DIG8 | Teensy 3.6 MCU Pin: PTC13
 #define FDR_PIN_PWM     9
 
+// Pin Addresses 
+#define PTC14 reinterpret_cast<void*>(4004_B044) //80
+#define PTC14 reinterpret_cast<void*>(4004_B038) //81
+#define PTC16 reinterpret_cast<void*>(4004_B040) //83
+#define PTC17 reinterpret_cast<void*>(4004_B044) //84
+#define PTC18 reinterpret_cast<void*>(4004_B040) //85
+#define PTC19 reinterpret_cast<void*>(4004_B04C) //86
+#define PTD10 reinterpret_cast<void*>(4004_B028) //87
+
+// Pin GPIO Set Addresses 
+#define PTC_address reinterpret_cast<void*>(400F_F084) //GPIOC_PSOR
+#define PTD_address reinterpret_cast<void*>(400F_F0C4) //GPIOD_PSOR
 
 // Pressure Transducer Sesnor Pin Designations, IDs, and Calibration Values
 // (sensors are currently uncalibrated)
