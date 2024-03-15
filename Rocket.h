@@ -2,9 +2,13 @@
 #define ROCKET_H 
 
 #include <Arduino.h>
-#include <IntervalTimer.h>
 #include <map>
+#include <utility>
 #include "VehicleState.h"
+#include "Igniter.h"
+#include "Valve.h"
+#include "Sensor.hpp"
+
 
 class Rocket{ 
     private: 
@@ -17,7 +21,7 @@ class Rocket{
 
     public:
         // Constructor 
-        Rocket(int ALARA) : ALARA(ALARA){}
+        Rocket(int ALARA);
 
         // Output 
         int sensorRead(int);

@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <map>
+#include <utility>
 #include "Rocket.h"
 #include "Valve.h"
 #include "Igniter.h"
@@ -51,8 +52,9 @@ bool Rocket::initializeIgniters(){
     Igniter Igniter1(IGN1_ID, IGN1_PIN_PWM,IGN1_PIN_DIG);
     Igniter Igniter2(IGN2_ID, IGN2_PIN_PWM,IGN2_PIN_DIG); 
 
-    igniterMap.insert(std::make_pair(IGN1_ID,Igniter1));
-    igniterMap.insert(std::make_pair(IGN2_ID,Igniter2));
+
+    igniterMap.insert({IGN1_ID, Igniter1});
+    igniterMap.insert({IGN2_ID, Igniter2});
 
     return true;
 }
@@ -63,10 +65,11 @@ bool Rocket::initializeUpperValves(){
     Valve FMV(FMV_ID,FMV_PIN_PWM,FMV_PIN_DIG);  // Fuel Main Valve
     Valve LMV(LMV_ID,LMV_PIN_PWM,LMV_PIN_DIG);  // Lox Main Valve
 
-    valveMap.insert(std::make_pair(HP_ID,HP));
-    valveMap.insert(std::make_pair(HV_ID,HV));
-    valveMap.insert(std::make_pair(FMV_ID,FMV));
-    valveMap.insert(std::make_pair(LMV_ID,LMV));
+    
+    valveMap.insert({HP_ID, HP});
+    valveMap.insert({HV_ID, HV});
+    valveMap.insert({FMV_ID, FMV});
+    valveMap.insert({LMV_ID, LMV});
 
     return true;
 }
@@ -79,12 +82,12 @@ bool Rocket::initializeLowerValves(){
     Valve FDV(FDV_ID,FDV_PIN_PWM,FDV_PIN_DIG);  // Fuel Dome Vent Valve
     Valve FDR(FDR_ID,FDR_PIN_PWM,FDR_PIN_DIG);  // Fuel Dome Reg Valve
 
-    valveMap.insert(std::make_pair(LV_ID,LV));
-    valveMap.insert(std::make_pair(LDV_ID,LDV));
-    valveMap.insert(std::make_pair(LDR_ID,LDR));
-    valveMap.insert(std::make_pair(FV_ID,FV));
-    valveMap.insert(std::make_pair(FDV_ID,FDV));
-    valveMap.insert(std::make_pair(FDR_ID,FDR));
+    valveMap.insert({LV_ID, LV});
+    valveMap.insert({LDV_ID, LDV});
+    valveMap.insert({LDR_ID, LDR});
+    valveMap.insert({FV_ID, FV});
+    valveMap.insert({FDV_ID, FDV});
+    valveMap.insert({FDR_ID, FDR});
 
     return true;
 }
@@ -92,7 +95,7 @@ bool Rocket::initializeLowerValves(){
 bool Rocket::initializeSensors(){
     //for(i = 0; i < ; i++)
     {
-        
+        return true;
     }
 }
 

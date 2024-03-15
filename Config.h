@@ -1,5 +1,8 @@
 // 2/10/2024
 
+#include <map>
+#include <string.h>
+
 // Valves & Igniters
 #define NUM_VALVES 10
 #define NUM_IGNITERS 2
@@ -124,13 +127,18 @@
 #define FDR_PIN_DIG     80  // ALARA: DIG8 | Teensy 3.6 MCU Pin: PTC13
 #define FDR_PIN_PWM     9
 
+// Pin Addresses 
+#define std::map<int, reinterpret_cast<void*>;
+
+#define PTC16 reinterpret_cast<void*>(4004_B040) //83
+#define PTC14 reinterpret_cast<void*>(4004_B038) //
+#define PTC10 reinterpret_cast<void*>(4004_B028) //
+
+#define PTC16 reinterpret_cast<void*>(4004_B040) //
+#define PTC16 reinterpret_cast<void*>(4004_B040) //
+#define PTC16 reinterpret_cast<void*>(4004_B040) //
 
 
-
-
-
-
- 
 
 
 //Prop Node Initialization Information
