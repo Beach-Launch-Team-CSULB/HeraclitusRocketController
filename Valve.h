@@ -10,7 +10,8 @@ class Valve{
         bool valveOpen;
 
     public:
-        Valve();
+        Valve():
+            id(0), pinPWM(0), pinDigital(0), valveOpen(false) {};
         Valve(int id, int pinPWM, int pinDigital);
         int getID();
         int getPinPWM();

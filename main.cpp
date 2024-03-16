@@ -4,7 +4,8 @@
 #include "Rocket.h"
 #include "CANDriver.h"
 #include "Arduino.h"
-#include "Sensor.h"
+//#include "Sensor.h"
+#include "Igniter.h"
 #include <unistd.h> // For sleep function
 #include <SD.h>
 #include <SPI.h>
@@ -24,24 +25,35 @@ void setup() {
 }
 
 void loop() {
+    /*Igniter();
     for (const auto& pair : myRocket.igniterMap) {
         myRocket.setIgnitionOn(pair.first, true);
-        sleep(1);
+        //sleep(1);
+        delay(1);
         myRocket.setIgnitionOn(pair.first, false);
-        sleep(1);
-    }
-    for (const auto& pair : myRocket.valveMap) {
-        myRocket.setValveOn(pair.first, true);
-        sleep(1);
-        myRocket.setValveOn(pair.first, false);
-        sleep(1);
-    }
+        //sleep(1);
+        delay(1);
+    }*/
+    //for (const auto& pair : myRocket.valveMap) {
+        myRocket.setValveOn(22, true);
+        //sleep(1);
+        delay(1000);
+        myRocket.setValveOn(22, false);
+        //sleep(1);
+
+        /// MILISECONDS
+        delay(1000);
+    //}
+
     if (sd_write) {
         File onBoardLog = SD.open(fileLogName, FILE_WRITE);
         for (const auto& sensor : myRocket.sensorMap) {
             onBoardLog.println(myRocket.sensorRead(sensor.first));
         }
     }
+    
+
+
 }
 
 /*class Main {

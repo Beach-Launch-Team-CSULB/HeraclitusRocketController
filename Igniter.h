@@ -2,6 +2,7 @@
 #define IGNITER_H
 #include <Arduino.h>
 
+
 class Igniter{ 
     private: 
         int id;
@@ -11,7 +12,8 @@ class Igniter{
         bool defaultStateOn;
 
     public:
-        Igniter();
+        Igniter()
+            : id(0), pinPWM(0), pinDigital(0), igniterOn(false) {};
         Igniter(int id, int pinPWM, int pinDigital)
             : id(id), pinPWM(pinPWM), pinDigital(pinDigital), igniterOn(false) {}
         int getID();

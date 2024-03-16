@@ -70,10 +70,10 @@ bool Rocket::initializeUpperValves(){
     Valve LMV(LMV_ID,LMV_PIN_PWM,LMV_PIN_DIG);  // Lox Main Valve
 
     
-    valveMap.insert({HP_ID, HP});
-    valveMap.insert({HV_ID, HV});
-    valveMap.insert({FMV_ID, FMV});
-    valveMap.insert({LMV_ID, LMV});
+    valveMap[HP_ID] =  HP;
+    valveMap[HV_ID] = HV;
+    valveMap[FMV_ID] = FMV;
+    valveMap[LMV_ID] = LMV;
 
     return true;
 }
