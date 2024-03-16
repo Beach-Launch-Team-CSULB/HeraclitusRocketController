@@ -56,8 +56,8 @@ void ExtendedIO::digitalWriteExtended(int pin, int value) {
 
     if(value==1){
           //Duck-Tape Code I know this is bad :<   -Bonnie
-        if(*registerAddress == *theonlyoneonPTD){  //if PTD
-            volatile uint32_t* registerPSORAddress = static_cast<volatile uint32_t*>(PTD_ADDRESS_SET); 
+        if(*registerAddress == *theonlyoneonPTD){  //if PTD       //FOR BRANDON: Should be executing here with pin = 87 and value = 1
+            volatile uint32_t* registerPSORAddress = static_cast<volatile uint32_t*>(PTD_ADDRESS_SET);  
             *registerPSORAddress |= (value << pin_PSOR_map[pin]); //Write 1 to the offset spot
 
             volatile uint32_t* registerPDORAddress = static_cast<volatile uint32_t*>(PTD_ADDRESS_DATA); 
