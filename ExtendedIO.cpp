@@ -11,8 +11,12 @@ static std::map<int, void*> pin_address_map = {
     {HV_ID,PTC19},
     {FMV_ID,PTC18},
     {LMV_ID,PTC17},
-    {LV_ID, PTD10}
-    
+    {LV_ID, PTD10},
+    {LDV_ID, PTC18},
+    {LDR_ID, PTC17},
+    {FV_ID, PTC16},
+    {FDV_ID, PTC14},
+    {FDR_ID, PTC13}
     };
  
 void ExtendedIO::pinModeExtended(int pin, int isGPIO) {
