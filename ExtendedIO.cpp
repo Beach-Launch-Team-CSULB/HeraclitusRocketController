@@ -3,36 +3,36 @@
 #include "iostream"
 #include "Config.h"
 
-// Sets up PIN References so when a pin ID is passed in, you can find the exact register address to write to
+// Sets up PIN References so when a pin DIG ID is passed in, you can find the exact register address to write to
 static std::map<int, void*> pin_address_map = {
-    {IGN1_ID,PTC16_PCR},
-    {IGN2_ID,PTC14_PCR},
-    {HP_ID,PTD10_PCR},
-    {HV_ID,PTC19_PCR},
-    {FMV_ID,PTC18_PCR},
-    {LMV_ID,PTC17_PCR},
-    {LV_ID,PTD10_PCR},
-    {LDV_ID,PTC18_PCR},
-    {LDR_ID,PTC17_PCR},
-    {FV_ID,PTC16_PCR},
-    {FDV_ID,PTC14_PCR},
-    {FDR_ID,PTC13_PCR}
+    {IGN1_PIN_DIG,PTC16_PCR},
+    {IGN2_PIN_DIG,PTC14_PCR},
+    {HP_PIN_DIG,PTD10_PCR},
+    {HV_PIN_DIG,PTC19_PCR},
+    {FMV_PIN_DIG,PTC18_PCR},
+    {LMV_PIN_DIG,PTC17_PCR},
+    {LV_PIN_DIG,PTD10_PCR},
+    {LDV_PIN_DIG,PTC18_PCR},
+    {LDR_PIN_DIG,PTC17_PCR},
+    {FV_PIN_DIG,PTC16_PCR},
+    {FDV_PIN_DIG,PTC14_PCR},
+    {FDR_PIN_DIG,PTC13_PCR}
     };
 
-// Sets up PIN References so when a pin ID is passed in, you can find the exact offset in the register 
+// Sets up PIN References so when a pin DIG ID is passed in, you can find the exact offset in the register 
 static std::map<int, int> pin_PSOR_map = {
-    {IGN1_ID,PTC16_OFFSET},
-    {IGN2_ID,PTC14_OFFSET},
-    {HP_ID,PTD10_OFFSET},
-    {HV_ID,PTC19_OFFSET},
-    {FMV_ID,PTC18_OFFSET},
-    {LMV_ID,PTC17_OFFSET},
-    {LV_ID,PTD10_OFFSET},
-    {LDV_ID,PTC18_OFFSET},
-    {LDR_ID,PTC17_OFFSET},
-    {FV_ID,PTC16_OFFSET},
-    {FDV_ID,PTC14_OFFSET},
-    {FDR_ID,PTC13_OFFSET}
+    {IGN1_PIN_DIG,PTC16_OFFSET},
+    {IGN2_PIN_DIG,PTC14_OFFSET},
+    {HP_PIN_DIG,PTD10_OFFSET},
+    {HV_PIN_DIG,PTC19_OFFSET},
+    {FMV_PIN_DIG,PTC18_OFFSET},
+    {LMV_PIN_DIG,PTC17_OFFSET},
+    {LV_PIN_DIG,PTD10_OFFSET},
+    {LDV_PIN_DIG,PTC18_OFFSET},
+    {LDR_PIN_DIG,PTC17_OFFSET},
+    {FV_PIN_DIG,PTC16_OFFSET},
+    {FDV_PIN_DIG,PTC14_OFFSET},
+    {FDR_PIN_DIG,PTC13_OFFSET}
     };    
  
 void ExtendedIO::pinModeExtended(int pin, int isGPIO) {

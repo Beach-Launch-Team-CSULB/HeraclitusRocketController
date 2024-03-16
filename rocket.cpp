@@ -63,7 +63,7 @@ bool Rocket::initializeIgniters(){
     return true;
 }
 
-bool Rocket::initializeUpperValves(){
+bool Rocket::initializeLowerValves(){
     Valve HP(HP_ID,HP_PIN_PWM,HV_PIN_DIG);      // High Press Valve
     Valve HV(HV_ID,HV_PIN_PWM,HV_PIN_DIG);      // High Vent Valve 
     Valve FMV(FMV_ID,FMV_PIN_PWM,FMV_PIN_DIG);  // Fuel Main Valve
@@ -78,7 +78,7 @@ bool Rocket::initializeUpperValves(){
     return true;
 }
 
-bool Rocket::initializeLowerValves(){
+bool Rocket::initializeUpperValves(){
     Valve LV(LV_ID,LV_PIN_PWM,LV_PIN_DIG);      // Lox Vent Valve
     Valve LDV(LDV_ID,LDV_PIN_PWM,LDV_PIN_DIG);  // Lox Dome Vent Valve
     Valve LDR(LDR_ID,LDR_PIN_PWM,LDR_PIN_DIG);  // Lox Dome Reg Valve
