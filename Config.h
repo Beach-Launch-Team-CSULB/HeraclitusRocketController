@@ -150,12 +150,13 @@
 #define PTD10_OFFSET 10
 
 // Pin GPIO Set Addresses 
-#define PTC_ADDRESS_SET reinterpret_cast<void*>(0x400FF08C) //GPIOC_PSOR
-#define PTC_ADDRESS_CLEAR reinterpret_cast<void*>(0x400FF088) //GPIOC_PSOR
+#define PTC_ADDRESS_SET reinterpret_cast<void*>(0x400FF08C) // Changes logic to 1 PSOR
+#define PTC_ADDRESS_CLEAR reinterpret_cast<void*>(0x400FF088) // Changes logic to 0 PCOR
+#define PTC_ADDRESS_DATA reinterpret_cast<void*>(0x400FF080) // "Drives" pin logic PDOR
 
-#define PTD_ADDRESS_SET reinterpret_cast<void*>(0x400FF0CC) //GPIOD_PSOR
-#define PTD_ADDRESS_CLEAR reinterpret_cast<void*>(0x400FF0C8) //GPIOd_PSOR
-
+#define PTD_ADDRESS_SET reinterpret_cast<void*>(0x400FF0CC) 
+#define PTD_ADDRESS_CLEAR reinterpret_cast<void*>(0x400FF0C8) 
+#define PTD_ADDRESS_DATA reinterpret_cast<void*>(0x400FF0C0) 
 
 // 
 #define INPUT (0<<8)  // INPUT, Disable GPIO, Analog

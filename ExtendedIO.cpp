@@ -58,20 +58,30 @@ void ExtendedIO::digitalWriteExtended(int pin, int value) {
           //Duck-Tape Code I know this is bad :<   -Bonnie
         if(*registerAddress == *theonlyoneonPTD){  //if PTD
             volatile uint32_t* registerPSORAddress = static_cast<volatile uint32_t*>(PTD_ADDRESS_SET); 
-            *registerPSORAddress |= (value << pin_PSOR_map[pin]); //Write value to the offset spot
+            *registerPSORAddress |= (value << pin_PSOR_map[pin]); //Write 1 to the offset spot
+
+            volatile uint32_t* registerPDORAddress = static_cast<volatile uint32_t*>(PTD_ADDRESS_DATA); 
+            *registerPDORAddress |= (value << pin_PSOR_map[pin]); //Write 1 to "Drive" bit
         }
         else{  // PTC
             volatile uint32_t* registerPSORAddress = static_cast<volatile uint32_t*>(PTC_ADDRESS_SET); 
-            *registerPSORAddress |= (value << pin_PSOR_map[pin]); //Write value to the offset spot
+            *registerPSORAddress |= (value << pin_PSOR_map[pin]); //Write 1 to the offset spot
+
+            volatile uint32_t* registerPDORAddress = static_cast<volatile uint32_t*>(PTC_ADDRESS_DATA); 
+            *registerPDORAddress |= (value << pin_PSOR_map[pin]); //Write 1 to "Drive" bit
         }
     }else{
           if(*registerAddress == *theonlyoneonPTD){  //if PTD
             volatile uint32_t* registerPSORAddress = static_cast<volatile uint32_t*>(PTD_ADDRESS_CLEAR); 
-            *registerPSORAddress |= (value << pin_PSOR_map[pin]); //Write value to the offset spot
+            *registerPSORAddress |= (value << pin_PSOR_map[pin]); //Write 0 to the offset spot
+            volatile uint32_t* registerPDORAddress = static_cast<volatile uint32_t*>(PTD_ADDRESS_DATA); 
+            *registerPDORAddress |= (value << pin_PSOR_map[pin]); //Write 0 to "Drive" bit
         }
         else{  // PTC
             volatile uint32_t* registerPSORAddress = static_cast<volatile uint32_t*>(PTC_ADDRESS_CLEAR); 
-            *registerPSORAddress |= (value << pin_PSOR_map[pin]); //Write value to the offset spot
+            *registerPSORAddress |= (value << pin_PSOR_map[pin]); //Write 0 to the offset spot
+            volatile uint32_t* registerPDORAddress = static_cast<volatile uint32_t*>(PTD_ADDRESS_DATA); 
+            *registerPDORAddress |= (value << pin_PSOR_map[pin]); //Write 0 to "Drive" bit
         }
     }
 
