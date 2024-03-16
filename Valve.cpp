@@ -33,6 +33,10 @@
     }
 
     bool Valve::setValveOpen(bool ValveOpenInput) {
+        
+        ExtendedIO::pinModeExtended(this->pinDigital,OUTPUT);
+        pinMode(this->pinPWM,OUTPUT);
+
         if(ValveOpenInput == true){
             ExtendedIO::digitalWriteExtended(this->pinDigital,1); 
             digitalWrite(this->pinPWM,1);
