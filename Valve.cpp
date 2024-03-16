@@ -39,7 +39,7 @@
             return true;
         }
         if(ValveOpenInput == false){
-           //ExtendedIO::digitalWriteExtended(this->pinDigital,0);
+            ExtendedIO::digitalWriteExtended(this->pinDigital,0);
             digitalWrite(this->pinPWM,0);
             return true;
         }

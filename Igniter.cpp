@@ -37,12 +37,12 @@ bool Igniter::setIgniterOn(bool isignitionOn){
     pinMode(this->pinPWM,OUTPUT);
 
     if(isignitionOn == true){
-        //ExtendedIO::digitalWriteExtended(this->pinDigital,1);
+        ExtendedIO::digitalWriteExtended(this->pinDigital,1);
         digitalWrite(this->pinPWM,1);
         return true;
     }
     if(isignitionOn == false){
-        //ExtendedIO::digitalWriteExtended(this->pinDigital,0);
+        ExtendedIO::digitalWriteExtended(this->pinDigital,0);
         digitalWrite(this->pinPWM,0);
         return false;
     }
