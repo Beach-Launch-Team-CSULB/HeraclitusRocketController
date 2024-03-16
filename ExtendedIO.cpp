@@ -12,12 +12,13 @@ static std::map<int, void*> pin_address_map = {
     {FMV_ID,PTC18},
     {LMV_ID,PTC17},
     {LV_ID, PTD10}
-    {}
+    
     };
  
 void ExtendedIO::pinModeExtended(int pin, int isGPIO) {
     //Initilzes pin and sets mode to GPIO, this is only working for PORTx_PCRn registers 
-    pin |= (isGPIO<<8);  // Set MUX to GPIO functionality
+    
+    *pin_address_map[pin] |= (isGPIO<<8);  // Set MUX to GPIO functionality
 
     //If you need anothe mode add it here and add an argument, as of now idk what else is needed
     

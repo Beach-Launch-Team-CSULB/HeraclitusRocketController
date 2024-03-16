@@ -128,7 +128,7 @@
 #define FDR_PIN_PWM     9
 
 // Pin Addresses 
-#define PTC14 reinterpret_cast<void*>(0x4004B044) //80
+#define PTC13 reinterpret_cast<void*>(0x4004B044) //80
 #define PTC14 reinterpret_cast<void*>(0x4004B038) //81
 #define PTC16 reinterpret_cast<void*>(0x4004B040) //83
 #define PTC17 reinterpret_cast<void*>(0x4004B044) //84
