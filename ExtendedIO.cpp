@@ -3,17 +3,23 @@
 #include "iostream"
 #include "Config.h"
 
-std::map<int, void*> ExtendedIO::pin_address_map;
+// Sets up PIN References so when a pin ID is passed in, you can find the exact register address to write to
+static std::map<int, void*> pin_address_map = {
+    {IGN1_ID,PTC16},
+    {IGN2_ID,PTC14},
+    {HP_ID,PTD10},
+    {HV_ID,PTC19},
+    {FMV_ID,PTC18},
+    {LMV_ID,PTC17},
+    {LV_ID, PTD10}
+    {}
+    };
+ 
+void ExtendedIO::pinModeExtended(int pin, int isGPIO) {
+    //Initilzes pin and sets mode to GPIO, this is only working for PORTx_PCRn registers 
+    pin |= (isGPIO<<8);  // Set MUX to GPIO functionality
 
-void initilizePins(){
-    ExtendedIO::pin_address_map.insert({IGN1_ID, PTC16}); 
-
-}
-
-
-void ExtendedIO::pinModeExtended(int pin, int value) {
-
-   // *pin |= (1<<8);  // MUX: GPIO functionality (Check correct value for GPIO)
+    //If you need anothe mode add it here and add an argument, as of now idk what else is needed
     
 }
 

@@ -30,7 +30,12 @@ bool Igniter::setPinDigital(int newPinDigital) {
 }
 
 bool Igniter::setIgniterOn(bool isignitionOn){
-    
+    // TRUE = ON , FALSE = OFF
+
+    //Set Pin Mode to GPIO, an move to constructor
+    ExtendedIO::pinModeExtended(this->pinDigital,OUTPUT);
+    pinMode(this->pinPWM,OUTPUT);
+
     if(isignitionOn == true){
         ExtendedIO::digitalWriteExtended(this->pinDigital,1);
         digitalWrite(this->pinPWM,1);

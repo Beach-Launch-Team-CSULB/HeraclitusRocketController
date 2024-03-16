@@ -29,8 +29,8 @@
 
     bool Valve::setValveOpen(bool ValveOpenInput) {
         if(ValveOpenInput == true){
-            ExtendedIO::digitalWriteExtended(this->pinDigital,1);
-            digitalWrite(this->pinPWM,0);
+            ExtendedIO::digitalWriteExtended(this->pinDigital,1); 
+            digitalWrite(this->pinPWM,1);
             return true;
         }
         if(ValveOpenInput == false){
