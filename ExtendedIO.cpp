@@ -49,18 +49,33 @@ void ExtendedIO::pinModeExtended(int pin, int isGPIO) {
 }
 
 void ExtendedIO::digitalWriteExtended(int pin, int value) {
+    //Pin digital is getting sent here 
+
     volatile uint32_t* registerAddress = static_cast<volatile uint32_t*>(pin_address_map[pin]);
     volatile uint32_t* theonlyoneonPTD = static_cast<volatile uint32_t*>(PTD10_PCR);
 
-    //Duck-Tape Code I know this is bad :<   -Bonnie
-    if(*registerAddress == *theonlyoneonPTD){  //if PTD
-        volatile uint32_t* registerPSORAddress = static_cast<volatile uint32_t*>(PTD_ADDRESS); 
-        *registerPSORAddress |= (value << pin_PSOR_map[pin]); //Write value to the offset spot
+    if(value==1){
+          //Duck-Tape Code I know this is bad :<   -Bonnie
+        if(*registerAddress == *theonlyoneonPTD){  //if PTD
+            volatile uint32_t* registerPSORAddress = static_cast<volatile uint32_t*>(PTD_ADDRESS_SET); 
+            *registerPSORAddress |= (value << pin_PSOR_map[pin]); //Write value to the offset spot
+        }
+        else{  // PTC
+            volatile uint32_t* registerPSORAddress = static_cast<volatile uint32_t*>(PTC_ADDRESS_SET); 
+            *registerPSORAddress |= (value << pin_PSOR_map[pin]); //Write value to the offset spot
+        }
+    }else{
+          if(*registerAddress == *theonlyoneonPTD){  //if PTD
+            volatile uint32_t* registerPSORAddress = static_cast<volatile uint32_t*>(PTD_ADDRESS_CLEAR); 
+            *registerPSORAddress |= (value << pin_PSOR_map[pin]); //Write value to the offset spot
+        }
+        else{  // PTC
+            volatile uint32_t* registerPSORAddress = static_cast<volatile uint32_t*>(PTC_ADDRESS_CLEAR); 
+            *registerPSORAddress |= (value << pin_PSOR_map[pin]); //Write value to the offset spot
+        }
     }
-    else{  // PTC
-        volatile uint32_t* registerPSORAddress = static_cast<volatile uint32_t*>(PTC_ADDRESS); 
-        *registerPSORAddress |= (value << pin_PSOR_map[pin]); //Write value to the offset spot
-    }
+
+  
   
 
 }

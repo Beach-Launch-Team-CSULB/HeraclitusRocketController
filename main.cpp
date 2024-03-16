@@ -11,7 +11,7 @@
 #include <SD.h>
 #include <SPI.h>
 
-int alara = 0;
+int alara = 1;
 File onBoardLog;
 char* fileLogName = "SoftwareTest-03-15-2024.txt";
 bool sd_write = true;
@@ -36,10 +36,10 @@ void loop() {
         delay(1);
     }*/
     //for (const auto& pair : myRocket.valveMap) {
-        myRocket.setValveOn(22, true);
+        myRocket.setValveOn(24, true);
         //sleep(1);
         delay(1000);
-        myRocket.setValveOn(22, false);
+        myRocket.setValveOn(24, false);
         //sleep(1);
 
         /// MILISECONDS
