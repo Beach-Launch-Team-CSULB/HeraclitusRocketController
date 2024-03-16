@@ -217,7 +217,7 @@
 
 
 //Prop Node Initialization Information
-
+#define UPPER_SENSOR_ARRAY_DECL  {PT_LOX_HIGH_ID, 
 
 
 //Engine Node Initialization Information

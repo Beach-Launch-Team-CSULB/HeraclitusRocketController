@@ -1,3 +1,4 @@
+#include "Arduino.h"
 #include <iostream>
 #include <array>
 #include <unordered_map>
@@ -14,7 +15,7 @@ int alara = 0;
 File onBoardLog;
 char* fileLogName = "SoftwareTest-03-15-2024.txt";
 bool sd_write = true;
-Rocket myRocket = NULL;
+Rocket myRocket = Rocket(alara);
 
 void setup() {
     Serial.begin(9600);
@@ -51,9 +52,6 @@ void loop() {
             onBoardLog.println(myRocket.sensorRead(sensor.first));
         }
     }
-    
-
-
 }
 
 /*class Main {
