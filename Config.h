@@ -128,17 +128,34 @@
 #define FDR_PIN_PWM     9
 
 // Pin Addresses 
-#define PTC14 reinterpret_cast<void*>(4004_B044) //80
-#define PTC14 reinterpret_cast<void*>(4004_B038) //81
-#define PTC16 reinterpret_cast<void*>(4004_B040) //83
-#define PTC17 reinterpret_cast<void*>(4004_B044) //84
-#define PTC18 reinterpret_cast<void*>(4004_B040) //85
-#define PTC19 reinterpret_cast<void*>(4004_B04C) //86
-#define PTD10 reinterpret_cast<void*>(4004_B028) //87
+#define PTC13_PCR reinterpret_cast<void*>(0x4004B044) //80
+#define PTC13_OFFSET 13
+
+#define PTC14_PCR reinterpret_cast<void*>(0x4004B038) //81
+#define PTC14_OFFSET 14
+
+#define PTC16_PCR reinterpret_cast<void*>(0x4004B040) //83
+#define PTC16_OFFSET 16
+
+#define PTC17_PCR reinterpret_cast<void*>(0x4004B044) //84
+#define PTC17_OFFSET 17
+
+#define PTC18_PCR reinterpret_cast<void*>(0x4004B040) //85
+#define PTC18_OFFSET 18
+
+#define PTC19_PCR reinterpret_cast<void*>(0x4004B04C) //86
+#define PTC19_OFFSET 19
+
+#define PTD10_PCR reinterpret_cast<void*>(0x4004B028) //87
+#define PTD10_OFFSET 10
 
 // Pin GPIO Set Addresses 
-#define PTC_address reinterpret_cast<void*>(400F_F084) //GPIOC_PSOR
-#define PTD_address reinterpret_cast<void*>(400F_F0C4) //GPIOD_PSOR
+#define PTC_ADDRESS reinterpret_cast<void*>(0x400FF084) //GPIOC_PSOR
+#define PTD_ADDRESS reinterpret_cast<void*>(0x400FF0C4) //GPIOD_PSOR
+
+// 
+#define INPUT (0<<8)  // INPUT, Disable GPIO, Analog
+#define OUTPUT (1<<8)  // OUTPUT, set to GPIO
 
 // Pressure Transducer Sesnor Pin Designations, IDs, and Calibration Values
 // (sensors are currently uncalibrated)
@@ -214,6 +231,8 @@
 #define PT_CHAMBER_2_PIN        A11
 #define PT_CHAMBER_2_CAL_M      1.0f
 #define PT_CHAMBER_2_CAL_B      0.0f
+
+
 
 
 //Prop Node Initialization Information
