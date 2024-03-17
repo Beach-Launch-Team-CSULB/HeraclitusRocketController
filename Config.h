@@ -128,7 +128,7 @@
 #define FDR_PIN_PWM     9
 
 // Pin Addresses 
-#define PTC13_PCR reinterpret_cast<void*>(0x4004B044) //80
+#define PTC13_PCR reinterpret_cast<void*>(0x4004B034) //80
 #define PTC13_OFFSET 13
 
 #define PTC14_PCR reinterpret_cast<void*>(0x4004B038) //81
@@ -140,20 +140,22 @@
 #define PTC17_PCR reinterpret_cast<void*>(0x4004B044) //84
 #define PTC17_OFFSET 17
 
-#define PTC18_PCR reinterpret_cast<void*>(0x4004B040) //85
+#define PTC18_PCR reinterpret_cast<void*>(0x4004B048) //85
 #define PTC18_OFFSET 18
 
 #define PTC19_PCR reinterpret_cast<void*>(0x4004B04C) //86
 #define PTC19_OFFSET 19
 
-#define PTD10_PCR reinterpret_cast<void*>(0x4004B028) //87
+#define PTD10_PCR reinterpret_cast<void*>(0x4004C028) //87
 #define PTD10_OFFSET 10
 
 // Pin GPIO Set Addresses 
+#define PTC_DATA_DIRECTION reinterpret_cast<void*>(0x400FF094)
 #define PTC_ADDRESS_SET reinterpret_cast<void*>(0x400FF08C) // Changes logic to 1 PSOR
 #define PTC_ADDRESS_CLEAR reinterpret_cast<void*>(0x400FF088) // Changes logic to 0 PCOR
 #define PTC_ADDRESS_DATA reinterpret_cast<void*>(0x400FF080) // "Drives" pin logic PDOR
 
+#define PTD_DATA_DIRECCTION reinterpret_cast<void*>(0x400FF0D4)
 #define PTD_ADDRESS_SET reinterpret_cast<void*>(0x400FF0CC) 
 #define PTD_ADDRESS_CLEAR reinterpret_cast<void*>(0x400FF0C8) 
 #define PTD_ADDRESS_DATA reinterpret_cast<void*>(0x400FF0C0) 
