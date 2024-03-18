@@ -1,6 +1,11 @@
 #include "Valve.h"
 #include "ExtendedIO.h"
 
+    // Constructor
+    Valve::Valve(int id, int pinPWM, int pinDigital) 
+        : id(id), pinPWM(pinPWM), pinDigital(pinDigital), valveOpen(false) {}
+
+
     // Getters
     int Valve::getID() {
         return this->id;
@@ -28,6 +33,10 @@
     }
 
     bool Valve::setValveOpen(bool ValveOpenInput) {
+        
+        ExtendedIO::pinModeExtended(this->pinDigital,OUTPUT);
+        pinMode(this->pinPWM,OUTPUT);
+
         if(ValveOpenInput == true){
             ExtendedIO::digitalWriteExtended(this->pinDigital,1); 
             digitalWrite(this->pinPWM,1);

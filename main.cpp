@@ -1,19 +1,21 @@
+#include "Arduino.h"
 #include <iostream>
 #include <array>
 #include <unordered_map>
 #include "Rocket.h"
 #include "CANDriver.h"
 #include "Arduino.h"
-#include "Sensor.h"
+//#include "Sensor.h"
+#include "Igniter.h"
 #include <unistd.h> // For sleep function
 #include <SD.h>
 #include <SPI.h>
 
-int alara = 0;
+int alara = 1;
 File onBoardLog;
 char* fileLogName = "SoftwareTest-03-15-2024.txt";
 bool sd_write = true;
-Rocket myRocket = NULL;
+Rocket myRocket = Rocket(alara);
 
 void setup() {
     Serial.begin(9600);
@@ -24,18 +26,26 @@ void setup() {
 }
 
 void loop() {
+    /*Igniter();
     for (const auto& pair : myRocket.igniterMap) {
         myRocket.setIgnitionOn(pair.first, true);
-        sleep(1);
+        //sleep(1);
+        delay(1);
         myRocket.setIgnitionOn(pair.first, false);
-        sleep(1);
-    }
-    for (const auto& pair : myRocket.valveMap) {
-        myRocket.setValveOn(pair.first, true);
-        sleep(1);
-        myRocket.setValveOn(pair.first, false);
-        sleep(1);
-    }
+        //sleep(1);
+        delay(1);
+    }*/
+    //for (const auto& pair : myRocket.valveMap) {
+        myRocket.setValveOn(24, true);
+        //sleep(1);
+        delay(1000);
+        myRocket.setValveOn(24, false);
+        //sleep(1);
+
+        /// MILISECONDS
+        delay(1000);
+    //}
+
     if (sd_write) {
         File onBoardLog = SD.open(fileLogName, FILE_WRITE);
         for (const auto& sensor : myRocket.sensorMap) {

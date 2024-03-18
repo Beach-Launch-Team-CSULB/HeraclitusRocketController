@@ -15,6 +15,8 @@ private:
 
 public:
     //Optional Constructor for an uncalibrated sensor
+    Sensor():
+        labelID(0), pinID(0), linCoefM(1.0f), linCoefB(0.0f), value(0.0f) {};
     Sensor(int label, int pin);
     
     //Primary Constructor for sensors
