@@ -10,6 +10,7 @@
 #include <unistd.h> // For sleep function
 #include <SD.h>
 #include <SPI.h>
+#include "ExtendedIO.h"
 
 int alara = 1;
 File onBoardLog;
@@ -23,6 +24,8 @@ void setup() {
         sd_write = false;
     }
     myRocket = Rocket(alara);
+    ExtendedIO::extendedIOsetup();
+
 }
 
 void loop() {

@@ -13,6 +13,7 @@ class ExtendedIO {
     public: 
         static void pinModeExtended(int pin, int value, int data_direction);
         static void digitalWriteExtended(int pin, int value);
+        static void extendedIOsetup();
     private:
         static int digitalPinToBit_int(int pin);
         static int digitalPinToPort_int(int pin);

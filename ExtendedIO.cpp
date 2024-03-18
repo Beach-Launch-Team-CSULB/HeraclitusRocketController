@@ -33,10 +33,11 @@ std::map<RegisterName, uint32_t> baseRegs = {
 
 
 void ExtendedIO::extendedIOsetup() {
-    SIM_SCGC5 |= SIM_SCGC5_PORTA_MASK;
-    SIM_SCGC5 |= SIM_SCGC5_PORTB_MASK;
-    SIM_SCGC5 |= SIM_SCGC5_PORTC_MASK;
-    SIM_SCGC5 |= SIM_SCGC5_PORTD_MASK;
+    uint32_t SCGC5 = 0x40048038;
+    SCGC5 |= (1<<9);
+    SCGC5 |= (1<<10);
+    SCGC5 |= (1<<11);
+    SCGC5 |= (1<<12);
 }
 
 int ExtendedIO::digitalPinToBit_int(int pin) {
