@@ -30,10 +30,10 @@ bool Igniter::setPinDigital(int newPinDigital) {
 }
 
 bool Igniter::setIgniterOn(bool isignitionOn){
-    // TRUE = ON , FALSE = OFF
+    /*Sets the state of Igniter Objects: True (Open) | False (Close)
+    Returns true if successful*/
 
-    //Set Pin Mode to GPIO, an move to constructor
-    ExtendedIO::pinModeExtended(this->pinDigital,OUTPUT);
+    ExtendedIO::pinModeExtended(this->pinDigital,1,OUTPUT); // Sets Pinmode to GPIO, Data Direction OUTPUT
     pinMode(this->pinPWM,OUTPUT);
 
     if(isignitionOn == true){

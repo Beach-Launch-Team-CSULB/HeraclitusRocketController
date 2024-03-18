@@ -69,7 +69,9 @@
 #define SENS_9_12_ENGINE  ((uint32_t) 135)
 #define SENS_13_16_ENGINE ((uint32_t) 136)
 
-
+// Data Direction Inputs 
+#define INPUT 0
+#define OUTPUT 1
 
 // Igniter Digital Pin Designations and IDs | ALARA LOWER 
 
@@ -159,10 +161,6 @@
 #define PTD_ADDRESS_SET reinterpret_cast<void*>(0x400FF0CC) 
 #define PTD_ADDRESS_CLEAR reinterpret_cast<void*>(0x400FF0C8) 
 #define PTD_ADDRESS_DATA reinterpret_cast<void*>(0x400FF0C0) 
-
-// 
-#define INPUT (0<<8)  // INPUT, Disable GPIO, Analog
-#define OUTPUT (1<<8)  // OUTPUT, set to GPIO
 
 // Pressure Transducer Sesnor Pin Designations, IDs, and Calibration Values
 // (sensors are currently uncalibrated)
