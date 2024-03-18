@@ -43,21 +43,68 @@ void loop() {
         //sleep(1);
         delay(1);
     }*/
+
+    int address = 0x40048038;
+    int* pcontent = (int*)address;
+    int content = *pcontent;
+    Serial.println("BeforeVVV");
+    Serial.println(content);
+
     //for (const auto& pair : myRocket.valveMap) {
         myRocket.setValveOn(24, true);
         //sleep(1);
         delay(1000);
         myRocket.setValveOn(24, false);
         //sleep(1);
+        /*
+
+        /// MILISECONDS
+        delay(1000);
+
+        myRocket.setValveOn(25, true);
+        //sleep(1);
+        delay(1000);
+        myRocket.setValveOn(25, false);
+        //sleep(1);
+
+        /// MILISECONDS
+        delay(1000);
+        myRocket.setValveOn(26, true);
+        //sleep(1);
+        delay(1000);
+        myRocket.setValveOn(26, false);
+        //sleep(1);
+
+        /// MILISECONDS
+        delay(1000);
+        myRocket.setValveOn(27, true);
+        //sleep(1);
+        delay(1000);
+        myRocket.setValveOn(27, false);
+        //sleep(1);
+
+        /// MILISECONDS
+        delay(1000);
+        myRocket.setValveOn(28, true);
+        //sleep(1);
+        delay(1000);
+        myRocket.setValveOn(28, false);
+        //sleep(1);
+
+        /// MILISECONDS
+        delay(1000);
+        myRocket.setValveOn(29, true);
+        //sleep(1);
+        delay(1000);
+        myRocket.setValveOn(29, false);
+        //sleep(1);
 
         /// MILISECONDS
         delay(1000);
     //}
-
-    
-    int address = 0x40048038;
-    int* pcontent = (int*)address;
-    int content = *pcontent;
+    */
+    delay(5000);
+    Serial.println("AfterVVV");
     Serial.println(content);
 
     if (sd_write) {
