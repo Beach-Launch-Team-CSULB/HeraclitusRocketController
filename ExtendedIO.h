@@ -11,6 +11,8 @@ class ExtendedIO {
         static void digitalWriteExtended(int pin, int value);
 
     private:
+        int digitalPinToBit(int pin);
+        int digitalPinToPort(int pin);
         enum Register_Name {
             PCR,
             PCOR,
