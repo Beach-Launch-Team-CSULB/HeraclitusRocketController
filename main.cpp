@@ -11,6 +11,7 @@
 #include <SD.h>
 #include <SPI.h>
 #include "ExtendedIO.h"
+#include <Wire.h>
 
 int alara = 1;
 File onBoardLog;
@@ -19,12 +20,16 @@ bool sd_write = true;
 Rocket myRocket = Rocket(alara);
 
 void setup() {
+    
     Serial.begin(9600);
+    Serial.println("Serial Test");
+    Wire.begin();
+    SPI.begin();
     if (!SD.begin(BUILTIN_SDCARD)) {
         sd_write = false;
     }
     myRocket = Rocket(alara);
-    ExtendedIO::extendedIOsetup();
+    //ExtendedIO::extendedIOsetup();
 
 }
 
@@ -32,7 +37,7 @@ void loop() {
     /*Igniter();
     for (const auto& pair : myRocket.igniterMap) {
         myRocket.setIgnitionOn(pair.first, true);
-        //sleep(1);
+ S       //sleep(1);
         delay(1);
         myRocket.setIgnitionOn(pair.first, false);
         //sleep(1);
@@ -48,6 +53,12 @@ void loop() {
         /// MILISECONDS
         delay(1000);
     //}
+
+    
+    int address = 0x40048038;
+    int* pcontent = (int*)address;
+    int content = *pcontent;
+    Serial.println(content);
 
     if (sd_write) {
         File onBoardLog = SD.open(fileLogName, FILE_WRITE);
