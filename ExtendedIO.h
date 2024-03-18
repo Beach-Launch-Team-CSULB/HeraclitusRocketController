@@ -11,7 +11,8 @@ class ExtendedIO {
         static void digitalWriteExtended(int pin, int value);
 
     private:
-        int 
+        int digitalPinToBit(int pin);
+        int digitalPinToPort(int pin);
 };
 
 #endif
