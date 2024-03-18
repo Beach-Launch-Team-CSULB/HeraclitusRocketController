@@ -14,10 +14,10 @@ class ExtendedIO {
         int digitalPinToBit(int pin);
         int digitalPinToPort(int pin);
         enum Register_Name {
-            PCR,
-            PCOR,
-            PSOR,
-            PDDR
+            PCR, // 4004_9000 
+            PCOR, // 400FF048
+            PSOR, // 400FF044
+            PDDR // 400FF014
         };
 };
 
