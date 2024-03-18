@@ -13,6 +13,7 @@ class ExtendedIO {
     private:
         int digitalPinToBit(int pin);
         int digitalPinToPort(int pin);
+        volatile uint32_t findRegister(int pin, RegisterName reg);
         enum Register_Name {
             PCR, // 4004_9000 
             PCOR, // 400FF048

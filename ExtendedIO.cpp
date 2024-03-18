@@ -2,46 +2,33 @@
 #include "ExtendedIO.h"
 #include "iostream"
 #include "Config.h"
-
-// Sets up PIN References so when a pin DIG ID is passed in, you can find the exact offset in the register 
-static std::map<int, int> pin_offset_map = {
-    {IGN1_PIN_DIG,PTC16_OFFSET},
-    {IGN2_PIN_DIG,PTC14_OFFSET},
-    {HP_PIN_DIG,PTD10_OFFSET},
-    {HV_PIN_DIG,PTC19_OFFSET},
-    {FMV_PIN_DIG,PTC18_OFFSET},
-    {LMV_PIN_DIG,PTC17_OFFSET},
-    {LV_PIN_DIG,PTD10_OFFSET},
-    {LDV_PIN_DIG,PTC18_OFFSET},
-    {LDR_PIN_DIG,PTC17_OFFSET},
-    {FV_PIN_DIG,PTC16_OFFSET},
-    {FDV_PIN_DIG,PTC14_OFFSET},
-    {FDR_PIN_DIG,PTC13_OFFSET}
-    };    
+   
 
 // Mapping from pin to {bit offset, port}
 // Port A = 0 ... D = 3
 std::map<int, std::array<int, 2>> pinMap = {
-        {IGN1_PIN_DIG,{16, 2}},  
-        {IGN2_PIN_DIG,{14,2}},
-        {HP_PIN_DIG,{10,2}},
-        {HV_PIN_DIG,{19,2}},
-        {FMV_PIN_DIG,{18,2}},
-        {LMV_PIN_DIG,{17,2}},
-        {LV_PIN_DIG,{10,3}},
-        {LDV_PIN_DIG,{8,2}},
-        {LDR_PIN_DIG,{17,2}},
-        {FV_PIN_DIG,{16,2}},
-        {FDV_PIN_DIG,{14,2}},
-        {FDR_PIN_DIG,{13,2}}
-    };
+    {IGN1_PIN_DIG,{16, 2}},  
+    {IGN2_PIN_DIG,{14,2}},
+    {HP_PIN_DIG,{10,2}},
+    {HV_PIN_DIG,{19,2}},
+    {FMV_PIN_DIG,{18,2}},
+    {LMV_PIN_DIG,{17,2}},
+    {LV_PIN_DIG,{10,3}},
+    {LDV_PIN_DIG,{8,2}},
+    {LDR_PIN_DIG,{17,2}},
+    {FV_PIN_DIG,{16,2}},
+    {FDV_PIN_DIG,{14,2}},
+    {FDR_PIN_DIG,{13,2}}
+};
 
+// Base register addresses
+// Used to calculate target register
 std::map<std::string, uint32_t> baseRegs = {
     {"PCR", 0x40049000},
     {"PCOR", 0x400FF048},
     {"PSOR", 0x400FF044},
     {"PDDR", 0x400FF014}
-}
+};
 
 *PTC_DATA_DIRECTION |= 1;
 *PTD_DATA_DIRECCTION |= 1;
@@ -100,24 +87,22 @@ void ExtendedIO::digitalWriteExtended(int pin, int value) {
 }
 
 int ExtendedIO::digitalPinToBit(int pin) {
-    pinMap[pin][0] = offset;
+    offset = pinMap[pin][0];
     if (offset == pinMap.end()) return -1;
     return offset;
 }
 
 int ExtendedIO::digitalPinToPort(int pin) {
-    pinMap[pin][1] = port;
+    port = pinMap[pin][1];
     if (port == pinMap.end()) return -1;
     return port;
 }
 
 uint32_t ExtendedIO::fetchRegister(int pin, Register_Name reg) {
     register = baseRegs[reg];
-    if (register = baseRegs.end()) return -1
-    if (register == "PCR") {
-        return volatile uint32_t (register + digitalPinToPort(pin) * 0x1000 + digitalPinToBit(pin) * 4);
-    }
-    else {
-        return volatile uint32_t (register + 0x40 * digitalPinToPort(pin));
-    }
+    pin = digitalPinToPort(pin);
+    port = digitalPinToBit(pin);
+    if (register == baseRegs.end() || pin == -1  || port == -1) return -1;
+    if (register == "PCR") return volatile uint32_t (register + pin * 0x1000 + port * 4);
+    else return volatile uint32_t (register + 0x40 * pin);
 }
