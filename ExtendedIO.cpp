@@ -3,22 +3,6 @@
 #include "iostream"
 #include "Config.h"
 
-// Sets up PIN References so when a pin DIG ID is passed in, you can find the exact register address to write to
-static std::map<int, void*> pin_address_map = {
-    {IGN1_PIN_DIG,PTC16_PCR},
-    {IGN2_PIN_DIG,PTC14_PCR},
-    {HP_PIN_DIG,PTD10_PCR},
-    {HV_PIN_DIG,PTC19_PCR},
-    {FMV_PIN_DIG,PTC18_PCR},
-    {LMV_PIN_DIG,PTC17_PCR},
-    {LV_PIN_DIG,PTD10_PCR},
-    {LDV_PIN_DIG,PTC18_PCR},
-    {LDR_PIN_DIG,PTC17_PCR},
-    {FV_PIN_DIG,PTC16_PCR},
-    {FDV_PIN_DIG,PTC14_PCR},
-    {FDR_PIN_DIG,PTC13_PCR}
-    };
-
 // Sets up PIN References so when a pin DIG ID is passed in, you can find the exact offset in the register 
 static std::map<int, int> pin_offset_map = {
     {IGN1_PIN_DIG,PTC16_OFFSET},
@@ -38,6 +22,7 @@ static std::map<int, int> pin_offset_map = {
 // Mapping from pin to {bit offset, port}
 // Port A = 0 ... D = 3
 std::map<int, std::array<int, 2>> pinMap = {
+        {IGN1_PIN_DIG, {}}
         {50, {0, 0}},
         {51, {1, 0}},
         {52, {2, 0}},
@@ -122,51 +107,88 @@ std::map<int, std::array<int, 2>> pinMap = {
         {144, {15, 3}}
     };
 
+std::map<std::string, uint32_t> baseRegs = {
+    {"PCR", 0x40049000},
+    {"PCOR", 0x400FF048},
+    {"PSOR", 0x400FF044},
+    {"PDDR", 0x400FF014}
+}
+
 *PTC_DATA_DIRECTION |= 1;
 *PTD_DATA_DIRECCTION |= 1;
  
 
- 
-void ExtendedIO::pinModeExtended(int pin, int isGPIO, int dataDirection) {
-    /*  Argument 1: Pin # designation specified on the ALARA V2.x MCU Pin Map and gets the address 
-        Argument 2: Specifies if this is a General Purpose Input/Output pin or not 
-        Manually writes to Registers that define given pin behaviors
-    */
+void ExtendedIO::pinModeExtended(int pin, int isGPIO) {
+    //Initilzes pin and sets mode to GPIO, this is only working for PORTx_PCRn registers 
     
-    volatile uint32_t* PCR = digitalPinToPort(pin,PCR);     // Gets the exact address of the pin control register
-    *PCR |= (isGPIO << 8);                                  // Sets pin PCR to GPIO Mode, 0 is INPUT, 1 is OUTPUT
+    //Gets the exact address of the pin # passed in
+    volatile uint32_t* registerAddress = static_cast<volatile uint32_t*>(pin_address_map[pin]);  
 
-    volatile uint32_t* PDDR = digitalPinToPort(pin, PDDR);  // Gets the exact address of the Port Data Direction Register
-    int PDDR_Offset = digitalPinToBit(pin)                  // Gets bit offset for PDDR Register 
-    *PDDR |= (dataDirection << PDDR_Offset);                // Sets pin PDDR to dataDirection Value at correct bit offset
+    
+    *registerAddress |= (isGPIO << 8); // Sets it to GPIO Mode, 0 is INPUT, 1 is OUTPUT
+    
+
+
+    //If you need another mode add it here and add an argument, as of now idk what else is needed
 }
 
 void ExtendedIO::digitalWriteExtended(int pin, int value) {
-    /*  Argument 1: Pin # designation specified on the ALARA V2.x MCU Pin Map and gets the address 
-        Argument 2: 1 High, 0 Low
-        Manually Writes Commands to Ports, Pinmode must be set prior
-    */
-    int pinBitOffset = digitalPinToBit(pin);                    // Gets bit offset for both PCOR & PSOR Register 
-    if (value == 0){  // Clear port to 0: Low
-        volatile uint32_t* PCOR = digitalPinToPort(pin,PCOR);   // Gets the exact address of the Port Clear Output Register
-        *PCOR |= (0 << pinBitOffset);                           // Sets pin PCOR to 0 (Low) at correct bit offset
+    //Pin digital is getting sent here 
+
+    volatile uint32_t* registerAddress = static_cast<volatile uint32_t*>(pin_address_map[pin]);
+    volatile uint32_t* theonlyoneonPTD = static_cast<volatile uint32_t*>(PTD10_PCR);
+
+    if(value==1){
+          //Duck-Tape Code I know this is bad :<   -Bonnie
+        if(*registerAddress == *theonlyoneonPTD){  //if PTD       //FOR BRANDON: Should be executing here with pin = 87 and value = 1
+            //volatile uint32_t* registerPSORAddress = static_cast<volatile uint32_t*>(PTD_ADDRESS_SET);  
+            //*registerPSORAddress |= (value << pin_PSOR_map[pin]); //Write 1 to the offset spot
+
+            volatile uint32_t* registerPDORAddress = static_cast<volatile uint32_t*>(PTD_ADDRESS_DATA); 
+            *registerPDORAddress |= (value << pin_offset_map[pin]); //Write 1 to "Drive" bit
+        }
+        else{  // PTC
+            //volatile uint32_t* registerPSORAddress = static_cast<volatile uint32_t*>(PTC_ADDRESS_SET); 
+            //*registerPSORAddress |= (value << pin_PSOR_map[pin]); //Write 1 to the offset spot
+
+            volatile uint32_t* registerPDORAddress = static_cast<volatile uint32_t*>(PTC_ADDRESS_DATA); 
+            *registerPDORAddress |= (value << pin_offset_map[pin]); //Write 1 to "Drive" bit
+        }
+    }else{
+          if(*registerAddress == *theonlyoneonPTD){  //if PTD
+            //volatile uint32_t* registerPSORAddress = static_cast<volatile uint32_t*>(PTD_ADDRESS_CLEAR); 
+            //*registerPSORAddress |= (value << pin_PSOR_map[pin]); //Write 0 to the offset spot
+            volatile uint32_t* registerPDORAddress = static_cast<volatile uint32_t*>(PTD_ADDRESS_DATA); 
+            *registerPDORAddress |= (value << pin_offset_map[pin]); //Write 0 to "Drive" bit
+        }
+        else{  // PTC
+            //volatile uint32_t* registerPSORAddress = static_cast<volatile uint32_t*>(PTC_ADDRESS_CLEAR); 
+            //*registerPSORAddress |= (value << pin_PSOR_map[pin]); //Write 0 to the offset spot
+            volatile uint32_t* registerPDORAddress = static_cast<volatile uint32_t*>(PTD_ADDRESS_DATA); 
+            *registerPDORAddress |= (value << pin_offset_map[pin]); //Write 0 to "Drive" bit
+        }
     }
-    if (value == 1){  // Sets port to 1: High
-        volatile uint32_t* PSOR = digitalPinToPort(pin,PSOR);   // Gets the exact address of the Port Set Output Register
-        *PSOR |= (1 << pinBitOffset);                           // Sets pin PSOR to 1 (High) at correct bit offset
-    }
-    
 }
 
 int ExtendedIO::digitalPinToBit(int pin) {
-    pinMap[pin][0] = offset
+    pinMap[pin][0] = offset;
     if (offset == pinMap.end()) return -1;
-    return offset
+    return offset;
 }
 
 int ExtendedIO::digitalPinToPort(int pin) {
-    pinMap[pin][1] = port
+    pinMap[pin][1] = port;
     if (port == pinMap.end()) return -1;
-    return port
+    return port;
 }
 
+uint32_t ExtendedIO::fetchRegister(int pin, Register_Name reg) {
+    register = baseRegs[reg];
+    if (register = baseRegs.end()) return -1
+    if (register == "PCR") {
+        return volatile uint32_t (register + digitalPinToPort(pin) * 0x1000 + digitalPinToBit(pin) * 4);
+    }
+    else {
+        return volatile uint32_t (register + 0x40 * digitalPinToPort(pin));
+    }
+}
