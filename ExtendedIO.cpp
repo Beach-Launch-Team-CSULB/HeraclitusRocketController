@@ -30,6 +30,13 @@ std::map<std::string, uint32_t> baseRegs = {
 };
 
 
+void ExtendedIO::extendedIOsetup() {
+    SIM_SCGC5 |= SIM_SCGC5_PORTA_MASK;
+    SIM_SCGC5 |= SIM_SCGC5_PORTB_MASK;
+    SIM_SCGC5 |= SIM_SCGC5_PORTC_MASK;
+    SIM_SCGC5 |= SIM_SCGC5_PORTD_MASK;
+}
+
 int ExtendedIO::digitalPinToBit(int pin) {
     int offset = pinMap[pin][0];
     if (offset == pinMap.end()) return -1;
