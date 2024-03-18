@@ -31,6 +31,14 @@ std::map<RegisterName, uint32_t> baseRegs = {
     {PDDR, 0x400FF014}
 };
 
+
+void ExtendedIO::extendedIOsetup() {
+    SIM_SCGC5 |= SIM_SCGC5_PORTA_MASK;
+    SIM_SCGC5 |= SIM_SCGC5_PORTB_MASK;
+    SIM_SCGC5 |= SIM_SCGC5_PORTC_MASK;
+    SIM_SCGC5 |= SIM_SCGC5_PORTD_MASK;
+}
+
 int ExtendedIO::digitalPinToBit_int(int pin) {
     auto it = pinMap.find(pin);
     if (it == pinMap.end()) return -1;

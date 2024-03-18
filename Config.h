@@ -70,64 +70,65 @@
 #define SENS_13_16_ENGINE ((uint32_t) 136)
 
 // Data Direction Inputs 
-#define INPUT 0
-#define OUTPUT 1
+#define INPUT  (uint32_t)0
+#define OUTPUT (uint32_t)1
 
 // Igniter Digital Pin Designations and IDs | ALARA LOWER 
 
-#define IGN1_ID         10  // Igniter A / ENG-IGNA / ALARA Lower
-#define IGN1_PIN_DIG    83  //ALARA: DIG5 | Teensy 3.6 MCU Pin: PTC16
-#define IGN1_PIN_PWM    2 
+#define IGN1_ID         (uint32_t)10  // Igniter A / ENG-IGNA / ALARA Lower
+#define IGN1_PIN_DIG    (uint32_t)83  //ALARA: DIG5 | Teensy 3.6 MCU Pin: PTC16
+#define IGN1_PIN_PWM    (uint32_t)2 
 
 
-#define IGN2_ID         11  // Igniter B / ENG-IGNB
-#define IGN2_PIN_DIG    81  // ALARA: DIG5 | Teensy 3.6 MCU Pin: PTC14
-#define IGN2_PIN_PWM    10  // In Dan's Code they are both 2?  
+#define IGN2_ID         (uint32_t)11  // Igniter B / ENG-IGNB
+#define IGN2_PIN_DIG    (uint32_t)81  // ALARA: DIG5 | Teensy 3.6 MCU Pin: PTC14
+#define IGN2_PIN_PWM    (uint32_t)10  // In Dan's Code they are both 2?  
       
 
 // Valve Digital Pin Designations and IDs | ALARA LOWER 
 
-#define HP_ID           20  // High Press valve / SV HI PRES  
-#define HP_PIN_DIG      87  // ALARA: DIG1 | Teensy 3.6 MCU Pin: PTD10
-#define HP_PIN_PWM      5
+#define HP_ID           (uint32_t)20  // High Press valve / SV HI PRES  
+#define HP_PIN_DIG      (uint32_t)87  // ALARA: DIG1 | Teensy 3.6 MCU Pin: PTD10
+#define HP_PIN_PWM      (uint32_t)5
 
-#define HV_ID           21  // High Vent valve / SV HI PRES V 
-#define HV_PIN_DIG      86  // ALARA: DIG2 | Teensy 3.6 MCU Pin: PTC19
-#define HV_PIN_PWM      6
+#define HV_ID           (uint32_t)21  // High Vent valve / SV HI PRES V 
+#define HV_PIN_DIG      (uint32_t)86  // ALARA: DIG2 | Teensy 3.6 MCU Pin: PTC19
+#define HV_PIN_PWM      (uint32_t)6
 
-#define FMV_ID          22  // Fuel Main valve / SV MV FUEL 
-#define FMV_PIN_DIG     85  // ALARA: DIG3 | Teensy 3.6 MCU Pin: PTC18
-#define FMV_PIN_PWM     8  
+#define FMV_ID          (uint32_t)22  // Fuel Main valve / SV MV FUEL 
+#define FMV_PIN_DIG     (uint32_t)85  // ALARA: DIG3 | Teensy 3.6 MCU Pin: PTC18
+#define FMV_PIN_PWM     (uint32_t)8  
 
-#define LMV_ID          23  // Lox Main valve / SV MV LOX
-#define LMV_PIN_DIG     84  // ALARA: DIG4 | Teensy 3.6 MCU Pin: PTC17
-#define LMV_PIN_PWM     7
+#define LMV_ID          (uint32_t)23  // Lox Main valve / SV MV LOX
+#define LMV_PIN_DIG     (uint32_t)84  // ALARA: DIG4 | Teensy 3.6 MCU Pin: PTC17
+#define LMV_PIN_PWM     (uint32_t)7
 
 // Valve Digital Pin Designations and IDs | ALARA UPPER 
 
-#define LV_ID           24  // Lox Vent valve / SV LOX V
-#define LV_PIN_DIG      87  // ALARA: DIG1 | Teensy 3.6 MCU Pin: PTD10
-#define LV_PIN_PWM      5
+#define LV_ID           (uint32_t)24  // Lox Vent valve / SV LOX V
+#define LV_PIN_DIG      (uint32_t)87  // ALARA: DIG1 | Teensy 3.6 MCU Pin: PTD10
+#define LV_PIN_PWM      (uint32_t)5
 
-#define LDV_ID          25  // Lox Dome Vent valve / SV DREG L
-#define LDV_PIN_DIG     85  // ALARA: DIG3 | Teensy 3.6 MCU Pin: PTC18
-#define LDV_PIN_PWM     8
+#define LDV_ID          (uint32_t)25  // Lox Dome Vent valve / SV DREG L
+#define LDV_PIN_DIG     (uint32_t)85  // ALARA: DIG3 | Teensy 3.6 MCU Pin: PTC18
+#define LDV_PIN_PWM     (uint32_t)8
 
-#define LDR_ID          26  // Lox Dome Reg valve / SV DREG LV
-#define LDR_PIN_DIG     84  // ALARA: DIG4 | Teensy 3.6 MCU Pin: PTC17
-#define LDR_PIN_PWM     7
+#define LDR_ID          (uint32_t)26  // Lox Dome Reg valve / SV DREG LV
+#define LDR_PIN_DIG     (uint32_t)84  // ALARA: DIG4 | Teensy 3.6 MCU Pin: PTC17
+#define LDR_PIN_PWM     (uint32_t)7
 
-#define FV_ID           27  // Fuel Vent valve / SV FUEL V 
-#define FV_PIN_DIG      83  // ALARA: DIG5 | Teensy 3.6 MCU Pin: PTC16
-#define FV_PIN_PWM      2
+#define FV_ID           (uint32_t)27  // Fuel Vent valve / SV FUEL V 
+#define FV_PIN_DIG      (uint32_t)83  // ALARA: DIG5 | Teensy 3.6 MCU Pin: PTC16
+#define FV_PIN_PWM      (uint32_t)2
 
-#define FDV_ID          28  // Fuel Dome Vent valve / SV DREG F V 
-#define FDV_PIN_DIG     81  // ALARA: DIG7 | Teensy 3.6 MCU Pin: PTC14
-#define FDV_PIN_PWM     10
+#define FDV_ID          (uint32_t)28  // Fuel Dome Vent valve / SV DREG F V 
+#define FDV_PIN_DIG     (uint32_t)81  // ALARA: DIG7 | Teensy 3.6 MCU Pin: PTC14
+#define FDV_PIN_PWM     (uint32_t)10
 
-#define FDR_ID          29  // Fuel Dome Reg valve /  SV DREG F
-#define FDR_PIN_DIG     80  // ALARA: DIG8 | Teensy 3.6 MCU Pin: PTC13
-#define FDR_PIN_PWM     9
+#define FDR_ID          (uint32_t)29  // Fuel Dome Reg valve /  SV DREG F
+#define FDR_PIN_DIG     (uint32_t)80  // ALARA: DIG8 | Teensy 3.6 MCU Pin: PTC13
+#define FDR_PIN_PWM     (uint32_t)9
+
 
 
 // Pressure Transducer Sesnor Pin Designations, IDs, and Calibration Values
