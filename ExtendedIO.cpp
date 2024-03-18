@@ -32,13 +32,13 @@ std::map<std::string, uint32_t> baseRegs = {
 
 int ExtendedIO::digitalPinToBit(int pin) {
     int offset = pinMap[pin][0];
-    if (offset == pinMap.end()) return -1;
+    if (offset == pinMap.end()) return 0;
     return offset;
 }
 
 int ExtendedIO::digitalPinToPort(int pin) {
     int port = pinMap[pin][1];
-    if (port == pinMap.end()) return -1;
+    if (port == pinMap.end()) return 0;
     return port;
 }
 
@@ -58,11 +58,24 @@ void ExtendedIO::pinModeExtended(int pin, int isGPIO, int dataDirection) {
     */
     
     volatile uint32_t* PCR = fetchRegister(pin,PCR);     // Gets the exact address of the pin control register
-    *PCR |= (isGPIO << 8);                                  // Sets pin PCR to GPIO Mode, 0 is Analog/Disabled, 1 is GPIO
+    if(*PCR != uint32_t(0)){                             // If it is a valid Pin with an address 
+        if(isGPIO == 1){
+            *PCR |= (1 << 8);                           // Sets pin PCR to GPIO Mode, 0 is Analog/Disabled, 1 is GPIO
+        }else{
+            *PCR &= (0 << 8);                           // Sets pin PCR to GPIO Mode, 0 is Analog/Disabled, 1 is GPIO
+        }
+    }
 
     volatile uint32_t* PDDR = fetchRegister(pin, PDDR);  // Gets the exact address of the Port Data Direction Register
-    int PDDR_Offset = digitalPinToBit(pin)                  // Gets bit offset for PDDR Register 
-    *PDDR |= (dataDirection << PDDR_Offset);                // Sets pin PDDR to dataDirection Value at correct bit offset 
+    if(*PDDR != 0){
+        int PDDR_Offset = digitalPinToBit(pin);          // Gets bit offset for PDDR Register 
+        if(dataDirection == 1){
+            *PDDR |= (1 << PDDR_Offset);                 // Sets pin PDDR to 1 at correct bit offset 
+        }
+        else{
+            *PDDR &= (0 << PDDR_Offset);                 // Sets pin PDDR to 0 at correct bit offset
+        }
+    }
 }
 
 void ExtendedIO::digitalWriteExtended(int pin, int value) {
@@ -70,13 +83,17 @@ void ExtendedIO::digitalWriteExtended(int pin, int value) {
         Argument 2: 1 High, 0 Low
         Manually Writes Commands to Ports, Pinmode must be set prior
     */
-    int pinBitOffset = digitalPinToBit(pin);                    // Gets bit offset for both PCOR & PSOR Register 
+    int pinBitOffset = digitalPinToBit(pin);                   // Gets bit offset for both PCOR & PSOR Register 
     if (value == 0){  // Clear port to 0: Low
-        volatile uint32_t* PCOR = fetchRegister(pin,PCOR);   // Gets the exact address of the Port Clear Output Register
-        *PCOR |= (0 << pinBitOffset);                           // Sets pin PCOR to 0 (Low) at correct bit offset
+        volatile uint32_t* PCOR = fetchRegister(pin,PCOR);     // Gets the exact address of the Port Clear Output Register
+        if(*PCOR != 0){                                        // If pin is correct & a register is returned 
+            *PCOR |= (1 << pinBitOffset);                      // Clears PDOR bit to 0 (Low) at correct bit offset
+        }
     }
     if (value == 1){  // Sets port to 1: High
-        volatile uint32_t* PSOR = fetchRegister(pin,PSOR);   // Gets the exact address of the Port Set Output Register
-        *PSOR |= (1 << pinBitOffset);                           // Sets pin PSOR to 1 (High) at correct bit offset
+        volatile uint32_t* PSOR = fetchRegister(pin,PSOR);     // Gets the exact address of the Port Set Output Register
+        if(*PSOR != 0){                                        // If pin is correct & a register is returned
+            *PSOR |= (1 << pinBitOffset);                          // Sets PDOR bit to 1 (High) at correct bit offset
+        }
     }
 
