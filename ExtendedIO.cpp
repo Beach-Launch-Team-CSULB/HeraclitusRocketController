@@ -79,9 +79,9 @@ void ExtendedIO::pinModeExtended(int pin, int isGPIO, int dataDirection) {
     uint32_t PCR_address = fetchRegister(pin,PCR);     // Gets the exact address of the pin control register
     if(PCR_address != uint32_t(0)){                             // If it is a valid Pin with an address 
         if(isGPIO == 1){
-            (*(volatile uint32_t*) PCR_address) |= PORT_PCR_MUX(0x1);                          // Sets pin PCR to GPIO Mode, 0 is Analog/Disabled, 1 is GPIO
+            (*(volatile uint32_t*) PCR_address) = PORT_PCR_MUX(0x1);                          // Sets pin PCR to GPIO Mode, 0 is Analog/Disabled, 1 is GPIO
         }else{
-            (*(volatile uint32_t*) PCR_address) &= PORT_PCR_MUX(0x0);                        // Sets pin PCR to Analog/Disabled, 1 is GPIO
+            (*(volatile uint32_t*) PCR_address) = PORT_PCR_MUX(0x0);                        // Sets pin PCR to Analog/Disabled, 1 is GPIO
         }
     }
 
@@ -89,10 +89,10 @@ void ExtendedIO::pinModeExtended(int pin, int isGPIO, int dataDirection) {
     if(PDDR_address != 0){
         int PDDR_Offset = digitalPinToBit_int(pin);          // Gets bit offset for PDDR Register 
         if(dataDirection == 1){
-            (*(volatile uint32_t*)PDDR_address) |= (1 << PDDR_Offset);                 // Sets pin PDDR to 1 at correct bit offset 
+            (*(volatile uint32_t*)PDDR_address) = (1 << PDDR_Offset);                 // Sets pin PDDR to 1 at correct bit offset 
         }
         else{
-            (*(volatile uint32_t*)PDDR_address) &= (0 << PDDR_Offset);                 // Sets pin PDDR to 0 at correct bit offset
+            (*(volatile uint32_t*)PDDR_address) = (0 << PDDR_Offset);                 // Sets pin PDDR to 0 at correct bit offset
         }
     }
 }
