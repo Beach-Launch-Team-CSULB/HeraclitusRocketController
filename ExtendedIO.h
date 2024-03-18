@@ -17,7 +17,7 @@ class ExtendedIO {
     private:
         static int digitalPinToBit_int(int pin);
         static int digitalPinToPort_int(int pin);
-        static volatile uint32_t fetchRegister(int pin, RegisterName reg);
+        static uint32_t fetchRegister(int pin, RegisterName reg);
 };
 
 #endif
