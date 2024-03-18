@@ -34,6 +34,7 @@ void setup() {
 }
 
 void loop() {
+    
     /*Igniter();
     for (const auto& pair : myRocket.igniterMap) {
         myRocket.setIgnitionOn(pair.first, true);
@@ -44,11 +45,17 @@ void loop() {
         delay(1);
     }*/
 
+    // You need a delay here or the first print will not work. 
+    delay(1000);
     int address = 0x40048038;
     int* pcontent = (int*)address;
     int content = *pcontent;
+
+
     Serial.println("BeforeVVV");
     Serial.println(content);
+
+    /*
 
     //for (const auto& pair : myRocket.valveMap) {
         myRocket.setValveOn(24, true);
@@ -56,7 +63,7 @@ void loop() {
         delay(1000);
         myRocket.setValveOn(24, false);
         //sleep(1);
-        /*
+        
 
         /// MILISECONDS
         delay(1000);
@@ -103,9 +110,11 @@ void loop() {
         delay(1000);
     //}
     */
-    delay(5000);
+    
+    //delay(5000);
     Serial.println("AfterVVV");
     Serial.println(content);
+    
 
     if (sd_write) {
         File onBoardLog = SD.open(fileLogName, FILE_WRITE);
