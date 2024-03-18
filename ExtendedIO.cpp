@@ -3,6 +3,7 @@
 #include "iostream"
 #include "Config.h"
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 <<<<<<< HEAD
  
@@ -33,6 +34,9 @@ static std::map<int, int> pin_offset_map = {
 =======
    
 >>>>>>> 9e85b59 (fixed syntax errors)
+=======
+   
+>>>>>>> 425a07317eaba82edfe3238046def0deb42fd02e
 
 // Mapping from pin to {bit offset, port}
 // Port A = 0 ... D = 3
@@ -59,17 +63,30 @@ std::map<std::string, uint32_t> baseRegs = {
     {"PSOR", 0x400FF044},
     {"PDDR", 0x400FF014}
 };
+<<<<<<< HEAD
+=======
 
-*PTC_DATA_DIRECTION |= 1;
-*PTD_DATA_DIRECCTION |= 1;
- 
+>>>>>>> 425a07317eaba82edfe3238046def0deb42fd02e
 
+
+<<<<<<< HEAD
 void ExtendedIO::pinModeExtended(int pin, int isGPIO) {
     //Initilzes pin and sets mode to GPIO, this is only working for PORTx_PCRn registers 
     
     //Gets the exact address of the pin # passed in
     volatile uint32_t* registerAddress = static_cast<volatile uint32_t*>(pin_address_map[pin]);  
 >>>>>>> afc0e8b (Wrote fetch register function)
+=======
+ 
+void ExtendedIO::pinModeExtended(int pin, int isGPIO, int dataDirection) {
+    /*  Argument 1: Pin # designation specified on the ALARA V2.x MCU Pin Map and gets the address 
+        Argument 2: Specifies if this is a General Purpose Input/Output pin or not 
+        Manually writes to Registers that define given pin behaviors
+    */
+    //TODO: Add for off 
+    volatile uint32_t* PCR = digitalPinToPort(pin,PCR);     // Gets the exact address of the pin control register
+    *PCR |= (isGPIO << 8);                                  // Sets pin PCR to GPIO Mode, 0 is INPUT, 1 is OUTPUT
+>>>>>>> 425a07317eaba82edfe3238046def0deb42fd02e
 
     
     *registerAddress |= (isGPIO << 8); // Sets it to GPIO Mode, 0 is INPUT, 1 is OUTPUT
