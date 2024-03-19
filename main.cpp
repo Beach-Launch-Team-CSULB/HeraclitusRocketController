@@ -47,26 +47,46 @@ void loop() {
 
     // You need a delay here or the first print will not work. 
     delay(1000);
-    int address = 0x40048038;
+    int address = 0x400FF100;       //PDOR for LV valve 
     int* pcontent = (int*)address;
     int content = *pcontent;
 
+    int pcr_address = 0x4004C028;       //PCR for LV valve PTD10
+    int* pcr_pcontent = (int*)address;
+    int pcr_content = *pcontent;
 
-    Serial.println("BeforeVVV");
+    int pddr_address = 0x400FF0D4;       //PDDR for LV valve
+    int* pddr_pcontent = (int*)address;
+    int pddr_content = *pcontent;
+    
+
+    Serial.println("PDOR BeforeVVV");
     Serial.println(content);
-
-    /*
-
+    Serial.println("PCR BeforeVVV");
+    Serial.println(pcr_content);
+    Serial.println("PDDR BeforeVVV");
+    Serial.println(pddr_content);
+   
     //for (const auto& pair : myRocket.valveMap) {
         myRocket.setValveOn(24, true);
         //sleep(1);
         delay(1000);
+        Serial.println("PDOR AfterVVV");
+        Serial.println(content);
+
+        Serial.println("PCR AfterVVV");
+        Serial.println(pcr_content);
+
+        Serial.println("PDDR AfterVVV");
+        Serial.println(pddr_content);
+
         myRocket.setValveOn(24, false);
         //sleep(1);
         
 
         /// MILISECONDS
         delay(1000);
+ /*
 
         myRocket.setValveOn(25, true);
         //sleep(1);
@@ -112,10 +132,7 @@ void loop() {
     */
     
     //delay(5000);
-    Serial.println("AfterVVV");
-    Serial.println(content);
-    
-
+   
     if (sd_write) {
         File onBoardLog = SD.open(fileLogName, FILE_WRITE);
         for (const auto& sensor : myRocket.sensorMap) {
