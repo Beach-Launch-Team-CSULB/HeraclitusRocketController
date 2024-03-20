@@ -13,7 +13,7 @@
 #include "ExtendedIO.h"
 #include <Wire.h>
 
-int alara = 1;
+int alara = 0;
 File onBoardLog;
 char* fileLogName = "SoftwareTest-03-15-2024.txt";
 bool sd_write = true;
@@ -34,7 +34,7 @@ void setup() {
 }
 
 void loop() {
-    
+    //return;
     /*Igniter();
     for (const auto& pair : myRocket.igniterMap) {
         myRocket.setIgnitionOn(pair.first, true);
@@ -68,7 +68,9 @@ void loop() {
     Serial.println(pddr_content);
    
     //for (const auto& pair : myRocket.valveMap) {
-        myRocket.setValveOn(24, true);
+        myRocket.setValveOn(20, true);
+        //(*(volatile uint32_t *)0x400FF0C0) = (1<<10); //PDOR
+
         //sleep(1);
         delay(1000);
         Serial.println("PDOR AfterVVV");
@@ -80,34 +82,38 @@ void loop() {
         Serial.println("PDDR AfterVVV");
         Serial.println(pddr_content);
 
-        myRocket.setValveOn(24, false);
+        myRocket.setValveOn(20, false);
+        //(*(volatile uint32_t *)0x400FF0C0) = (0<<10); //PDOR
         //sleep(1);
+        
+        /*
+
+        /// MILISECONDS
+        delay(1000);
+ 
+
+        myRocket.setValveOn(21, true);
+        //sleep(1);
+        delay(1000);
+        myRocket.setValveOn(21, false);
+        //sleep(1);
+
         
 
         /// MILISECONDS
         delay(1000);
- /*
-
-        myRocket.setValveOn(25, true);
+        myRocket.setValveOn(22, true);
         //sleep(1);
         delay(1000);
-        myRocket.setValveOn(25, false);
+        myRocket.setValveOn(22, false);
         //sleep(1);
 
         /// MILISECONDS
         delay(1000);
-        myRocket.setValveOn(26, true);
+        myRocket.setValveOn(23, true);
         //sleep(1);
         delay(1000);
-        myRocket.setValveOn(26, false);
-        //sleep(1);
-
-        /// MILISECONDS
-        delay(1000);
-        myRocket.setValveOn(27, true);
-        //sleep(1);
-        delay(1000);
-        myRocket.setValveOn(27, false);
+        myRocket.setValveOn(23, false);
         //sleep(1);
 
         /// MILISECONDS

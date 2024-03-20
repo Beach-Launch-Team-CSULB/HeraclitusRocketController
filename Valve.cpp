@@ -41,12 +41,12 @@
 
         if(ValveOpenInput == true){
             ExtendedIO::digitalWriteExtended(this->pinDigital,1); 
-            analogWrite(this->pinPWM,256);
+            digitalWrite(this->pinPWM,1);
             return true;
         }
         if(ValveOpenInput == false){
             ExtendedIO::digitalWriteExtended(this->pinDigital,0);
-            digitalWrite(this->pinPWM,256);
+            digitalWrite(this->pinPWM,0);
             return true;
         }
         return false;

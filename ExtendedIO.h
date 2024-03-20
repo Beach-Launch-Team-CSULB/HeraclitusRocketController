@@ -6,7 +6,8 @@ enum RegisterName {
     PCR,    // 4004_9000 
     PCOR,   // 400FF048
     PSOR,   // 400FF044
-    PDDR    // 400FF014
+    PDDR,    // 400FF014
+    PDOR
 };
 
 class ExtendedIO { 
@@ -15,6 +16,7 @@ class ExtendedIO {
         static void digitalWriteExtended(int pin, int value);
         static void extendedIOsetup();
     private:
+        //static std::map<int, std::array<int,2>> pinMap;
         static int digitalPinToBit_int(int pin);
         static int digitalPinToPort_int(int pin);
         static uint32_t fetchRegister(int pin, RegisterName reg);
