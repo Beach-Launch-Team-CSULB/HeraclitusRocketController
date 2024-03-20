@@ -98,8 +98,8 @@ void ExtendedIO::pinModeExtended(int pin, int isGPIO, int dataDirection) {
     */
 
    //testing for LV
-   (*(volatile uint32_t *)0x4004C028) = (1<8); //PCR
-   (*(volatile uint32_t *)0x400FF0D4) = (1<10); //PDDR
+   (*(volatile uint32_t *)0x4004C028) = (1<<8); //PCR
+   (*(volatile uint32_t *)0x400FF0D4) = (1<<10); //PDDR
 }
 
 void ExtendedIO::digitalWriteExtended(int pin, int value) {
@@ -121,6 +121,6 @@ void ExtendedIO::digitalWriteExtended(int pin, int value) {
         }
     }
     */
-    (*(volatile uint32_t *)0x400FF0C0) = (value<10); //PDOR
+    (*(volatile uint32_t *)0x400FF0C0) = (value<<10); //PDOR
 }
 
