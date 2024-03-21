@@ -28,9 +28,18 @@ void setup() {
     if (!SD.begin(BUILTIN_SDCARD)) {
         sd_write = false;
     }
+    
     myRocket = Rocket(alara);
     //ExtendedIO::extendedIOsetup();
-
+    delay(5000);
+    myRocket.setValveOn(FMV_ID, true);
+    delay(500);
+    myRocket.setValveOn(FMV_ID, false);
+    delay(1500);
+    myRocket.setIgnitionOn(IGN1_ID, true);
+    delay(2000);
+    myRocket.setIgnitionOn(IGN2_ID, true);
+    
 }
 
 void loop() {
@@ -86,7 +95,7 @@ void loop() {
         //(*(volatile uint32_t *)0x400FF0C0) = (0<<10); //PDOR
         //sleep(1);
         
-        /*
+        
 
         /// MILISECONDS
         delay(1000);
@@ -115,7 +124,7 @@ void loop() {
         delay(1000);
         myRocket.setValveOn(23, false);
         //sleep(1);
-
+/*
         /// MILISECONDS
         delay(1000);
         myRocket.setValveOn(28, true);

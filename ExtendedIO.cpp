@@ -11,19 +11,15 @@
 // Mapping from pin to {bit offset, port}
 // Port A = 0 ... D = 3
 
+//Static map used to associate digital pins to the bits and ports on the teensy
 std::map<int, std::array<int,2>> pinMap = {
-    {IGN1_PIN_DIG,{16, 2}},  
-    {IGN2_PIN_DIG,{14,2}},
-    {HP_PIN_DIG,{10,3}}, //hpo1->87->ptd10
-    {HV_PIN_DIG,{19,2}}, //hpo2->86->ptc19
-    {FMV_PIN_DIG,{18,2}},
-    {LMV_PIN_DIG,{17,2}},
-    {LV_PIN_DIG,{10,3}},
-    {LDV_PIN_DIG,{8,2}},
-    {LDR_PIN_DIG,{17,2}},
-    {FV_PIN_DIG,{16,2}},
-    {FDV_PIN_DIG,{14,2}},
-    {FDR_PIN_DIG,{13,2}}
+    {83, {16, 2}}, //used for IGN1_PIN_DIG and FV_PIN_DIG
+    {81, {14, 2}}, //used for IGN2_PIN_DIG and FDV_PIN_DIG
+    {87, {10, 3}}, //used for HP_PIN_DIG and LV_PIN_DIG
+    {86, {19, 2}}, //used for HV_PIN_DIG
+    {85, {18, 2}}, //used for FMV_PIN_DIG and LDV_PIN_DIG     if valves dont work, array might be {8,2}
+    {84, {17, 2}}, //used for LMV_PIN_DIG and LDR_PIN_DIG
+    {80, {13, 2}}  //used for FDR_PIN_DIG
 };
 
 
@@ -37,7 +33,7 @@ std::map<RegisterName, uint32_t> baseRegs = {
     {PDOR, 0x400FF000}
 };
 
-
+// Outdated setup method. Not currently utilized. Suggest removal. (comment by Aurum 3/20/2024)
 void ExtendedIO::extendedIOsetup() {
     SIM_SCGC5 |= SIM_SCGC5_PORTA;
     SIM_SCGC5 |= SIM_SCGC5_PORTB;
@@ -45,20 +41,15 @@ void ExtendedIO::extendedIOsetup() {
     SIM_SCGC5 |= SIM_SCGC5_PORTD;
 }
 
-
+// Finds the number of bits needed to shift from the port
 int ExtendedIO::digitalPinToBit_int(int pin) {
     std::array<int,2> pinsArray = pinMap[pin];
     if (pinsArray.empty()) 
         return -1;
     return pinsArray[0];
 }
-/*
-int ExtendedIO::digitalPinToBit_int(int pin) {
-    auto it = pinMap.find(pin);
-    if (it == pinMap.end()) return -1;
-    return it->second[0];
-}*/
 
+// Finds the number of ports from the base register to this digital pin
 int ExtendedIO::digitalPinToPort_int(int pin) {
     std::array<int,2> pinsArray = pinMap[pin];
     if (pinsArray.empty()) 
@@ -66,23 +57,29 @@ int ExtendedIO::digitalPinToPort_int(int pin) {
     return pinsArray[1];
 }
 
+// 
 uint32_t ExtendedIO::fetchRegister(int pin, RegisterName reg) {
-    //Gets the register
+    // Gets and validates the register
     uint32_t registerAddress = baseRegs[reg];
     if (registerAddress == 0) 
         return 0;
+
+    // Gets and validates the port
     int port = digitalPinToPort_int(pin);
     if (port == -1) 
         return 0;
+    
+    // Gets and validates the bits to shift
     int bitOffset = digitalPinToBit_int(pin);
     if (bitOffset == -1) 
         return 0;
 
+    //
     if (reg == PCR) {
-        return uint32_t (registerAddress + port * 0x1000 + bitOffset * 4);
-    } else {
-        return uint32_t (registerAddress + 0x40 * (port));
-    }
+        return uint32_t (registerAddress + port * 0x1000 + bitOffset * 4); }
+    //
+    else {
+        return uint32_t (registerAddress + 0x40 * (port)); }
 }
 
 /*
