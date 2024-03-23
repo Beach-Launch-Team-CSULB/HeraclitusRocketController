@@ -24,13 +24,13 @@ class CANDriver
         
         // If we are able to set up the .begin and all that here within the CANDriver.cpp - that would be cool.
         // Otherwise it would probably need to happen in main.
-        //CANDriver();
+        CANDriver();
 
         // Would be RocketState rocketState instead of uint8_t rocketState.
         void sendStateReport(int time, uint8_t rocketState, Valve valves[], Igniter igniters[], bool Prop);
         void sendSensorData(int sensorID, float sensorData1, float sensorData2, float SensorData3, float SensorData4);
 
-        //int readMessage();
+        uint32_t readMessage();
         //^ .push_back() into commands vector
 
         //void sendOperatorMessage(int messageID);

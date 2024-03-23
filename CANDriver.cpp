@@ -8,21 +8,31 @@
 #include "Valve.h"
 
 /* To-do: 
- *        1.) Make array of valve and igniter pointers - that way the objects themselves are not being passed each time.
- *        2.) Determine if CANBus must be passed as a reference. (Figure out if constructor will work.)
- *        3.) Combine this with Analicia's constructor, read, and sendOperatorMessage functions.
+ *        1.) Research remote flag.
  */
 
-/* Try this first - may need to be moved into main. 
+
 CANDriver::CANDriver()
 {
-  Can0.begin(500000);
+  // 
 };
-*/
+
+uint32_t CANDriver::readMessage()
+{
+  static CAN_message_t msg;
+  // Initialized as an unused id.
+  msg.id = 255;
+  Can0.read(msg);
+
+  return msg.id;
+}
 
 void CANDriver::sendStateReport(int time, uint8_t rocketState, Valve valves[], Igniter igniters[], bool Prop)
 {
-  CAN_message_t msg;
+  static CAN_message_t msg;
+  msg.flags.extended = 0;
+  // msg.flags.remote = 0; <---- Do we need this?
+  msg.len = 8;
   int aTime = time;
   
   char* littleElf;
@@ -70,17 +80,20 @@ void CANDriver::sendStateReport(int time, uint8_t rocketState, Valve valves[], I
 
 void CANDriver::sendSensorData(int sensorID, float sensorData1, float sensorData2, float sensorData3, float sensorData4)
 {
-  CAN_message_t msg;
+  static CAN_message_t msg;
   msg.id = sensorID;  // Ensure CAN id corresponds to the correct sensor ids.
+  msg.flags.extended = 0;
+  // msg.flags.remote = 0; <---- Do we need this?
+  msg.len = 8;
   
   // Avoiding dealing with the binary representation of floats. Divide by ten on CANReceive.py end.
-  sensorData1 *= 10;
+  sensorData1 *= 100;
   int sensorData1Mod = sensorData1;
-  sensorData2 *= 10;
+  sensorData2 *= 100;
   int sensorData2Mod = sensorData2;
-  sensorData3 *= 10;
+  sensorData3 *= 100;
   int sensorData3Mod = sensorData3;
-  sensorData4 *= 10;
+  sensorData4 *= 100;
   int sensorData4Mod = sensorData4;
   
   char* littleElf;
