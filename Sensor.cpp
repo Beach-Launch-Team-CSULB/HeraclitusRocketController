@@ -16,17 +16,12 @@ Sensor::Sensor(int label, int pin)
 float Sensor::getLastValue() const { return value; }
 
 //Gets an integer between 0-1023 coresponding to the sensor's current analog volatage
-float Sensor::readDataRaw()
-{
-    int rawValue = analogRead(pinID); 
-    return rawValue; 
-};
+float Sensor::readDataRaw() {
+    return analogRead(pinID); }
 
 //Rads the sensor's analog input, calibrates the data, and sets the sensor's value
-void Sensor::updateValue()
-{
-    value = linCoefM * readDataRaw() + linCoefB; // Update the sensor value by reading new data
-}
+void Sensor::updateValue() {
+    value = linCoefM * readDataRaw() + linCoefB;} // Update the sensor value by reading new data
 
 //Updated the sensor's value and returns the new value
 float Sensor::getCurrentValue()
@@ -34,7 +29,6 @@ float Sensor::getCurrentValue()
     updateValue();
     return value;
 }
-
 
 //Sets the linear coefficients to their default values for calibrating
 void Sensor::resetCalibration()

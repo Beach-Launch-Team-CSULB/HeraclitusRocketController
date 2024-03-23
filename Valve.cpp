@@ -4,7 +4,10 @@
     // Constructor
     Valve::Valve(int id, int pinPWM, int pinDigital) 
         : id(id), pinPWM(pinPWM), pinDigital(pinDigital), valveOpen(false)
-        {}
+        {
+            ExtendedIO::pinModeExtended(this->pinDigital, 1, OUTPUT); // Sets Manual Pinmode to GPIO, Data Direction OUTPUT
+            pinMode(this->pinPWM, OUTPUT); //Teensy function to set up the PWM pin
+        }
 
 
     // Getters
@@ -29,17 +32,15 @@
 
         /*Sets the state of Valve Objet: True (Open) | False (Close)
                 Returns true if successful*/
-    bool Valve::setValveOpen(bool ValveOpenInput)
+    bool Valve::setValveOpen(bool valveOpenInput)
     {    
         // These should be initialized earlier and not called again, but having them in main did not work.
 
-        ExtendedIO::pinModeExtended(this->pinDigital, 1, OUTPUT); // Sets Manual Pinmode to GPIO, Data Direction OUTPUT
-        pinMode(this->pinPWM, OUTPUT); //Teensy function to set up the PWM pin
 
         // Try/Catch block was not working with our platformio.ini settings. This is untested -Aurum 3/20/2024
         
-        ExtendedIO::digitalWriteExtended(this->pinDigital, ValveOpenInput); 
-        digitalWrite(this->pinPWM, ValveOpenInput);        
+        ExtendedIO::digitalWriteExtended(this->pinDigital, valveOpenInput); 
+        digitalWrite(this->pinPWM, valveOpenInput);        
         return true;
         
         /* This works, but passing the bool directly should be easier and more readable

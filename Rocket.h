@@ -8,15 +8,17 @@
 #include "Igniter.h"
 #include "Valve.h"
 #include "Sensor.h"
+#include <vector>
 
+
+enum E_RocketState {Standby, HighPressArm, HighPress, TankPressArm, TankPress, FireArm, Fire, Vent, Abort, Test};
 
 class Rocket{ 
     public:
-
+        E_RocketState currentState;
         std::map<int, Igniter> igniterMap;
         std::map<int, Valve> valveMap;
         std::map<int, Sensor> sensorMap;
-        int sensorArray[8];
 
         // Constructor 
         Rocket(int ALARA);
@@ -33,11 +35,14 @@ class Rocket{
 
         // Execution Check
         bool getExecuting();
+
+        bool enterState(E_RocketState stateToEnter); 
+        bool canEnterState(E_RocketState stateToEnter); 
     
    private: 
         VehicleState state;
         bool executingCommand;
-        int ALARA;                      // 0 = Lower , 1 = Upper  
+        int ALARA; // 0 = Lower , 1 = Upper  
        
         //Sensor* sensorArray[8];
         bool initializeIgniters();
@@ -45,7 +50,20 @@ class Rocket{
         bool initializeLowerValves();
         bool initializeUpperSensors();
         bool initializeLowerSensors();
-    
+
+        void setValvesOpen(bool valvesOpenInput, const std::vector<int> &valveIDs);
+
+        //Called by enterState()
+        bool enterTest();
+        bool enterStandby();
+        bool enterHighPressArm();
+        bool enterHighPress();
+        bool enterTankPressArm();
+        bool enterTankPress();
+        bool enterFireArm();
+        bool enterFire();
+        bool enterVent();
+        bool enterAbort();
 };
 
 #endif

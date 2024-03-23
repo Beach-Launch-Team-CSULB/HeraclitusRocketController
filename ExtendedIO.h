@@ -13,8 +13,7 @@ enum RegisterName {
 class ExtendedIO { 
     public: 
         static void pinModeExtended(int pin, int value, int data_direction);
-        static void digitalWriteExtended(int pin, int value);
-        static void extendedIOsetup();
+        static void digitalWriteExtended(int pin, bool valueOpen);
     private:
         //static std::map<int, std::array<int,2>> pinMap;
         static int digitalPinToBit_int(int pin);

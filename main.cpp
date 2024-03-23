@@ -13,7 +13,7 @@
 #include "ExtendedIO.h"
 #include <Wire.h>
 
-int alara = 0;
+int alara = 1; //Lower = 0     Upper = 1
 File onBoardLog;
 char* fileLogName = "SoftwareTest-03-15-2024.txt";
 bool sd_write = true;
@@ -31,6 +31,8 @@ void setup() {
     
     myRocket = Rocket(alara);
     //ExtendedIO::extendedIOsetup();
+
+    /* Igniter tests
     delay(5000);
     myRocket.setValveOn(FMV_ID, true);
     delay(500);
@@ -39,115 +41,22 @@ void setup() {
     myRocket.setIgnitionOn(IGN1_ID, true);
     delay(2000);
     myRocket.setIgnitionOn(IGN2_ID, true);
-    
+    */
 }
 
 void loop() {
-    //return;
-    /*Igniter();
-    for (const auto& pair : myRocket.igniterMap) {
-        myRocket.setIgnitionOn(pair.first, true);
- S       //sleep(1);
-        delay(1);
-        myRocket.setIgnitionOn(pair.first, false);
-        //sleep(1);
-        delay(1);
-    }*/
 
-    // You need a delay here or the first print will not work. 
+    /// MILISECONDS
     delay(1000);
-    int address = 0x400FF100;       //PDOR for LV valve 
-    int* pcontent = (int*)address;
-    int content = *pcontent;
-
-    int pcr_address = 0x4004C028;       //PCR for LV valve PTD10
-    int* pcr_pcontent = (int*)address;
-    int pcr_content = *pcontent;
-
-    int pddr_address = 0x400FF0D4;       //PDDR for LV valve
-    int* pddr_pcontent = (int*)address;
-    int pddr_content = *pcontent;
-    
-
-    Serial.println("PDOR BeforeVVV");
-    Serial.println(content);
-    Serial.println("PCR BeforeVVV");
-    Serial.println(pcr_content);
-    Serial.println("PDDR BeforeVVV");
-    Serial.println(pddr_content);
-   
-    //for (const auto& pair : myRocket.valveMap) {
-        myRocket.setValveOn(20, true);
-        //(*(volatile uint32_t *)0x400FF0C0) = (1<<10); //PDOR
-
-        //sleep(1);
+    /*
+    for(int i=24; i<=29; i++)   //Lower Valves: 20-23     Upper Valves: 24-29
+    {
+        myRocket.setValveOn(i, true);
         delay(1000);
-        Serial.println("PDOR AfterVVV");
-        Serial.println(content);
-
-        Serial.println("PCR AfterVVV");
-        Serial.println(pcr_content);
-
-        Serial.println("PDDR AfterVVV");
-        Serial.println(pddr_content);
-
-        myRocket.setValveOn(20, false);
-        //(*(volatile uint32_t *)0x400FF0C0) = (0<<10); //PDOR
-        //sleep(1);
-        
-        
-
-        /// MILISECONDS
+        myRocket.setValveOn(i, false);
         delay(1000);
- 
-
-        myRocket.setValveOn(21, true);
-        //sleep(1);
-        delay(1000);
-        myRocket.setValveOn(21, false);
-        //sleep(1);
-
-        
-
-        /// MILISECONDS
-        delay(1000);
-        myRocket.setValveOn(22, true);
-        //sleep(1);
-        delay(1000);
-        myRocket.setValveOn(22, false);
-        //sleep(1);
-
-        /// MILISECONDS
-        delay(1000);
-        myRocket.setValveOn(23, true);
-        //sleep(1);
-        delay(1000);
-        myRocket.setValveOn(23, false);
-        //sleep(1);
-/*
-        /// MILISECONDS
-        delay(1000);
-        myRocket.setValveOn(28, true);
-        //sleep(1);
-        delay(1000);
-        myRocket.setValveOn(28, false);
-        //sleep(1);
-
-        /// MILISECONDS
-        delay(1000);
-        myRocket.setValveOn(29, true);
-        //sleep(1);
-        delay(1000);
-        myRocket.setValveOn(29, false);
-        //sleep(1);
-
-        /// MILISECONDS
-        delay(1000);
-    //}
-    */
-    
-    //delay(5000);
-   
+    }
+    /*/
     if (sd_write) {
         File onBoardLog = SD.open(fileLogName, FILE_WRITE);
         for (const auto& sensor : myRocket.sensorMap) {

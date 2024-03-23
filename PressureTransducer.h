@@ -17,10 +17,9 @@ class PressureTransducer : public Sensor {
     public:
         //Constructor used by rocketdriver
         PressureTransducer(int labelID, int pinID, float linCoM, float linCoB);
-
+        
         //Constructor used for uncalibrated sensors
         PressureTransducer(int labelID, int pinID);
-
 
 
         E_PressureUnit getUnitEnum();
