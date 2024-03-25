@@ -59,15 +59,10 @@
 #define SR_ENGINE ((uint32_t) 128)
 
 // Sensor Reports
-#define SENS_1_4_PROP   ((uint32_t) 129)
-#define SENS_5_8_PROP   ((uint32_t) 130)
-#define SENS_9_12_PROP  ((uint32_t) 131)
-#define SENS_13_16_PROP ((uint32_t) 132)
-
-#define SENS_1_4_ENGINE   ((uint32_t) 133)
-#define SENS_5_8_ENGINE   ((uint32_t) 134)
-#define SENS_9_12_ENGINE  ((uint32_t) 135)
-#define SENS_13_16_ENGINE ((uint32_t) 136)
+#define SENS_1_4_PROP     ((uint32_t) 129) // Lox High,   Fuel High, Lox Dome,   Fuel Dome
+#define SENS_5_8_PROP     ((uint32_t) 130) // Lox Tank1,  Lox Tank2, Fuel Tank1, Fuel Tank2
+#define SENS_9_12_ENGINE  ((uint32_t) 131) // Pneumatics, Lox Inlet, Fuel Inlet, Fuel Injector
+#define SENS_13_16_ENGINE ((uint32_t) 132) // Chamber1,   Chamber2,  UNUSED,     UNUSED
 
 // Data Direction Inputs 
 #define INPUT  (uint32_t)0
