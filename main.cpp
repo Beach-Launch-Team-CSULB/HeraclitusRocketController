@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include "Rocket.h"
 #include "CANDriver.h"
-#include "Arduino.h"
+//#include "Arduino.h"
 //#include "Sensor.h"
 #include "Igniter.h"
 #include <unistd.h> // For sleep function
@@ -13,11 +13,31 @@
 #include "ExtendedIO.h"
 #include <Wire.h>
 
-int alara = 1; //Lower = 0     Upper = 1
+
+
+#include <FlexCAN.h>
+
+#include <ios>
+#include "CANDriver.h"
+
+
+int alara = 0;
 File onBoardLog;
 char* fileLogName = "SoftwareTest-03-15-2024.txt";
 bool sd_write = true;
 Rocket myRocket = Rocket(alara);
+
+// TO BE REMOVED AT THE END OF CAN TEST
+
+const int CAN2busSpeed = 500000;
+CANDriver test = CANDriver();
+
+// Simulating PT readings
+#define FAKEDATA1     ((float) 0.00)
+#define FAKEDATA2     ((float) 27.00)
+#define FAKEDATA3     ((float) 42.00)
+#define FAKEDATA4     ((float) 655.35)
+
 
 void setup() {
     
@@ -28,35 +48,191 @@ void setup() {
     if (!SD.begin(BUILTIN_SDCARD)) {
         sd_write = false;
     }
-    
     myRocket = Rocket(alara);
     //ExtendedIO::extendedIOsetup();
 
-    /* Igniter tests
-    delay(5000);
-    myRocket.setValveOn(FMV_ID, true);
-    delay(500);
-    myRocket.setValveOn(FMV_ID, false);
-    delay(1500);
-    myRocket.setIgnitionOn(IGN1_ID, true);
-    delay(2000);
-    myRocket.setIgnitionOn(IGN2_ID, true);
-    */
+    Can0.begin(CAN2busSpeed);
+    Can0.setTxBufferSize(64);
+    uint32_t verifier = 0;
+    
+
 }
 
 void loop() {
 
-    /// MILISECONDS
-    delay(1000);
+    
+
+    //return;
+    /*Igniter();
+    for (const auto& pair : myRocket.igniterMap) {
+        myRocket.setIgnitionOn(pair.first, true);
+ S       //sleep(1);
+        delay(1);
+        myRocket.setIgnitionOn(pair.first, false);
+        //sleep(1);
+        delay(1);
+    }*/
+
+
+
+
+    // ONLY COMMENTED OUT FOR CAN TEST. 
+
+
     /*
-    for(int i=24; i<=29; i++)   //Lower Valves: 20-23     Upper Valves: 24-29
+    // You need a delay here or the first print will not work. 
+    delay(1000);
+    int address = 0x400FF100;       //PDOR for LV valve 
+    int* pcontent = (int*)address;
+    int content = *pcontent;
+
+    int pcr_address = 0x4004C028;       //PCR for LV valve PTD10
+    int* pcr_pcontent = (int*)address;
+    int pcr_content = *pcontent;
+
+    int pddr_address = 0x400FF0D4;       //PDDR for LV valve
+    int* pddr_pcontent = (int*)address;
+    int pddr_content = *pcontent;
+    
+
+    Serial.println("PDOR BeforeVVV");
+    Serial.println(content);
+    Serial.println("PCR BeforeVVV");
+    Serial.println(pcr_content);
+    Serial.println("PDDR BeforeVVV");
+    Serial.println(pddr_content);
+   
+    //for (const auto& pair : myRocket.valveMap) {
+        myRocket.setValveOn(24, true);
+        //sleep(1);
+        delay(1000);
+        Serial.println("PDOR AfterVVV");
+        Serial.println(content);
+
+        Serial.println("PCR AfterVVV");
+        Serial.println(pcr_content);
+
+        Serial.println("PDDR AfterVVV");
+        Serial.println(pddr_content);
+
+        myRocket.setValveOn(20, false);
+        */
+
+    // TO BE REMOVED AT THE CONCLUSION OF THE CAN TEST
+
+    // Do static methods
+    uint32_t verifier = test.readMessage();
+    if (verifier != 0)
     {
-        myRocket.setValveOn(i, true);
-        delay(1000);
-        myRocket.setValveOn(i, false);
-        delay(1000);
+        Serial.println("Main: ");
+        Serial.println(verifier);
     }
-    /*/
+    //Serial.println("Working");
+    //Serial.println(verifier);
+
+
+    /*
+ *   /// CAN 2.0 Engine Node ///
+ *   1.)  Receives [3] from Pi Box
+ *   2.)  Sends [4] to Pi Box
+ *  
+ *   3.)  Receives [6] from Propulsion Node
+ *   4.)  Sends [7] to Pi Box
+ * 
+ *   6.)  Receives [8] from Pi Box
+ *   5.)  Sends [9] to Propulsion Node
+ */
+
+  if(verifier == 3)
+  {
+    //test.sendStateReport(1000007,);
+    test.sendSensorData(4,FAKEDATA1,FAKEDATA2,FAKEDATA3,FAKEDATA4);
+    verifier = 0;
+  }
+  if(verifier == 6)
+  {
+    test.sendSensorData(7,FAKEDATA1,FAKEDATA2,FAKEDATA3,FAKEDATA4);
+    verifier = 0;
+  }
+  if(verifier == 8)
+  {
+    test.sendSensorData(9,FAKEDATA1,FAKEDATA2,FAKEDATA3,FAKEDATA4);
+    verifier = 0;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //(*(volatile uint32_t *)0x400FF0C0) = (0<<10); //PDOR
+        //sleep(1);
+        
+        /*
+
+        /// MILISECONDS
+        delay(1000);
+ 
+
+        myRocket.setValveOn(21, true);
+        //sleep(1);
+        delay(1000);
+        myRocket.setValveOn(21, false);
+        //sleep(1);
+
+        
+
+        /// MILISECONDS
+        delay(1000);
+        myRocket.setValveOn(22, true);
+        //sleep(1);
+        delay(1000);
+        myRocket.setValveOn(22, false);
+        //sleep(1);
+
+        /// MILISECONDS
+        delay(1000);
+        myRocket.setValveOn(23, true);
+        //sleep(1);
+        delay(1000);
+        myRocket.setValveOn(23, false);
+        //sleep(1);
+
+        /// MILISECONDS
+        delay(1000);
+        myRocket.setValveOn(28, true);
+        //sleep(1);
+        delay(1000);
+        myRocket.setValveOn(28, false);
+        //sleep(1);
+
+        /// MILISECONDS
+        delay(1000);
+        myRocket.setValveOn(29, true);
+        //sleep(1);
+        delay(1000);
+        myRocket.setValveOn(29, false);
+        //sleep(1);
+
+        /// MILISECONDS
+        delay(1000);
+    //}
+
+    
+    int address = 0x40048038;
+    int* pcontent = (int*)address;
+    int content = *pcontent;
+    Serial.println(content);
+
     if (sd_write) {
         File onBoardLog = SD.open(fileLogName, FILE_WRITE);
         for (const auto& sensor : myRocket.sensorMap) {
