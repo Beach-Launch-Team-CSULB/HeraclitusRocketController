@@ -3,6 +3,11 @@
 #include <map>
 #include <string.h>
 
+#define UPPER_ALARA true
+//#undef UPPER_ALARA
+//#define LOWER_ALARA true
+//#undef LOWER_ALARA
+
 // Valves & Igniters
 #define NUM_VALVES 10
 #define NUM_IGNITERS 2
@@ -201,15 +206,33 @@
 #define PT_CHAMBER_2_CAL_M      1.0f
 #define PT_CHAMBER_2_CAL_B      0.0f
 
-
-
-
 //Prop Node Initialization Information
-#define UPPER_SENSOR_ARRAY_DECL  {PT_LOX_HIGH_ID, 
+#ifdef UPPER_ALARA
+    #define ALARA 1
 
+    #define VALVE_ARRAY_LENGTH 6
+    #define VALVE_ARRAY {LV_ID, LDV_ID, LDR_ID, FV_ID, FDV_ID, FDR_ID}
+
+    #define SENSOR_ARRAY_LENGTH 8
+    #define SENSOR_ARRAY {PT_LOX_HIGH_ID, PT_FUEL_HIGH_ID, PT_LOX_DOME_ID, PT_FUEL_DOME_ID, PT_LOX_TANK_1_ID, PT_LOX_TANK_2_ID, PT_FUEL_TANK_1_ID, PT_FUEL_TANK_2_ID}
+    
+    #define IGNITER_ARRAY_LENGTH 0
+    #define IGNITER_ARRAY {}
+#endif UPPER_ALARA
 
 //Engine Node Initialization Information
+#ifdef LOWER_ALARA
+    #define ALARA 0
 
+    #define VALVE_ARRAY_LENGTH 4
+    #define VALVE_ARRAY {HP_ID, HV_ID, FMV_ID, LMV_ID}
+
+    #define SENSOR_ARRAY_LENGTH 6
+    #define SENSOR_ARRAY {PT_PNUEMATICS_ID, PT_LOX_INLET_ID, PT_FUEL_INLET_ID, PT_FUEL_INJECTOR_ID, PT_CHAMBER_1_ID, PT_CHAMBER_2_ID}
+    
+    #define IGNITER_ARRAY_LENGTH 2
+    #define IGNITER_ARRAY {IGN1_ID, IGN2_ID}
+#endif LOWER_ALARA
 
 /*****************************************CAN DBC (Database File)****************************************
  *

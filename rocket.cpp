@@ -7,13 +7,17 @@
 #include "Igniter.h"
 #include "Sensor.h"
 #include "PressureTransducer.h"
-#include "Config.h"
+
+void Rocket::setLED(int ledID, Color newColor)
+{
+    ledArray.setLed(ledID, newColor);
+}
 
 // Constructor definition
-Rocket::Rocket(int ALARA)
+Rocket::Rocket()
 {
     currentState = Standby;
-    // TODO: Set up LEDs?
+    //ledArray.init();
     if (ALARA == 0) // Lower ALARA Setup
     { 
         initializeIgniters();

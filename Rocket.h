@@ -8,7 +8,10 @@
 #include "Igniter.h"
 #include "Valve.h"
 #include "Sensor.h"
+#include "LEDController.h"
 #include <vector>
+#include "Config.h"
+
 
 
 enum E_RocketState {Standby, HighPressArm, HighPress, TankPressArm, TankPress, FireArm, Fire, Vent, Abort, Test};
@@ -17,11 +20,19 @@ class Rocket{
     public:
         E_RocketState currentState;
         std::map<int, Igniter> igniterMap;
+        const int igniterIDArray[IGNITER_ARRAY_LENGTH] = IGNITER_ARRAY;
+
         std::map<int, Valve> valveMap;
+        const int valveIDArray[VALVE_ARRAY_LENGTH] = VALVE_ARRAY;
+
         std::map<int, Sensor> sensorMap;
+        const int sensorIDArray[SENSOR_ARRAY_LENGTH] = SENSOR_ARRAY;
+
+        //const std::vector<int> &sensorIDVector;
+        LEDController ledArray;
 
         // Constructor 
-        Rocket(int ALARA);
+        Rocket();
 
         // Output 
         //float sensorRead(Sensor);
@@ -35,6 +46,7 @@ class Rocket{
 
         // Execution Check
         bool getExecuting();
+        void setLED(int ledID, Color newColor);
 
         bool enterState(E_RocketState stateToEnter); 
         bool canEnterState(E_RocketState stateToEnter); 
@@ -42,7 +54,7 @@ class Rocket{
    private: 
         VehicleState state;
         bool executingCommand;
-        int ALARA; // 0 = Lower , 1 = Upper  
+        //int ALARA; // 0 = Lower , 1 = Upper  
        
         //Sensor* sensorArray[8];
         bool initializeIgniters();
