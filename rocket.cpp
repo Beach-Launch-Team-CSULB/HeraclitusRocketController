@@ -38,6 +38,15 @@ Rocket::Rocket()
 float Rocket::sensorRead(int sensorId) {
     return sensorMap[sensorId].getCurrentValue(); }
 
+void Rocket::pollSensors()
+{
+    for(int sensorID : sensorIDArray)
+    {
+        // TODO: do something with this
+        int pressureReading = sensorRead(sensorID);
+    }
+}
+
 bool Rocket::ignitionRead(int igniterID) {
     return igniterMap[igniterID].getIgniterOn(); }
 
@@ -60,12 +69,14 @@ bool Rocket::enterState(E_RocketState stateToEnter)
         return false;
     switch(stateToEnter)
     {
+        /*
         case Vent:
             enterVent();
             return true;
         case Abort:
             enterAbort();
             return true;
+        */
         case Fire:
             enterFire();
             return true;
@@ -99,12 +110,14 @@ bool Rocket::canEnterState(E_RocketState stateToEnter)
 {
     switch(stateToEnter)
     {
+        /*
         case Vent: // Vent is always valid
             return currentState != Vent;
         case Abort: // Abort is always valid
             return currentState != Abort;
+        */
         case Standby: // Standby is allowable in any other neutral state
-            return (currentState == Vent || currentState == Abort || currentState == Fire || currentState == Test);
+            return (/*currentState == Vent || currentState == Abort || */currentState == Fire || currentState == Test || currentState == Standby);
         case Test: // Can only be entered from Standby
             return currentState == Standby;
 
@@ -172,14 +185,14 @@ bool Rocket::initializeUpperValves()
 // Sets up the Sensors on the Upper Prop Node
 bool Rocket::initializeUpperSensors() 
 {
-    sensorMap.insert({PT_LOX_HIGH_ID, Sensor(PT_LOX_HIGH_ID, PT_LOX_HIGH_PIN, PT_LOX_HIGH_CAL_M, PT_LOX_HIGH_CAL_B)});
-    sensorMap.insert({PT_FUEL_HIGH_ID, Sensor(PT_FUEL_HIGH_ID, PT_FUEL_HIGH_PIN, PT_FUEL_HIGH_CAL_M, PT_FUEL_HIGH_CAL_B)});
-    sensorMap.insert({PT_LOX_DOME_ID, Sensor(PT_LOX_DOME_ID, PT_LOX_DOME_PIN, PT_LOX_DOME_CAL_M, PT_LOX_DOME_CAL_B)});
-    sensorMap.insert({PT_FUEL_DOME_ID, Sensor(PT_FUEL_DOME_ID, PT_FUEL_DOME_PIN, PT_FUEL_DOME_CAL_M, PT_FUEL_DOME_CAL_B)});
-    sensorMap.insert({PT_LOX_TANK_1_ID, Sensor(PT_LOX_TANK_1_ID, PT_LOX_TANK_1_PIN, PT_LOX_TANK_1_CAL_M, PT_LOX_TANK_1_CAL_B)});
-    sensorMap.insert({PT_LOX_TANK_2_ID, Sensor(PT_LOX_TANK_2_ID, PT_LOX_TANK_2_PIN, PT_LOX_TANK_2_CAL_M, PT_LOX_TANK_2_CAL_B),});
-    sensorMap.insert({PT_FUEL_TANK_1_ID, Sensor(PT_FUEL_TANK_1_ID, PT_FUEL_TANK_1_PIN, PT_FUEL_TANK_1_CAL_M, PT_FUEL_TANK_1_CAL_M)});
-    sensorMap.insert({PT_FUEL_TANK_2_ID, Sensor(PT_FUEL_TANK_2_ID, PT_FUEL_TANK_2_PIN, PT_FUEL_TANK_2_CAL_M, PT_FUEL_TANK_2_CAL_B)});
+    sensorMap.insert({PT_LOX_HIGH_ID, Sensor(PT_LOX_HIGH_ID, PT_LOX_HIGH_PIN, PT_LOX_HIGH_CAL_M, PT_LOX_HIGH_CAL_B)}); //autovent high possible
+    sensorMap.insert({PT_FUEL_HIGH_ID, Sensor(PT_FUEL_HIGH_ID, PT_FUEL_HIGH_PIN, PT_FUEL_HIGH_CAL_M, PT_FUEL_HIGH_CAL_B)}); //autovent highif possible
+    sensorMap.insert({PT_LOX_DOME_ID, Sensor(PT_LOX_DOME_ID, PT_LOX_DOME_PIN, PT_LOX_DOME_CAL_M, PT_LOX_DOME_CAL_B)}); //autovent lox dome and close reg
+    sensorMap.insert({PT_FUEL_DOME_ID, Sensor(PT_FUEL_DOME_ID, PT_FUEL_DOME_PIN, PT_FUEL_DOME_CAL_M, PT_FUEL_DOME_CAL_B)}); //autovent fuel dome and close reg
+    sensorMap.insert({PT_LOX_TANK_1_ID, Sensor(PT_LOX_TANK_1_ID, PT_LOX_TANK_1_PIN, PT_LOX_TANK_1_CAL_M, PT_LOX_TANK_1_CAL_B)}); //autovent lox side and close reg
+    sensorMap.insert({PT_LOX_TANK_2_ID, Sensor(PT_LOX_TANK_2_ID, PT_LOX_TANK_2_PIN, PT_LOX_TANK_2_CAL_M, PT_LOX_TANK_2_CAL_B),}); //autovent lox side and close reg
+    sensorMap.insert({PT_FUEL_TANK_1_ID, Sensor(PT_FUEL_TANK_1_ID, PT_FUEL_TANK_1_PIN, PT_FUEL_TANK_1_CAL_M, PT_FUEL_TANK_1_CAL_M)}); //autovent fuel side and close reg
+    sensorMap.insert({PT_FUEL_TANK_2_ID, Sensor(PT_FUEL_TANK_2_ID, PT_FUEL_TANK_2_PIN, PT_FUEL_TANK_2_CAL_M, PT_FUEL_TANK_2_CAL_B)}); //autovent fuel side and close reg
     return true;
 }
 
@@ -199,21 +212,28 @@ bool Rocket::initializeLowerSensors()
 bool Rocket::enterTest()
 {
     currentState = Test;
+    setLED(0, GREEN);
+    setLED(1, GREEN);
     return true;
 }
 
 // Closes all valves and sets rocket for Standby
 bool Rocket::enterStandby()
 {
-    setValvesOpen(false, (std::vector<int>){HP_ID, HV_ID, FMV_ID, LMV_ID, LV_ID, LDV_ID, LDR_ID, FV_ID, FDV_ID, FDR_ID});
+    //setValvesOpen(false, (std::vector<int>){HP_ID, HV_ID, FMV_ID, LMV_ID, LV_ID, LDV_ID, LDR_ID, FV_ID, FDV_ID, FDR_ID});
     currentState = Standby;
+    setLED(0, WHITE);
+    setLED(1, WHITE);
     return true;
 }
 
 // Prepares rocket for HighPress
 bool Rocket::enterHighPressArm()
 {
+    setValvesOpen(false, (std::vector<int>){HP_ID, HV_ID, FMV_ID, LMV_ID, LV_ID, LDV_ID, LDR_ID, FV_ID, FDV_ID, FDR_ID});
     currentState = HighPressArm;
+    setLED(0, ORANGE);
+    setLED(1, TEAL);
     return true;
 }
 
@@ -222,6 +242,8 @@ bool Rocket::enterHighPress()
 {
     setValvesOpen(true, (std::vector<int>){HP_ID});
     currentState = HighPress;
+    setLED(0, ORANGE);
+    setLED(1, BLUE);
     return true;
 }
 
@@ -229,6 +251,8 @@ bool Rocket::enterHighPress()
 bool Rocket::enterTankPressArm()
 {
     currentState = TankPressArm;
+    setLED(0, ORANGE);
+    setLED(1, LIME);
     return true;
 }
 
@@ -237,6 +261,8 @@ bool Rocket::enterTankPress()
 {
     setValvesOpen(true, (std::vector<int>){LDR_ID, FDR_ID});
     currentState = HighPress;
+    setLED(0, ORANGE);
+    setLED(1, GREEN);
     return true;
 }
 
@@ -244,6 +270,8 @@ bool Rocket::enterTankPress()
 bool Rocket::enterFireArm()
 {
     currentState = FireArm;
+    setLED(0, ORANGE);
+    setLED(1, ORANGE);
     return true;
 }
 
@@ -252,23 +280,29 @@ bool Rocket::enterFire()
 {
     //TODO ***************************************************************************** TODO
     currentState = Fire;
+    setLED(0, RED);
+    setLED(1, RED);
     return true;
 }
 
-// Opens all Vent valves and closes all other valves
-bool Rocket::enterVent()
+// Opens all Vent valves and closes all other valves and enters standby
+bool Rocket::vent()
 {
     setValvesOpen(true, (std::vector<int>){LV_ID, LDV_ID, HV_ID, FV_ID, FDV_ID});
     setValvesOpen(false, (std::vector<int>){HP_ID, LMV_ID, LDR_ID, FMV_ID, FDR_ID});
-    currentState = Vent;
+    //currentState = Vent;
+    currentState = Standby;
+    setLED(1, PINK);
     return true;
 }
 
-// Closes all valves and aborts
-bool Rocket::enterAbort()
+// Closes all valves and enters standby
+bool Rocket::abort()
 {
     setValvesOpen(false, (std::vector<int>){HP_ID, HV_ID, FMV_ID, LMV_ID, LV_ID, LDV_ID, LDR_ID, FV_ID, FDV_ID, FDR_ID});
-    currentState = Abort;
+    //currentState = Abort;
+    currentState = Standby;
+    setLED(1, YELLOW);
     return true;
 }
 

@@ -14,7 +14,7 @@
 
 
 
-enum E_RocketState {Standby, HighPressArm, HighPress, TankPressArm, TankPress, FireArm, Fire, Vent, Abort, Test};
+enum E_RocketState {Standby, HighPressArm, HighPress, TankPressArm, TankPress, FireArm, Fire,/* Vent, Abort,*/ Test};
 
 class Rocket{ 
     public:
@@ -39,16 +39,20 @@ class Rocket{
         float sensorRead(int);
         bool ignitionRead(int);
         bool valveRead(int);
+        void pollSensors();
         
         // Commands 
         bool setIgnitionOn(int,bool);
         bool setValveOn(int,bool);
-
-        // Execution Check
-        bool getExecuting();
         void setLED(int ledID, Color newColor);
 
         bool enterState(E_RocketState stateToEnter); 
+        bool vent();
+        bool abort();
+
+        // Execution Check
+        bool getExecuting();
+
         bool canEnterState(E_RocketState stateToEnter); 
     
    private: 
@@ -74,8 +78,7 @@ class Rocket{
         bool enterTankPress();
         bool enterFireArm();
         bool enterFire();
-        bool enterVent();
-        bool enterAbort();
+
 };
 
 #endif
