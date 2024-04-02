@@ -27,7 +27,7 @@ class CANDriver
         CANDriver();
 
         // Would be RocketState rocketState instead of uint8_t rocketState.
-        void sendStateReport(int time, uint8_t rocketState, Valve valves[], Igniter igniters[], bool Prop);
+        void sendStateReport(int time, uint8_t rocketState, Rocket node, bool Prop);
         void sendSensorData(int sensorID, float sensorData1, float sensorData2, float SensorData3, float SensorData4);
 
         uint32_t readMessage();

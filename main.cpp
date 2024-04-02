@@ -53,7 +53,7 @@ void setup() {
 
     Can0.begin(CAN2busSpeed);
     Can0.setTxBufferSize(64);
-    uint32_t verifier = 0;
+    uint32_t verifier = 255;
     
 
 }
@@ -122,7 +122,7 @@ void loop() {
 
     // Do static methods
     uint32_t verifier = test.readMessage();
-    if (verifier != 0)
+    if (verifier != 255)
     {
         Serial.println("Main: ");
         Serial.println(verifier);
@@ -347,5 +347,5 @@ int main() {
         mainSystem.monitorPressure();
 
     }
-}
 */
+}

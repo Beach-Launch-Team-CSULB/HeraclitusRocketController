@@ -54,6 +54,28 @@
 #define FMV_CLOSE  ((uint32_t) 30)  // Fuel Main valve
 #define FMV_OPEN   ((uint32_t) 31)
 
+// Timing
+#define SET_IGNITION     ((uint32_t) 32)  // Set ignition time for both igniters.
+#define SET_LMV_OPEN     ((uint32_t) 33)  // Set LMV open time.
+#define SET_FMV_OPEN     ((uint32_t) 34)  // Set FMV open time. 
+#define SET_LMV_CLOSE    ((uint32_t) 35)  // Set LMV close time.
+#define SET_FMV_CLOSE    ((uint32_t) 36)  // Set FMV close time.
+
+#define GET_IGNITION     ((uint32_t) 37)  // Confirm ignition time for both igniters.
+#define GET_LMV_OPEN     ((uint32_t) 38)  // Confirm LMV open time.
+#define GET_FMV_OPEN     ((uint32_t) 39)  // Confirm FMV open time.
+#define GET_LMV_CLOSE    ((uint32_t) 40)  // Confirm LMV close time.
+#define GET_FMV_CLOSE    ((uint32_t) 41)  // Confirm FMV close time.
+
+// Ping
+#define PING_PI_ROCKET   ((uint32_t) 42)  // *Important*: Pi Box sends a ping to the rocket. 
+#define PING_ROCKET_PI   ((uint32_t) 43)  // Rocket sends a ping to the Pi Box.
+
+// PT Configuration
+#define ZERO_PTS         ((uint32_t) 44)  // Zero the pressure transducers.
+
+
+
 // State Reports
 #define SR_PROP   ((uint32_t) 127)
 #define SR_ENGINE ((uint32_t) 128)

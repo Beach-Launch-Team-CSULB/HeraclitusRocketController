@@ -1,4 +1,4 @@
-// 2/10/2024
+// 4/1/2024
 
 //#include <Arduino.h>
 #include <FlexCAN.h>
@@ -6,9 +6,10 @@
 #include "Config.h"
 #include "Igniter.h"
 #include "Valve.h"
+#include "Rocket.h"
 
 /* To-do: 
- *        1.) Research remote flag.
+ *        1.) Get the readMessage() to return the time for igniters on, FMV open, LMV open, and close valves.
  */
 
 
@@ -27,11 +28,11 @@ uint32_t CANDriver::readMessage()
   return msg.id;
 }
 
-void CANDriver::sendStateReport(int time, uint8_t rocketState, Valve valves[], Igniter igniters[], bool Prop)
+void CANDriver::sendStateReport(int time, uint8_t rocketState, Rocket node, bool Prop)
 {
   static CAN_message_t msg;
   msg.flags.extended = 0;
-  // msg.flags.remote = 0; <---- Do we need this?
+  msg.flags.remote = 0;
   msg.len = 8;
   int aTime = time;
   
@@ -42,38 +43,47 @@ void CANDriver::sendStateReport(int time, uint8_t rocketState, Valve valves[], I
   msg.buf[2] = littleElf[1];
   msg.buf[3] = littleElf[0];
 
-  // Determine which ALARA to generate the report for.
-  if (Prop == true)
-    msg.id = SR_PROP;
-  else
-    msg.id = SR_ENGINE;
-
   // If it is passed in as one of the defines in the Config.h that would be best. If not we can adjust it here.
   msg.buf[4]= rocketState;
 
-  // First byte of valve states.
-  uint8_t byte5 = 0;
-  for(int x = 0; x < 2; x++)
+  // Determine which ALARA to generate the report for.
+  // Use stoi() for valve/igniter states. For both nodes the first two numbers in the byte will be zeros.
+  // You can use the ultraElf since you are only dealing with one byte. Otherwise the littleElf would need to help.
+  std::string ultraElf = "00";
+  if (Prop == 0)
   {
-      byte5 = byte5|valves[x].getValveOpen() << x;
-  }
-  msg.buf[5] = byte5;
+    msg.id = SR_ENGINE;
+    // Get HP, HV, FMV, LMV, IGN1, IGN2.
+    // You could make this faster by looping through the valve/igniter maps using an iterator and bit shifting, but this .___Read() 
+    // has already been built so I will use it along with the ternary operator.
+    char hp   = (node.valveRead(HP_ID)      ? '1' : '0');
+    char hv   = (node.valveRead(HV_ID)      ? '1' : '0');
+    char fmv  = (node.valveRead(FMV_ID)     ? '1' : '0');
+    char lmv  = (node.valveRead(LMV_ID)     ? '1' : '0');
+    char ign1 = (node.ignitionRead(IGN1_ID) ? '1' : '0');
+    char ign2 = (node.ignitionRead(IGN2_ID) ? '1' : '0');
 
-  // Second byte of valve states.
-  uint8_t byte6 = 0;
-  for(int x = 2; x < 10; x++)
-  {
-      byte6 = byte6|valves[x].getValveOpen() << (x-2);
-  }
-  msg.buf[6] = byte6;
+    ultraElf = ultraElf + hp + hv + fmv + lmv + ign1 + ign2;
 
-  // Byte of igniter states.
-  uint8_t byte7 = 0;
-  for(int x = 0; x < 2; x++)
-  {
-      byte7 = byte7|igniters[x].getIgniterOn() << x;
+    // Cast as a single byte before packing into the frame.
+    msg.buf[5] = uint8_t(stoi(ultraElf, nullptr, 2));
   }
-  msg.buf[7] = byte7;
+  else
+  {
+    msg.id = SR_PROP;
+    // Get LV, LDV, LDR, FV, FDV, FDR.
+    char lv  = (node.valveRead(LV_ID)  ? '1' : '0');
+    char ldv = (node.valveRead(LDV_ID) ? '1' : '0');
+    char ldr = (node.valveRead(LDR_ID) ? '1' : '0');
+    char fv  = (node.valveRead(FV_ID)  ? '1' : '0');
+    char fdv = (node.valveRead(FDV_ID) ? '1' : '0');
+    char fdr = (node.valveRead(FDR_ID) ? '1' : '0');
+
+    ultraElf = ultraElf + lv + ldv + ldr + fv + fdv + fdr;
+
+    // Cast as a single byte before packing into the frame.
+    msg.buf[5] = uint8_t(stoi(ultraElf, nullptr, 2));
+  }
 
   Can0.write(msg);
 };
@@ -83,7 +93,7 @@ void CANDriver::sendSensorData(int sensorID, float sensorData1, float sensorData
   static CAN_message_t msg;
   msg.id = sensorID;  // Ensure CAN id corresponds to the correct sensor ids.
   msg.flags.extended = 0;
-  // msg.flags.remote = 0; <---- Do we need this?
+  msg.flags.remote = 0;
   msg.len = 8;
   
   // Avoiding dealing with the binary representation of floats. Divide by ten on CANReceive.py end.
