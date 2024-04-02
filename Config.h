@@ -1,7 +1,16 @@
-// 2/10/2024
+// 4/1/2024
+#ifndef CONFIG_H
+#define CONFIG_H
 
 #include <map>
 #include <string.h>
+
+// Extern definitions for timing.
+extern uint32_t ignitionTime = 0;
+extern uint32_t LMVOpenTime  = 0;
+extern uint32_t FMVOpenTime  = 0;
+extern uint32_t LMVCloseTime = 0;
+extern uint32_t FMVCloseTime = 0;
 
 // Valves & Igniters
 #define NUM_VALVES 10
@@ -73,8 +82,6 @@
 
 // PT Configuration
 #define ZERO_PTS         ((uint32_t) 44)  // Zero the pressure transducers.
-
-
 
 // State Reports
 #define SR_PROP   ((uint32_t) 127)
@@ -346,3 +353,4 @@
  *       135     Sensors  9, 10, 11, and 12 from Engine Node.
  *       136     Sensors 13, 14, 15, and 16 from Engine Node.
  */
+#endif

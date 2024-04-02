@@ -2,6 +2,7 @@
 
 //#include <Arduino.h>
 #include <FlexCAN.h>
+#include <string>
 #include "CANDriver.h"
 #include "Config.h"
 #include "Igniter.h"
@@ -9,7 +10,7 @@
 #include "Rocket.h"
 
 /* To-do: 
- *        1.) Get the readMessage() to return the time for igniters on, FMV open, LMV open, and close valves.
+ *        1.) Test!
  */
 
 
@@ -25,6 +26,39 @@ uint32_t CANDriver::readMessage()
   msg.id = 255;
   Can0.read(msg);
 
+  // Check for instances where we need to read the data field.
+  uint32_t time = 0;
+  if(msg.len == 5)
+  {
+    std::string num1 = std::to_string(msg.buf[0]);
+    std::string num2 = std::to_string(msg.buf[1]);
+    std::string num3 = std::to_string(msg.buf[2]);
+    std::string num4 = std::to_string(msg.buf[3]);
+    std::string num5 = std::to_string(msg.buf[4]);
+    time = stoi(num1+num2+num3+num4+num5);
+
+    if(msg.id == SET_IGNITION)
+    {
+      ignitionTime = time;
+    }
+    if(msg.id == SET_LMV_OPEN)
+    {
+      LMVOpenTime = time;
+    }
+    if(msg.id == SET_FMV_OPEN)
+    {
+      FMVOpenTime = time;
+    }
+    if(msg.id == SET_LMV_CLOSE)
+    {
+      LMVCloseTime = time;
+    }
+    if(msg.id == SET_FMV_CLOSE)
+    {
+      FMVCloseTime = time;
+    }
+  }
+
   return msg.id;
 }
 
@@ -33,7 +67,7 @@ void CANDriver::sendStateReport(int time, uint8_t rocketState, Rocket node, bool
   static CAN_message_t msg;
   msg.flags.extended = 0;
   msg.flags.remote = 0;
-  msg.len = 8;
+  msg.len = 6;
   int aTime = time;
   
   char* littleElf;
