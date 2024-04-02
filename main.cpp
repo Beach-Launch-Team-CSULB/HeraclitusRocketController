@@ -3,9 +3,6 @@
 #include <array>
 #include <unordered_map>
 #include "Rocket.h"
-#include "CANDriver.h"
-//#include "Arduino.h"
-//#include "Sensor.h"
 #include "Igniter.h"
 #include <unistd.h> // For sleep function
 #include <SD.h>
@@ -13,12 +10,16 @@
 #include "ExtendedIO.h"
 #include <Wire.h>
 
-
-
 #include <FlexCAN.h>
-
-#include <ios>
 #include "CANDriver.h"
+#include <cstdint>
+#include <iostream>
+
+uint32_t ignitionTime = 0;
+uint32_t LMVOpenTime  = 0;
+uint32_t FMVOpenTime  = 0;
+uint32_t LMVCloseTime = 0;
+uint32_t FMVCloseTime = 0;
 
 
 int alara = 0;
@@ -54,7 +55,6 @@ void setup() {
     Can0.begin(CAN2busSpeed);
     Can0.setTxBufferSize(64);
     uint32_t verifier = 255;
-    
 
 }
 

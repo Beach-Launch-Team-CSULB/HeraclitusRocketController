@@ -4,13 +4,14 @@
 
 #include <map>
 #include <string.h>
+#include <cstdint>
 
 // Extern definitions for timing.
-extern uint32_t ignitionTime = 0;
-extern uint32_t LMVOpenTime  = 0;
-extern uint32_t FMVOpenTime  = 0;
-extern uint32_t LMVCloseTime = 0;
-extern uint32_t FMVCloseTime = 0;
+extern uint32_t ignitionTime;
+extern uint32_t LMVOpenTime;
+extern uint32_t FMVOpenTime;
+extern uint32_t LMVCloseTime;
+extern uint32_t FMVCloseTime;
 
 // Valves & Igniters
 #define NUM_VALVES 10
@@ -93,9 +94,13 @@ extern uint32_t FMVCloseTime = 0;
 #define SENS_9_12_ENGINE  ((uint32_t) 131) // Pneumatics, Lox Inlet, Fuel Inlet, Fuel Injector
 #define SENS_13_16_ENGINE ((uint32_t) 132) // Chamber1,   Chamber2,  UNUSED,     UNUSED
 
+
+
 // Data Direction Inputs 
 #define INPUT  (uint32_t)0
 #define OUTPUT (uint32_t)1
+
+
 
 // Igniter Digital Pin Designations and IDs | ALARA LOWER 
 
@@ -234,7 +239,7 @@ extern uint32_t FMVCloseTime = 0;
 
 
 //Prop Node Initialization Information
-#define UPPER_SENSOR_ARRAY_DECL  {PT_LOX_HIGH_ID, 
+//#define UPPER_SENSOR_ARRAY_DECL  {PT_LOX_HIGH_ID, 
 
 
 //Engine Node Initialization Information
@@ -353,4 +358,5 @@ extern uint32_t FMVCloseTime = 0;
  *       135     Sensors  9, 10, 11, and 12 from Engine Node.
  *       136     Sensors 13, 14, 15, and 16 from Engine Node.
  */
+
 #endif

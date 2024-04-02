@@ -1,17 +1,13 @@
-// 2/10/2024
+// 4/2/2024
 
 #ifndef CANDRIVER_H
 #define CANDRIVER_H
 
-//#include <Arduino.h>
+#include "Rocket.h"
 #include <FlexCAN.h>
 #include <iostream>
 #include <vector>
-//#include <stdint.h>
-
-#include "Config.h"
-#include "Valve.h"
-#include "Igniter.h"
+#include <cstdint>
 
 
 class CANDriver 
