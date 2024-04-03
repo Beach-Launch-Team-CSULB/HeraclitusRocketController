@@ -13,16 +13,17 @@
 #include <FlexCAN.h>
 #include "CANDriver.h"
 #include <cstdint>
-#include <iostream>
+#include "Config.h"
 
-uint32_t ignitionTime = 0;
-uint32_t LMVOpenTime  = 0;
-uint32_t FMVOpenTime  = 0;
-uint32_t LMVCloseTime = 0;
-uint32_t FMVCloseTime = 0;
+// These need to not have a value or the value will be set to that throughout the duration of the program.
+// Initialize in setup()
+uint32_t ignitionTime;
+uint32_t LMVOpenTime;
+uint32_t FMVOpenTime;
+uint32_t LMVCloseTime;
+uint32_t FMVCloseTime;
 
-
-int alara = 0;
+int alara = 1;
 File onBoardLog;
 char* fileLogName = "SoftwareTest-03-15-2024.txt";
 bool sd_write = true;
@@ -38,6 +39,18 @@ CANDriver test = CANDriver();
 #define FAKEDATA2     ((float) 27.00)
 #define FAKEDATA3     ((float) 42.00)
 #define FAKEDATA4     ((float) 655.35)
+
+#define CANID_1  ((uint32_t) 1)
+#define CANID_2  ((uint32_t) 2)
+#define CANID_3  ((uint32_t) 3)
+#define CANID_4  ((uint32_t) 4)
+#define CANID_5  ((uint32_t) 5)
+#define CANID_6  ((uint32_t) 6)
+#define CANID_7  ((uint32_t) 7)
+#define CANID_8  ((uint32_t) 8)
+#define CANID_9  ((uint32_t) 9)
+#define CANID_10 ((uint32_t) 10)
+
 
 
 void setup() {
@@ -56,12 +69,17 @@ void setup() {
     Can0.setTxBufferSize(64);
     uint32_t verifier = 255;
 
+    // Do we want default values?
+    ignitionTime = 0;
+    LMVOpenTime = 0;
+    FMVOpenTime = 0;
+    LMVCloseTime = 0;
+    FMVCloseTime = 0;
+
 }
 
+
 void loop() {
-
-    
-
     //return;
     /*Igniter();
     for (const auto& pair : myRocket.igniterMap) {
@@ -120,6 +138,7 @@ void loop() {
 
     // TO BE REMOVED AT THE CONCLUSION OF THE CAN TEST
 
+
     // Do static methods
     uint32_t verifier = test.readMessage();
     if (verifier != 255)
@@ -130,33 +149,43 @@ void loop() {
     //Serial.println("Working");
     //Serial.println(verifier);
 
+    
 
-    /*
- *   /// CAN 2.0 Engine Node ///
- *   1.)  Receives [3] from Pi Box
- *   2.)  Sends [4] to Pi Box
+
+  /*
+ *   /// CAN 2.0 Propulsion Node ///
+ *   1.)  Receives [1] from Pi Box
+ *   2.)  Sends [2] to Pi Box
  *  
- *   3.)  Receives [6] from Propulsion Node
- *   4.)  Sends [7] to Pi Box
+ *   3.)  Receives [5] from Pi Box
+ *   4.)  Sends [6] to Engine Node
  * 
- *   6.)  Receives [8] from Pi Box
- *   5.)  Sends [9] to Propulsion Node
- */
+ *   6.)  Receives [9] from Engine Node
+ *   5.)  Sends [10] to Pi Box
+ */ 
 
-  if(verifier == 3)
+  // Changing this first id only.
+  if(verifier == CANID_1)
   {
-    //test.sendStateReport(1000007,);
-    test.sendSensorData(4,FAKEDATA1,FAKEDATA2,FAKEDATA3,FAKEDATA4);
+    // Added in this
+    myRocket.setValveOn(LDV_ID, true);
+    delay(1000);
+    test.sendStateReport(1, TEST, 1, true);
+    delay(1000);
+    myRocket.setValveOn(LDV_ID, false);
+
+
+    test.sendSensorData(2,FAKEDATA1,FAKEDATA2,FAKEDATA3,FAKEDATA4);
     verifier = 0;
   }
-  if(verifier == 6)
+  if(verifier == CANID_5)
   {
-    test.sendSensorData(7,FAKEDATA1,FAKEDATA2,FAKEDATA3,FAKEDATA4);
+    test.sendSensorData(6,FAKEDATA1,FAKEDATA2,FAKEDATA3,FAKEDATA4);
     verifier = 0;
   }
-  if(verifier == 8)
+  if(verifier == CANID_9)
   {
-    test.sendSensorData(9,FAKEDATA1,FAKEDATA2,FAKEDATA3,FAKEDATA4);
+    test.sendSensorData(10,FAKEDATA1,FAKEDATA2,FAKEDATA3,FAKEDATA4);
     verifier = 0;
   }
 
