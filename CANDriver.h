@@ -1,17 +1,13 @@
-// 2/10/2024
+// 4/2/2024
 
 #ifndef CANDRIVER_H
 #define CANDRIVER_H
 
-//#include <Arduino.h>
+#include "Rocket.h"
 #include <FlexCAN.h>
 #include <iostream>
 #include <vector>
-//#include <stdint.h>
-
-#include "Config.h"
-#include "Valve.h"
-#include "Igniter.h"
+#include <cstdint>
 
 
 class CANDriver 
@@ -27,7 +23,7 @@ class CANDriver
         CANDriver();
 
         // Would be RocketState rocketState instead of uint8_t rocketState.
-        void sendStateReport(int time, uint8_t rocketState, Valve valves[], Igniter igniters[], bool Prop);
+        void sendStateReport(int time, uint8_t rocketState, Rocket node, bool Prop);
         void sendSensorData(int sensorID, float sensorData1, float sensorData2, float SensorData3, float SensorData4);
 
         uint32_t readMessage();

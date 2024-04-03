@@ -1,7 +1,17 @@
-// 2/10/2024
+// 4/1/2024
+#ifndef CONFIG_H
+#define CONFIG_H
 
 #include <map>
 #include <string.h>
+#include <cstdint>
+
+// Extern definitions for timing.
+extern uint32_t ignitionTime;
+extern uint32_t LMVOpenTime;
+extern uint32_t FMVOpenTime;
+extern uint32_t LMVCloseTime;
+extern uint32_t FMVCloseTime;
 
 #define UPPER_ALARA true
 //#undef UPPER_ALARA
@@ -59,6 +69,26 @@
 #define FMV_CLOSE  ((uint32_t) 30)  // Fuel Main valve
 #define FMV_OPEN   ((uint32_t) 31)
 
+// Timing
+#define SET_IGNITION     ((uint32_t) 32)  // Set ignition time for both igniters.
+#define SET_LMV_OPEN     ((uint32_t) 33)  // Set LMV open time.
+#define SET_FMV_OPEN     ((uint32_t) 34)  // Set FMV open time. 
+#define SET_LMV_CLOSE    ((uint32_t) 35)  // Set LMV close time.
+#define SET_FMV_CLOSE    ((uint32_t) 36)  // Set FMV close time.
+
+#define GET_IGNITION     ((uint32_t) 37)  // Confirm ignition time for both igniters.
+#define GET_LMV_OPEN     ((uint32_t) 38)  // Confirm LMV open time.
+#define GET_FMV_OPEN     ((uint32_t) 39)  // Confirm FMV open time.
+#define GET_LMV_CLOSE    ((uint32_t) 40)  // Confirm LMV close time.
+#define GET_FMV_CLOSE    ((uint32_t) 41)  // Confirm FMV close time.
+
+// Ping
+#define PING_PI_ROCKET   ((uint32_t) 42)  // *Important*: Pi Box sends a ping to the rocket. 
+#define PING_ROCKET_PI   ((uint32_t) 43)  // Rocket sends a ping to the Pi Box.
+
+// PT Configuration
+#define ZERO_PTS         ((uint32_t) 44)  // Zero the pressure transducers.
+
 // State Reports
 #define SR_PROP   ((uint32_t) 127)
 #define SR_ENGINE ((uint32_t) 128)
@@ -69,9 +99,13 @@
 #define SENS_9_12_ENGINE  ((uint32_t) 131) // Pneumatics, Lox Inlet, Fuel Inlet, Fuel Injector
 #define SENS_13_16_ENGINE ((uint32_t) 132) // Chamber1,   Chamber2,  UNUSED,     UNUSED
 
+
+
 // Data Direction Inputs 
 #define INPUT  (uint32_t)0
 #define OUTPUT (uint32_t)1
+
+
 
 // Igniter Digital Pin Designations and IDs | ALARA LOWER 
 
@@ -209,6 +243,7 @@
 //Prop Node Initialization Information
 #ifdef UPPER_ALARA
     #define ALARA 1
+//#define UPPER_SENSOR_ARRAY_DECL  {PT_LOX_HIGH_ID, 
 
     #define VALVE_ARRAY_LENGTH 6
     #define VALVE_ARRAY {LV_ID, LDV_ID, LDR_ID, FV_ID, FDV_ID, FDR_ID}
@@ -347,3 +382,5 @@
  *       135     Sensors  9, 10, 11, and 12 from Engine Node.
  *       136     Sensors 13, 14, 15, and 16 from Engine Node.
  */
+
+#endif
