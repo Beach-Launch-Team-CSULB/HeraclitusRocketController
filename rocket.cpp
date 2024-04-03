@@ -7,6 +7,7 @@
 #include "Igniter.h"
 #include "Sensor.h"
 #include "PressureTransducer.h"
+#include "DelayedAction.h"
 
 void Rocket::setLED(int ledID, Color newColor)
 {
@@ -29,6 +30,7 @@ Rocket::Rocket()
         initializeUpperValves();
         initializeUpperSensors();
     }
+    manualOverrideEnabled = false;
 }
 
 /*float Rocket::sensorRead(Sensor sensor) {
@@ -56,8 +58,20 @@ bool Rocket::valveRead(int valveID) {
 bool Rocket::setIgnitionOn(int igniterID, bool ignitionOn) {
     return igniterMap[igniterID].setIgniterOn(ignitionOn); }
 
-bool Rocket::setValveOn(int valveID,bool valveOpen) {
+bool Rocket::setValve(int valveID,bool valveOpen) {
     return valveMap[valveID].setValveOpen(valveOpen); }
+
+void Rocket::setValveOpen(int valveID) {
+    valveMap[valveID].setValveOpen(true); }
+
+void Rocket::setValveClosed(int valveID) {
+    valveMap[valveID].setValveOpen(false); }
+
+void Rocket::setValveOpenIfFire(int valveID) 
+{
+    if(currentState == Fire)
+        valveMap[valveID].setValveOpen(true); 
+}
 
 bool Rocket::getExecuting(){
     return this->executingCommand; }
@@ -136,6 +150,9 @@ bool Rocket::canEnterState(E_RocketState stateToEnter)
             return currentState == TankPress;
     }
 }
+
+bool Rocket::canActuateValve(){
+    return manualOverrideEnabled || currentState == Test; }
 
 // Sets up the Igniters on the Lower Engine Node
 bool Rocket::initializeIgniters() 
@@ -317,3 +334,14 @@ void Rocket::setValvesOpen(bool valvesOpenInput, const std::vector<int> &valveID
             it->second.setValveOpen(valvesOpenInput);
     }
 }
+
+/*
+void Rocket::testDelay()
+{
+    void (Rocket::*testfunc)(int);
+    testfunc = &setValveOpen;
+    DelayedAction::addAction(millis() + 5000, testfunc, LMV_ID);
+    //setValveOpen(LMV_ID);
+    //delay(250);
+    //setValveClosed(LMV_ID);
+}*/

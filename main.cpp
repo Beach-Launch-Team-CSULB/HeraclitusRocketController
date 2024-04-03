@@ -66,6 +66,8 @@ void setup() {
 }
 
 void loop() {
+//testing delay
+
 
 /* //testing colors
     myRocket.setLED(0, RED);

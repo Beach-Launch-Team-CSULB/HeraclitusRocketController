@@ -31,6 +31,8 @@ class Rocket{
         //const std::vector<int> &sensorIDVector;
         LEDController ledArray;
 
+        bool manualOverrideEnabled;
+
         // Constructor 
         Rocket();
 
@@ -43,7 +45,10 @@ class Rocket{
         
         // Commands 
         bool setIgnitionOn(int,bool);
-        bool setValveOn(int,bool);
+        bool setValve(int,bool);
+        void setValveOpen(int); //setValve for use with DelayedAction
+        void setValveClosed(int); //setValve for use with DelayedAction
+        void setValveOpenIfFire(int); //setValve for use with DelayedAction in Fire Sequence
         void setLED(int ledID, Color newColor);
 
         bool enterState(E_RocketState stateToEnter); 
@@ -52,8 +57,10 @@ class Rocket{
 
         // Execution Check
         bool getExecuting();
+        void testDelay();
 
         bool canEnterState(E_RocketState stateToEnter); 
+        bool canActuateValve();
     
    private: 
         VehicleState state;
@@ -78,7 +85,6 @@ class Rocket{
         bool enterTankPress();
         bool enterFireArm();
         bool enterFire();
-
 };
 
 #endif
