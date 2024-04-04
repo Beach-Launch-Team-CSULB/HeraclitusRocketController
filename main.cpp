@@ -3,9 +3,6 @@
 #include <array>
 #include <unordered_map>
 #include "Rocket.h"
-#include "CANDriver.h"
-//#include "Arduino.h"
-//#include "Sensor.h"
 #include "Igniter.h"
 #include <unistd.h> // For sleep function
 #include <SD.h>
@@ -13,18 +10,24 @@
 #include "ExtendedIO.h"
 #include <Wire.h>
 
-
-
 #include <FlexCAN.h>
-
-#include <ios>
 #include "CANDriver.h"
+#include <cstdint>
+#include "Config.h"
 
+// These need to not have a value or the value will be set to that throughout the duration of the program.
+// Defined globally, initialized in setup(), and modified by readMessage() in CANDriver.cpp
+uint32_t ignitionTime;
+uint32_t LMVOpenTime;
+uint32_t FMVOpenTime;
+uint32_t LMVCloseTime;
+uint32_t FMVCloseTime;
 
+int alara = 1;
 File onBoardLog;
 char* fileLogName = "SoftwareTest-03-15-2024.txt";
 bool sd_write = true;
-Rocket myRocket = Rocket();
+Rocket myRocket = Rocket(alara);
 
 // TO BE REMOVED AT THE END OF CAN TEST
 
@@ -37,6 +40,18 @@ CANDriver test = CANDriver();
 #define FAKEDATA3     ((float) 42.00)
 #define FAKEDATA4     ((float) 655.35)
 
+#define CANID_1  ((uint32_t) 1)
+#define CANID_2  ((uint32_t) 2)
+#define CANID_3  ((uint32_t) 3)
+#define CANID_4  ((uint32_t) 4)
+#define CANID_5  ((uint32_t) 5)
+#define CANID_6  ((uint32_t) 6)
+#define CANID_7  ((uint32_t) 7)
+#define CANID_8  ((uint32_t) 8)
+#define CANID_9  ((uint32_t) 9)
+#define CANID_10 ((uint32_t) 10)
+
+
 
 void setup() {
     
@@ -47,95 +62,203 @@ void setup() {
     if (!SD.begin(BUILTIN_SDCARD)) {
         sd_write = false;
     }
-    //myRocket = Rocket();
-    //ExtendedIO::extendedIOsetup();
 
-    myRocket.ledArray.init();
+    myRocket = Rocket(alara);
+    //ExtendedIO::extendedIOsetup();
 
     Can0.begin(CAN2busSpeed);
     Can0.setTxBufferSize(64);
-    uint32_t verifier = 0;
-    
-    myRocket.setLED(0, GRAY);
-    myRocket.setLED(1, GRAY);
-    delay(500);
-    //myRocket.setLED(1, TEAL);
+    uint32_t verifier = 255;
 
-
+    // Do we want default values?
+    ignitionTime = 0;
+    LMVOpenTime = 0;
+    FMVOpenTime = 0;
+    LMVCloseTime = 0;
+    FMVCloseTime = 0;
 
 }
 
+
 void loop() {
-//testing delay
+    //return;
+    /*Igniter();
+    for (const auto& pair : myRocket.igniterMap) {
+        myRocket.setIgnitionOn(pair.first, true);
+ S       //sleep(1);
+        delay(1);
+        myRocket.setIgnitionOn(pair.first, false);
+        //sleep(1);
+        delay(1);
+    }*/
 
 
-/* //testing colors
-    myRocket.setLED(0, RED);
-    delay(500);
-    myRocket.setLED(1, RED);
-    delay(500);
 
-    myRocket.setLED(0, ORANGE);
-    delay(500);
-    myRocket.setLED(1, ORANGE);
-    delay(500);
-    
-    myRocket.setLED(0, YELLOW);
-    delay(500);
-    myRocket.setLED(1, YELLOW);
-    delay(500);
-    
-    myRocket.setLED(0, LIME);
-    delay(500);
-    myRocket.setLED(1, LIME);
-    delay(500);
-    
-    myRocket.setLED(0, GREEN);
-    delay(500);
-    myRocket.setLED(1, GREEN);
-    delay(500);
 
-    myRocket.setLED(0, CYAN);
-    delay(500);
-    myRocket.setLED(1, CYAN);
-    delay(500);
-    
-    myRocket.setLED(0, TEAL);
-    delay(500);
-    myRocket.setLED(1, TEAL);
-    delay(500);
+    // ONLY COMMENTED OUT FOR CAN TEST. 
 
-    myRocket.setLED(0, BLUE);
-    delay(500);
-    myRocket.setLED(1, BLUE);
-    delay(500);
-
-    myRocket.setLED(0, PURPLE);
-    delay(500);
-    myRocket.setLED(1, PURPLE);
-    delay(500);
-    
-    myRocket.setLED(0, MAGENTA);
-    delay(500);
-    myRocket.setLED(1, MAGENTA);
-    delay(500);
-    
-    myRocket.setLED(0, PINK);
-    delay(500);
-    myRocket.setLED(1, PINK);
-    delay(500);
-
-*/
 
     /*
+    // You need a delay here or the first print will not work. 
+    delay(1000);
+    int address = 0x400FF100;       //PDOR for LV valve 
+    int* pcontent = (int*)address;
+    int content = *pcontent;
+
+    int pcr_address = 0x4004C028;       //PCR for LV valve PTD10
+    int* pcr_pcontent = (int*)address;
+    int pcr_content = *pcontent;
+
+    int pddr_address = 0x400FF0D4;       //PDDR for LV valve
+    int* pddr_pcontent = (int*)address;
+    int pddr_content = *pcontent;
+    
+
+    Serial.println("PDOR BeforeVVV");
+    Serial.println(content);
+    Serial.println("PCR BeforeVVV");
+    Serial.println(pcr_content);
+    Serial.println("PDDR BeforeVVV");
+    Serial.println(pddr_content);
+   
+    //for (const auto& pair : myRocket.valveMap) {
+        myRocket.setValveOn(24, true);
+        //sleep(1);
+        delay(1000);
+        Serial.println("PDOR AfterVVV");
+        Serial.println(content);
+
+        Serial.println("PCR AfterVVV");
+        Serial.println(pcr_content);
+
+        Serial.println("PDDR AfterVVV");
+        Serial.println(pddr_content);
+
+        myRocket.setValveOn(20, false);
+        */
+
+    // TO BE REMOVED AT THE CONCLUSION OF THE CAN TEST
+
+
+    // Do static methods
+    uint32_t verifier = test.readMessage();
+    if (verifier != 255)
+    {
+        Serial.println("Main: ");
+        Serial.println(verifier);
+    }
+    //Serial.println("Working");
+    //Serial.println(verifier);
+
+    
+
+
+  /*
+ *   /// CAN 2.0 Propulsion Node ///
+ *   1.)  Receives [1] from Pi Box
+ *   2.)  Sends [2] to Pi Box
+ *  
+ *   3.)  Receives [5] from Pi Box
+ *   4.)  Sends [6] to Engine Node
+ * 
+ *   6.)  Receives [9] from Engine Node
+ *   5.)  Sends [10] to Pi Box
+ */ 
+
+  // Changing this first id only.
+  if(verifier == CANID_1)
+  {
+    // Added in this
+    delay(500);
+    myRocket.setValveOn(LDV_ID, true);
+    delay(500);
+    // Try passing in the value of "alara" from setup as the boolean value.
+    test.sendStateReport(1, TEST, myRocket, true);
+    delay(500);
+    myRocket.setValveOn(LDV_ID, false);
+
+
+    test.sendSensorData(2,FAKEDATA1,FAKEDATA2,FAKEDATA3,FAKEDATA4);
+    verifier = 0;
+  }
+  if(verifier == CANID_5)
+  {
+    test.sendSensorData(6,FAKEDATA1,FAKEDATA2,FAKEDATA3,FAKEDATA4);
+    verifier = 0;
+  }
+  if(verifier == CANID_9)
+  {
+    test.sendSensorData(10,FAKEDATA1,FAKEDATA2,FAKEDATA3,FAKEDATA4);
+    verifier = 0;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //(*(volatile uint32_t *)0x400FF0C0) = (0<<10); //PDOR
+        //sleep(1);
+        
+        /*
+
         /// MILISECONDS
         delay(1000);
-        myRocket.setValveOn(myRocket.valveIDArray[4], true);
+ 
+
+        myRocket.setValveOn(21, true);
         //sleep(1);
         delay(1000);
-        myRocket.setValveOn(myRocket.valveIDArray[4], false);
+        myRocket.setValveOn(21, false);
         //sleep(1);
-    */
+
+        
+
+        /// MILISECONDS
+        delay(1000);
+        myRocket.setValveOn(22, true);
+        //sleep(1);
+        delay(1000);
+        myRocket.setValveOn(22, false);
+        //sleep(1);
+
+        /// MILISECONDS
+        delay(1000);
+        myRocket.setValveOn(23, true);
+        //sleep(1);
+        delay(1000);
+        myRocket.setValveOn(23, false);
+        //sleep(1);
+
+        /// MILISECONDS
+        delay(1000);
+        myRocket.setValveOn(28, true);
+        //sleep(1);
+        delay(1000);
+        myRocket.setValveOn(28, false);
+        //sleep(1);
+
+        /// MILISECONDS
+        delay(1000);
+        myRocket.setValveOn(29, true);
+        //sleep(1);
+        delay(1000);
+        myRocket.setValveOn(29, false);
+        //sleep(1);
+
+        /// MILISECONDS
+        delay(1000);
+    //}
+
     
     int address = 0x40048038;
     int* pcontent = (int*)address;
@@ -256,5 +379,5 @@ int main() {
         mainSystem.monitorPressure();
 
     }
-}
 */
+}

@@ -6,6 +6,9 @@
 #include <string.h>
 #include <cstdint>
 
+// Constant defined for packing sensor data
+#define NO_DECIMAL ((uint8_t) 100)
+
 // Extern definitions for timing.
 extern uint32_t ignitionTime;
 extern uint32_t LMVOpenTime;

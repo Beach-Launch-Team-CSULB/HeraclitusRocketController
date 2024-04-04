@@ -6,7 +6,8 @@
 #include <string>
 
 /* To-do: 
- *        1.) Test!
+ *        1.) Ensure that the NO_DECIMAL addition is working correctly.
+ *        2.) Test the final byte of sendStateReport by actuating a valve.
  */
 
 
@@ -127,13 +128,13 @@ void CANDriver::sendSensorData(int sensorID, float sensorData1, float sensorData
   msg.len = 8;
   
   // Avoiding dealing with the binary representation of floats. Divide by ten on CANReceive.py end.
-  sensorData1 *= 100;
+  sensorData1 *= NO_DECIMAL;
   int sensorData1Mod = sensorData1;
-  sensorData2 *= 100;
+  sensorData2 *= NO_DECIMAL;
   int sensorData2Mod = sensorData2;
-  sensorData3 *= 100;
+  sensorData3 *= NO_DECIMAL;
   int sensorData3Mod = sensorData3;
-  sensorData4 *= 100;
+  sensorData4 *= NO_DECIMAL;
   int sensorData4Mod = sensorData4;
   
   char* littleElf;
