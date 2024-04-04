@@ -64,7 +64,7 @@ void setup() {
     }
 
     myRocket = Rocket(alara);
-    ExtendedIO::extendedIOsetup();
+    //ExtendedIO::extendedIOsetup();
 
     Can0.begin(CAN2busSpeed);
     Can0.setTxBufferSize(64);
@@ -169,11 +169,12 @@ void loop() {
   if(verifier == CANID_1)
   {
     // Added in this
+    delay(500);
     myRocket.setValveOn(LDV_ID, true);
-    delay(1000);
+    delay(500);
     // Try passing in the value of "alara" from setup as the boolean value.
     test.sendStateReport(1, TEST, myRocket, true);
-    delay(1000);
+    delay(500);
     myRocket.setValveOn(LDV_ID, false);
 
 
