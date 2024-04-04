@@ -36,28 +36,11 @@
     {    
         // These should be initialized earlier and not called again, but having them in main did not work.
 
-
         // Try/Catch block was not working with our platformio.ini settings. This is untested -Aurum 3/20/2024
-        
+        this->valveOpen = valveOpenInput;
         ExtendedIO::digitalWriteExtended(this->pinDigital, valveOpenInput); 
         digitalWrite(this->pinPWM, valveOpenInput);        
         return true;
-        
-        /* This works, but passing the bool directly should be easier and more readable
-        if(ValveOpenInput == true)
-        {
-            ExtendedIO::digitalWriteExtended(this->pinDigital,1); 
-            digitalWrite(this->pinPWM,1);
-            return true;
-        }
-        if(ValveOpenInput == false)
-        {
-            ExtendedIO::digitalWriteExtended(this->pinDigital,0);
-            digitalWrite(this->pinPWM,0);
-            return true;
-        }
-        return false;
-        */
     }
 
 
