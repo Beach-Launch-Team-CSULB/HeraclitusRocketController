@@ -16,7 +16,7 @@
 #include "Config.h"
 
 // These need to not have a value or the value will be set to that throughout the duration of the program.
-// Initialize in setup()
+// Defined globally, initialized in setup(), and modified by readMessage() in CANDriver.cpp
 uint32_t ignitionTime;
 uint32_t LMVOpenTime;
 uint32_t FMVOpenTime;
@@ -62,8 +62,9 @@ void setup() {
     if (!SD.begin(BUILTIN_SDCARD)) {
         sd_write = false;
     }
+
     myRocket = Rocket(alara);
-    //ExtendedIO::extendedIOsetup();
+    ExtendedIO::extendedIOsetup();
 
     Can0.begin(CAN2busSpeed);
     Can0.setTxBufferSize(64);
@@ -170,7 +171,8 @@ void loop() {
     // Added in this
     myRocket.setValveOn(LDV_ID, true);
     delay(1000);
-    test.sendStateReport(1, TEST, 1, true);
+    // Try passing in the value of "alara" from setup as the boolean value.
+    test.sendStateReport(1, TEST, myRocket, true);
     delay(1000);
     myRocket.setValveOn(LDV_ID, false);
 
