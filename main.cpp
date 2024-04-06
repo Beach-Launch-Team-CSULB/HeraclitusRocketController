@@ -23,11 +23,11 @@ uint32_t FMVOpenTime;
 uint32_t LMVCloseTime;
 uint32_t FMVCloseTime;
 
-int alara = 1;
+//int alara = 1;
 File onBoardLog;
 char* fileLogName = "SoftwareTest-03-15-2024.txt";
 bool sd_write = true;
-Rocket myRocket = Rocket(alara);
+Rocket myRocket = Rocket();
 
 // TO BE REMOVED AT THE END OF CAN TEST
 
@@ -63,7 +63,7 @@ void setup() {
         sd_write = false;
     }
 
-    myRocket = Rocket(alara);
+    //myRocket = Rocket(alara);
     //ExtendedIO::extendedIOsetup();
 
     Can0.begin(CAN2busSpeed);
@@ -170,13 +170,15 @@ void loop() {
   {
     // Added in this
     delay(500);
-    myRocket.setValveOn(LDV_ID, true);
+    myRocket.setValveOpen(LDV_ID);
     delay(500);
     // Try passing in the value of "alara" from setup as the boolean value.
     test.sendStateReport(1, TEST, myRocket, true);
     delay(500);
-    myRocket.setValveOn(LDV_ID, false);
+    myRocket.setValveClosed(LDV_ID);
 
+    //Serial.println(ignitionTime);
+    //test.sendTiming(ignitionTime);
 
     test.sendSensorData(2,FAKEDATA1,FAKEDATA2,FAKEDATA3,FAKEDATA4);
     verifier = 0;

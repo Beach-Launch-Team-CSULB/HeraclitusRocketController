@@ -1,4 +1,4 @@
-// 4/2/2024
+// 4/5/2024
 #include "CANDriver.h"
 #include "Config.h"
 
@@ -6,8 +6,7 @@
 #include <string>
 
 /* To-do: 
- *        1.) Ensure that the NO_DECIMAL addition is working correctly.
- *        2.) Test the final byte of sendStateReport by actuating a valve.
+ *        1.) Test the ability to send  a time back to the stand.
  */
 
 
@@ -153,3 +152,23 @@ void CANDriver::sendSensorData(int sensorID, float sensorData1, float sensorData
 
   Can0.write(msg);
 };
+
+// Sends timing data back to the GUI.
+void CANDriver::sendTiming(uint32_t time)
+{
+  static CAN_message_t msg;
+  msg.id = 37;
+  msg.flags.extended = 0;
+  msg.flags.remote = 0;
+  msg.len = 4;
+  int aTime = time;
+  
+  char* littleElf;
+  littleElf =  (char*)&aTime;
+  msg.buf[0] = littleElf[3];
+  msg.buf[1] = littleElf[2];
+  msg.buf[2] = littleElf[1];
+  msg.buf[3] = littleElf[0];
+
+  Can0.write(msg);
+}
