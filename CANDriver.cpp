@@ -1,4 +1,4 @@
-// 4/5/2024
+// 4/7/2024
 #include "CANDriver.h"
 #include "Config.h"
 
@@ -6,7 +6,7 @@
 #include <string>
 
 /* To-do: 
- *        1.) Test the ability to send  a time back to the stand.
+ *        1.) Test the additions made to sendTiming().
  */
 
 
@@ -154,14 +154,38 @@ void CANDriver::sendSensorData(int sensorID, float sensorData1, float sensorData
 };
 
 // Sends timing data back to the GUI.
-void CANDriver::sendTiming(uint32_t time)
+void CANDriver::sendTiming(uint32_t getTimeID)
 {
   static CAN_message_t msg;
+  uint32_t aTime = 0;
 
-  // VVV Fix VVV
-  // Add if statements where msg.id and aTime receive appropriate assignment and initialization.
-  msg.id = 133;
-  int aTime = time;
+  // msg.id and aTime receive appropriate assignment based on input.
+  if (getTimeID == GET_IGNITION)
+  {
+    msg.id = SEND_IGNITION;
+    // int aTime = time;
+    aTime = ignitionTime;
+  }
+  if (getTimeID == GET_LMV_OPEN)
+  {
+    msg.id = SEND_LMV_OPEN;
+    aTime = LMVOpenTime;
+  }
+  if (getTimeID == GET_FMV_OPEN)
+  {
+    msg.id = SEND_FMV_OPEN;
+    aTime = FMVOpenTime;
+  }
+  if (getTimeID == GET_LMV_CLOSE)
+  {
+    msg.id = SEND_LMV_CLOSE;
+    aTime = LMVCloseTime;
+  }
+  if (getTimeID == GET_FMV_CLOSE)
+  {
+    msg.id = SEND_FMV_CLOSE;
+    aTime = FMVCloseTime;
+  }
 
   msg.flags.extended = 0;
   msg.flags.remote = 0;

@@ -1,4 +1,4 @@
-// 4/5/2024
+// 4/7/2024
 
 #ifndef CANDRIVER_H
 #define CANDRIVER_H
@@ -27,7 +27,7 @@ class CANDriver
         // Would be RocketState rocketState instead of uint8_t rocketState.
         void sendStateReport(int time, uint8_t rocketState, Rocket node, bool Prop);
         void sendSensorData(int sensorID, float sensorData1, float sensorData2, float SensorData3, float SensorData4);
-        void sendTiming(uint32_t time);
+        void sendTiming(uint32_t getTimeID);
 
         //void sendOperatorMessage(int messageID);
 };
