@@ -79,15 +79,17 @@ extern uint32_t FMVCloseTime;
 #define SET_LMV_CLOSE    ((uint32_t) 35)  // Set LMV close time.
 #define SET_FMV_CLOSE    ((uint32_t) 36)  // Set FMV close time.
 
-#define GET_IGNITION     ((uint32_t) 37)  // Confirm ignition time for both igniters.
-#define GET_LMV_OPEN     ((uint32_t) 38)  // Confirm LMV open time.
-#define GET_FMV_OPEN     ((uint32_t) 39)  // Confirm FMV open time.
-#define GET_LMV_CLOSE    ((uint32_t) 40)  // Confirm LMV close time.
-#define GET_FMV_CLOSE    ((uint32_t) 41)  // Confirm FMV close time.
+#define GET_IGNITION     ((uint32_t) 37)  // Pi Box requests ignition time for both igniters.
+#define GET_LMV_OPEN     ((uint32_t) 38)  // Pi Box requests LMV open time.
+#define GET_FMV_OPEN     ((uint32_t) 39)  // Pi Box requests FMV open time.
+#define GET_LMV_CLOSE    ((uint32_t) 40)  // Pi Box requests LMV close time.
+#define GET_FMV_CLOSE    ((uint32_t) 41)  // Pi Box requests FMV close time.
 
 // Ping
 #define PING_PI_ROCKET   ((uint32_t) 42)  // *Important*: Pi Box sends a ping to the rocket. 
-#define PING_ROCKET_PI   ((uint32_t) 43)  // Rocket sends a ping to the Pi Box.
+
+// Reserved
+#define RESERVED         ((uint32_t) 43)  // Reserved - does nothing.
 
 // PT Configuration
 #define ZERO_PTS         ((uint32_t) 44)  // Zero the pressure transducers.
@@ -101,6 +103,16 @@ extern uint32_t FMVCloseTime;
 #define SENS_5_8_PROP     ((uint32_t) 130) // Lox Tank1,  Lox Tank2, Fuel Tank1, Fuel Tank2
 #define SENS_9_12_ENGINE  ((uint32_t) 131) // Pneumatics, Lox Inlet, Fuel Inlet, Fuel Injector
 #define SENS_13_16_ENGINE ((uint32_t) 132) // Chamber1,   Chamber2,  UNUSED,     UNUSED
+
+// Timing Reports
+#define SEND_IGNITION     ((uint32_t) 133)  // ALARA response to 37. Sends igniter time for confirmation.
+#define SEND_LMV_OPEN     ((uint32_t) 134)  // ALARA response to 38. Sends LMV open time for confirmation. 
+#define SEND_FMV_OPEN     ((uint32_t) 135)  // ALARA response to 39. Sends FMV open time for confirmation.
+#define SEND_LMV_CLOSE    ((uint32_t) 136)  // ALARA response to 40. Sends LMV close time for confirmation.
+#define SEND_FMV_CLOSE    ((uint32_t) 137)  // ALARA response to 41. Sends FMV close time for confirmation.
+
+// Ping Response
+#define PING_ROCKET_PI    ((uint32_t) 138)  // Rocket sends a ping to the Pi Box.
 
 
 

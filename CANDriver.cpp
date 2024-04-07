@@ -157,11 +157,15 @@ void CANDriver::sendSensorData(int sensorID, float sensorData1, float sensorData
 void CANDriver::sendTiming(uint32_t time)
 {
   static CAN_message_t msg;
-  msg.id = 37;
+
+  // VVV Fix VVV
+  // Add if statements where msg.id and aTime receive appropriate assignment and initialization.
+  msg.id = 133;
+  int aTime = time;
+
   msg.flags.extended = 0;
   msg.flags.remote = 0;
   msg.len = 4;
-  int aTime = time;
   
   char* littleElf;
   littleElf =  (char*)&aTime;
