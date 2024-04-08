@@ -1,4 +1,4 @@
-// 4/1/2024
+// 4/8/2024
 #ifndef CONFIG_H
 #define CONFIG_H
 
@@ -24,6 +24,9 @@ extern uint32_t FMVCloseTime;
 // Valves & Igniters
 #define NUM_VALVES 10
 #define NUM_IGNITERS 2
+
+// Constant define for specifying the number of times per second sensor data & state reports are to be transmitted over CAN (ms).
+#define CAN_INTERVAL ((uint32_t) 333)
 
 // Vehicle Commands
 #define ABORT      ((uint32_t) 0)
