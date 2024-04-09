@@ -452,3 +452,11 @@ void CANRoutine() {
     test.sendSensorData(msgID+1,sensorReads[4], sensorReads[5], sensorReads[6], sensorReads[7]);
     test.sendStateReport(millis(), myRocket.getState(), myRocket, alara);
 }
+
+// TODO:: helper function for safety features
+//      Ping loss
+//      Lox pressure
+
+// TODO:: fire sequence function
+
+// TODO:: add LEDs
