@@ -35,7 +35,7 @@
     bool Valve::setValveOpen(bool ValveOpenInput) {
         /*Sets the state of Valve Objet: True (Open) | False (Close)
         Returns true if successful*/
-        
+        this->valveOpen = ValveOpenInput;
         ExtendedIO::pinModeExtended(this->pinDigital,1,OUTPUT);     // Sets Manual Pinmode to GPIO, Data Direction OUTPUT
         pinMode(this->pinPWM,1);
 

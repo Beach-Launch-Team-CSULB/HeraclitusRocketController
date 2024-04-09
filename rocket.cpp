@@ -50,6 +50,11 @@ bool Rocket::getExecuting(){
     return this->executingCommand;
 }
 
+// 4/8/'24
+uint8_t Rocket::getState() {
+    return this->state;
+}
+
 
 bool Rocket::initializeIgniters(){
     

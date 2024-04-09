@@ -1,14 +1,9 @@
-// 4/2/2024
+// 4/8/2024
 #include "CANDriver.h"
 #include "Config.h"
 
 #include <FlexCAN.h>
 #include <string>
-
-/* To-do: 
- *        1.) Test!
- */
-
 
 CANDriver::CANDriver()
 {
@@ -127,13 +122,13 @@ void CANDriver::sendSensorData(int sensorID, float sensorData1, float sensorData
   msg.len = 8;
   
   // Avoiding dealing with the binary representation of floats. Divide by ten on CANReceive.py end.
-  sensorData1 *= 100;
+  sensorData1 *= NO_DECIMAL;
   int sensorData1Mod = sensorData1;
-  sensorData2 *= 100;
+  sensorData2 *= NO_DECIMAL;
   int sensorData2Mod = sensorData2;
-  sensorData3 *= 100;
+  sensorData3 *= NO_DECIMAL;
   int sensorData3Mod = sensorData3;
-  sensorData4 *= 100;
+  sensorData4 *= NO_DECIMAL;
   int sensorData4Mod = sensorData4;
   
   char* littleElf;
@@ -152,3 +147,51 @@ void CANDriver::sendSensorData(int sensorID, float sensorData1, float sensorData
 
   Can0.write(msg);
 };
+
+// Sends timing data back to the GUI.
+void CANDriver::sendTiming(uint32_t getTimeID)
+{
+  static CAN_message_t msg;
+  uint32_t aTime = 0;
+
+  // msg.id and aTime receive appropriate assignment based on input.
+  if (getTimeID == GET_IGNITION)
+  {
+    msg.id = SEND_IGNITION;
+    // int aTime = time;
+    aTime = ignitionTime;
+  }
+  if (getTimeID == GET_LMV_OPEN)
+  {
+    msg.id = SEND_LMV_OPEN;
+    aTime = LMVOpenTime;
+  }
+  if (getTimeID == GET_FMV_OPEN)
+  {
+    msg.id = SEND_FMV_OPEN;
+    aTime = FMVOpenTime;
+  }
+  if (getTimeID == GET_LMV_CLOSE)
+  {
+    msg.id = SEND_LMV_CLOSE;
+    aTime = LMVCloseTime;
+  }
+  if (getTimeID == GET_FMV_CLOSE)
+  {
+    msg.id = SEND_FMV_CLOSE;
+    aTime = FMVCloseTime;
+  }
+
+  msg.flags.extended = 0;
+  msg.flags.remote = 0;
+  msg.len = 4;
+  
+  char* littleElf;
+  littleElf =  (char*)&aTime;
+  msg.buf[0] = littleElf[3];
+  msg.buf[1] = littleElf[2];
+  msg.buf[2] = littleElf[1];
+  msg.buf[3] = littleElf[0];
+
+  Can0.write(msg);
+}

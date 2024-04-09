@@ -33,6 +33,9 @@ class Rocket{
 
         // Execution Check
         bool getExecuting();
+
+        // Getter for Rocket's state
+        uint8_t getState();
     
    private: 
         VehicleState state;

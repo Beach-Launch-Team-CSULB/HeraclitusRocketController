@@ -80,6 +80,10 @@ void setup() {
 
 
 void loop() {
+
+    // See if this works - 
+    static uint32_t nextCANTime;
+
     //return;
     /*Igniter();
     for (const auto& pair : myRocket.igniterMap) {
@@ -152,7 +156,7 @@ void loop() {
     
 
 
-  /*
+ /*
  *   /// CAN 2.0 Propulsion Node ///
  *   1.)  Receives [1] from Pi Box
  *   2.)  Sends [2] to Pi Box
@@ -164,17 +168,24 @@ void loop() {
  *   5.)  Sends [10] to Pi Box
  */ 
 
+
+  Serial.println(LMVOpenTime);
+
+
   // Changing this first id only.
-  if(verifier == CANID_1)
+  if(verifier == 33)
   {
     // Added in this
+    delay(500);
     myRocket.setValveOn(LDV_ID, true);
-    delay(1000);
-    test.sendStateReport(1, TEST, 1, true);
-    delay(1000);
+    delay(500);
+    // Try passing in the value of "alara" from setup as the boolean value.
+    //test.sendStateReport(1, TEST, myRocket, true);
+    delay(500);
     myRocket.setValveOn(LDV_ID, false);
 
-
+    //Serial.println(ignitionTime);
+    test.sendTiming(GET_LMV_OPEN);
     test.sendSensorData(2,FAKEDATA1,FAKEDATA2,FAKEDATA3,FAKEDATA4);
     verifier = 0;
   }
@@ -189,6 +200,122 @@ void loop() {
     verifier = 0;
   }
 
+// SD Card and CAN Send
+
+// *** Note: The enum for the rocket states have values that are inconsistent with the IDs for CAN messages. Ask about this. ***
+    if(alara == 1) // Propulsion Node
+    {
+        int time = millis(); // Double check. This should be fine as long as the ALARA doesn't run for 3 weeks+.
+        uint8_t state = myRocket.getState();
+
+        std::string sTime  = std::to_string(time);
+        std::string sState = std::to_string(state);
+
+        std::string sPTLoxHigh   = std::to_string(myRocket.sensorRead(PT_LOX_HIGH_ID));
+        std::string sPTFuelHigh  = std::to_string(myRocket.sensorRead(PT_FUEL_HIGH_ID));
+        std::string sPTLoxDome   = std::to_string(myRocket.sensorRead(PT_LOX_DOME_ID));
+        std::string sPTFuelDome  = std::to_string(myRocket.sensorRead(PT_FUEL_DOME_ID));
+
+        std::string sPTLoxTank1  = std::to_string(myRocket.sensorRead(PT_LOX_TANK_1_ID));
+        std::string sPTLoxTank2  = std::to_string(myRocket.sensorRead(PT_LOX_TANK_2_ID));
+        std::string sPTFuelTank1 = std::to_string(myRocket.sensorRead(PT_FUEL_TANK_1_ID));
+        std::string sPTFuelTank2 = std::to_string(myRocket.sensorRead(PT_FUEL_TANK_2_ID));
+
+        char LVState  = (myRocket.valveRead(LV_ID)  ? '1' : '0');
+        char LDVState = (myRocket.valveRead(LDV_ID) ? '1' : '0');
+        char LDRState = (myRocket.valveRead(LDR_ID) ? '1' : '0');
+        char FVState  = (myRocket.valveRead(FV_ID)  ? '1' : '0');
+        char FDVState = (myRocket.valveRead(FDV_ID) ? '1' : '0');
+        char FDRState = (myRocket.valveRead(FDR_ID) ? '1' : '0');
+
+        std::string entry = sTime + " | State: " + sState + " | LV: " + LVState + " | LDV: " + LDVState + " | LDR: " + LDRState +
+                            " | FV: " + FVState + " | FDV: " + FDVState + " | FDR: " + FDRState + " | PTLox High: " + sPTLoxHigh + 
+                            " | PTFuel High: " + sPTFuelHigh + " | PTLox Dome: " + sPTLoxDome + " | PTFuel Dome: " + sPTFuelDome +
+                            " | PTLox Tank1: " + sPTLoxTank1 + " | PTLox Tank2: " + sPTLoxTank2 + " | PTFuel Tank1: " + sPTFuelTank1 +
+                            " | PTFuel Tank2: " + sPTFuelTank2 + '\n';
+
+        if (sd_write) 
+        {
+            File onBoardLog = SD.open(fileLogName, FILE_WRITE);
+            onBoardLog.printf("Time (ms) : %s", entry);
+        }
+
+        // Only occurs three times per second
+        if(millis() - nextCANTime >= CAN_INTERVAL)
+        {
+            // Update time
+            nextCANTime += CAN_INTERVAL;
+
+            // Do CAN tasks
+            float PTLoxHigh   = myRocket.sensorRead(PT_LOX_HIGH_ID);
+            float PTFuelHigh  = myRocket.sensorRead(PT_FUEL_HIGH_ID);
+            float PTLoxDome   = myRocket.sensorRead(PT_LOX_DOME_ID);
+            float PTFuelDome  = myRocket.sensorRead(PT_FUEL_DOME_ID);
+
+            float PTLoxTank1  = myRocket.sensorRead(PT_LOX_TANK_1_ID);
+            float PTLoxTank2  = myRocket.sensorRead(PT_LOX_TANK_2_ID);
+            float PTFuelTank1 = myRocket.sensorRead(PT_FUEL_TANK_1_ID);
+            float PTFuelTank2 = myRocket.sensorRead(PT_FUEL_TANK_2_ID);
+
+            test.sendSensorData(SENS_1_4_PROP, PTLoxHigh, PTFuelHigh, PTLoxDome, PTFuelDome);
+            test.sendSensorData(SENS_5_8_PROP, PTLoxTank1, PTLoxTank2, PTFuelTank1, PTFuelTank2);
+            test.sendStateReport(time, state, myRocket, alara);
+        }
+    }
+    else // Engine Node
+    {
+        int time = millis();
+        uint8_t state = myRocket.getState(); 
+
+        std::string sTime  = std::to_string(time);
+        std::string sState = std::to_string(state);
+
+        std::string sPTPneumatics   = std::to_string(myRocket.sensorRead(PT_PNUEMATICS_ID));
+        std::string sPTLoxInlet     = std::to_string(myRocket.sensorRead(PT_LOX_INLET_ID));
+        std::string sPTFuelInlet    = std::to_string(myRocket.sensorRead(PT_FUEL_INLET_ID));
+        std::string sPTFuelInjector = std::to_string(myRocket.sensorRead(PT_FUEL_INJECTOR_ID));
+
+        std::string sPTChamber1     = std::to_string(myRocket.sensorRead(PT_CHAMBER_1_ID));
+        std::string sPTChamber2     = std::to_string(myRocket.sensorRead(PT_CHAMBER_2_ID));
+
+        char HPState   = (myRocket.valveRead(HP_ID)      ? '1' : '0');
+        char HVState   = (myRocket.valveRead(HV_ID)      ? '1' : '0');
+        char FMVState  = (myRocket.valveRead(FMV_ID)     ? '1' : '0');
+        char LMVState  = (myRocket.valveRead(LMV_ID)     ? '1' : '0');
+        char IGN1State = (myRocket.ignitionRead(IGN1_ID) ? '1' : '0');
+        char IGN2State = (myRocket.ignitionRead(IGN2_ID) ? '1' : '0');
+
+        std::string entry = sTime + " | State: " + sState + " | HP: " + HPState + " | HV: " + HVState + " | FMV: " + FMVState  +
+                            " | LMV: " + LMVState + " | IGN1: " + IGN1State + " | IGN2: " + IGN2State + " | PTPneumatics: " + 
+                            sPTPneumatics + " | PTLox Inlet: " + sPTLoxInlet + " | PTFuel Inlet: " + sPTFuelInlet + " | PTFuel Injector: " +
+                            sPTFuelInjector + " | PTChamber1: " + sPTChamber1 + " | PTChamber2: " + sPTChamber2 + '\n';
+
+        if (sd_write) 
+        {
+            File onBoardLog = SD.open(fileLogName, FILE_WRITE);
+            onBoardLog.printf("Time (ms) : %s", entry);
+        }
+
+        // Only occurs three times per second
+        if(millis() - nextCANTime >= CAN_INTERVAL)
+        {
+            // Update time
+            nextCANTime += CAN_INTERVAL;
+
+            // Do CAN tasks
+            float PTPneumatics   = myRocket.sensorRead(PT_PNUEMATICS_ID);
+            float PTLoxInlet     = myRocket.sensorRead(PT_LOX_INLET_ID);
+            float PTFuelInlet    = myRocket.sensorRead(PT_FUEL_INLET_ID);
+            float PTFuelInjector = myRocket.sensorRead(PT_FUEL_INJECTOR_ID);
+
+            float PTChamber1     = myRocket.sensorRead(PT_CHAMBER_1_ID);
+            float PTChamber2     = myRocket.sensorRead(PT_CHAMBER_2_ID);
+
+            test.sendSensorData(SENS_9_12_ENGINE,PTPneumatics, PTLoxInlet, PTFuelInlet, PTFuelInjector);
+            test.sendSensorData(SENS_13_16_ENGINE,PTChamber1, PTChamber2, 0, 0);
+            test.sendStateReport(time, state, myRocket, alara);
+        }
+    }
 
 
 
