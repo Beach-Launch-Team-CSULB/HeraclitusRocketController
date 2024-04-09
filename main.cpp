@@ -172,21 +172,24 @@ void loop() {
  *   5.)  Sends [10] to Pi Box
  */ 
 
+
+  Serial.println(LMVOpenTime);
+
+
   // Changing this first id only.
-  if(verifier == CANID_1)
+  if(verifier == 33)
   {
     // Added in this
     delay(500);
     myRocket.setValveOpen(LDV_ID);
     delay(500);
     // Try passing in the value of "alara" from setup as the boolean value.
-    test.sendStateReport(1, TEST, myRocket, true);
+    //test.sendStateReport(1, TEST, myRocket, true);
     delay(500);
     myRocket.setValveClosed(LDV_ID);
 
     //Serial.println(ignitionTime);
-    //test.sendTiming(ignitionTime);
-
+    test.sendTiming(GET_LMV_OPEN);
     test.sendSensorData(2,FAKEDATA1,FAKEDATA2,FAKEDATA3,FAKEDATA4);
     verifier = 0;
   }
@@ -204,6 +207,7 @@ void loop() {
 
 
 // NOTE: Comment out before testing the updated sendTiming()
+/*
 
 // SD Card and CAN Send
 
@@ -321,6 +325,7 @@ void loop() {
             test.sendStateReport(time, state, myRocket, ALARA);
         }
     }
+    */
 
 
         //(*(volatile uint32_t *)0x400FF0C0) = (0<<10); //PDOR
