@@ -51,10 +51,6 @@ bool Rocket::valveRead(int valveID) {
     return valveMap[valveID].getValveOpen();
 }
 
-bool Rocket::getState() {
-    return this->state;
-}
-
 bool Rocket::setIgnitionOn(int igniterID, bool ignitionOn) {
     return igniterMap[igniterID].setIgniterOn(ignitionOn);
 }
