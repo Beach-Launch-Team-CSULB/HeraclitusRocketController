@@ -35,7 +35,7 @@ Rocket::Rocket(int ALARA){
     stateMap.emplace(IGN1_ID, int[8]{0, 0, 0, 0, 0, 0, 0, 0});
     stateMap.emplace(IGN2_ID, int[8]{0, 0, 0, 0, 0, 0, 0, 0});
 
-    this->state = 2;
+    changeState(STANDBY)
 }
 
 /*float Rocket::sensorRead(Sensor sensor) {
@@ -67,7 +67,7 @@ bool Rocket::changeState(int state) {
     for (std::map<int,Valve>::iterator valve = valveMap.begin(); valve != valveMap.end(); ++valve) {
         setValveOn(valve->first, stateMap[valve->first][state]);
     }
-    for (std::map<int,Igniter>::iterator Igniter = igniterMap.begin(); vigniter != igniterMap.end(); ++igniter) {
+    for (std::map<int,Igniter>::iterator Igniter = igniterMap.begin(); igniter != igniterMap.end(); ++igniter) {
         setValveOn(igniter->first, stateMap[igniter->first][state]);
     }
     this->state = state;

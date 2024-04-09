@@ -17,7 +17,7 @@ class Rocket{
         std::map<int, Valve> valveMap;
         std::map<int, Sensor> sensorMap;
         std::map<int, int[8]> stateMap;
-        int sensorArray[8];
+        //int sensorArray[8];
         
 
         // Constructor 

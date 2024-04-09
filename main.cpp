@@ -396,113 +396,6 @@ void loop() {
         }
     }
 }
-
-/*class Main {
-    EventManager eventManager;
-    Rocket rocket; 
-
-    void processCommand() {
-        // If a command is valid and no other command is currently executing
-        if (commandIsValid() && !isExecuting()) {
-            // Execute the command
-            executeCommand();
-            // Confirm update status
-            confirmUpdateStatus();
-        }
-    }
-
-    void handleSensorData() {
-        // Check if flag for new sensor data is set
-        if (isNewSensorDataAvailable()) {
-            // Execute sensor data collection
-            Event sensorDataEvent = collectSensorData();
-            // Return sensor data
-            returnSensorData(sensorDataEvent);
-        }
-    }
-
-    void monitorPressure() {
-        // Poll the LOX pressure
-        int loxPressure = pollLoxPressure();
-        // If LOX pressure is too high
-        if (loxPressureTooHigh(loxPressure)) {
-            // Execute vent command
-            executeVentCommand();
-            // Confirm update status
-            confirmUpdateStatus();
-        }
-    }
-
-    // Helper methods
-    bool commandIsValid(int idx) {
-        if (validCommandTable[rocket.curState][idx] == 1)
-            return true;
-        else {
-            return false;
-        }
-    }
-
-    bool isExecuting() {
-        // Implementation depends on how execution status is tracked
-        if (rocket.flag == 0){
-            return true;
-        }
-        else { 
-            return false;
-        } 
-    }
-
-    Event collectSensorData() {
-        int sensorReading = rocket.sensorRead();
-        Event sensorDataEvent(sensorReading); 
-        return sensorDataEvent;
-    }
-
-    void returnSensorData(Event& event) {
-        // Implementation depends on how sensor data is returned
-    }
-
-    int pollLoxPressure() {
-        const int loxPressureSensorId = /* appropriate sensor ID ;
-        int loxPressure = rocket.sensorRead(loxPressureSensorId);
-        return loxPressure;
-    }
-
-    bool loxPressureTooHigh(int loxPressure) {
-        const int pressureThreshold = /* define your threshold ;
-        return pressure > pressureThreshold;
-    }
-
-    void executeVentCommand() {
-        // Implementation depends on how the vent command is executed
-        rocket.toggleValve(ventID, true);
-    }
-
-    void confirmUpdateStatus() {
-        // if message is received from rocket, then we give thumbs up
-    }
-
-};
-
-// Main program loop
-int main() {
-    Main mainSystem;
-
-    static std::unordered_map<std::string, std::array<int, 12>> validCommandTable;
-    validCommandTable["Passive"] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-    // Fill out Command Table for final implementation
-
-    while (true) {
-        // Process incoming commands
-        mainSystem.processCommand();
-
-        // Handle sensor data if available
-        mainSystem.handleSensorData();
-
-        // Monitor and control LOX pressure
-        mainSystem.monitorPressure();
-
-    }
 */
 }
 
@@ -526,4 +419,36 @@ void executeCommand(int commandID) {
         else if (commandID < 32) myRocket.setValveOn(commandID / 2, commandID % 2);
     }
     // else handle the remaining CAN commands
+}
+
+std::string generateSDReport() {
+    std::string entry = std::to_string(millis());
+    entry = entry + " | State: " + std::to_string(myRocket.getState());
+
+    for (std::map<int,Sensor>::iterator sensor = myRocket.sensorMap.begin(); sensor != myRocket.sensorMap.end(); ++sensor) {
+        entry = entry + " | " + std::to_string(sensor->first) + ":" + std::to_string(myRocket.sensorRead(sensor->first));
+    }
+    for (std::map<int,Valve>::iterator valve = myRocket.valveMap.begin(); valve != myRocket.valveMap.end(); ++valve) {
+        entry = entry + " | " + std::to_string(sensor->first) + ":" + std::to_string(myRocket.valveRead(valve->first));
+    }
+    for (std::map<int,Igniter>::iterator igniter = myRocket.igniterMap.begin(); igniter != myRocket.igniterMap.end(); ++igniter) {
+        entry = entry + " | " + std::to_string(sensor->first) + ":" + std::to_string(myRocket.ignitionRead(igniter->first));
+    }
+
+    return entry + '\n';
+}
+
+void CANRoutine() {
+    if (alara == 0) msgID = SENS_1_4_PROP;
+    else msgID = SENS_9_12_ENGINE;
+    int sensorReads[8] = {0};
+    int i = 0;
+
+    for (std::map<int,Sensor>::iterator sensor = myRocket.sensorMap.begin(); sensor != myRocket.sensorMap.end(); ++sensor) {
+        sensorReads[i++] = myRocket.sensorRead(sensor->first);
+    }
+
+    test.sendSensorData(msgID,sensorReads[0], sensorReads[1], sensorReads[2], sensorReads[3]);
+    test.sendSensorData(msgID+1,sensorReads[4], sensorReads[5], sensorReads[6], sensorReads[7]);
+    test.sendStateReport(millis(), myRocket.getState(), myRocket, alara);
 }
