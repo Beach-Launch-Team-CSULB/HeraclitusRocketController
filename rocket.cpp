@@ -20,6 +20,19 @@ Rocket::Rocket(int ALARA){
         initializeUpperValves();
         initializeUpperSensors();
     }
+
+    stateMap.emplace(HP_ID, int[8]{0, 0, 0, 1, 1, 1, 0, 0});
+    stateMap.emplace(HV_ID, int[8]{0, 0, 0, 0, 0, 0, 1, 0});
+    stateMap.emplace(LV_ID, int[8]{0, 0, 0, 0, 0, 0, 1, 0});
+    stateMap.emplace(LMV_ID, int[8]{0, 0, 0, 0, 0, 0, 0, 0});
+    stateMap.emplace(LDR_ID, int[8]{0, 0, 0, 0, 1, 1, 0, 0});
+    stateMap.emplace(LDV_ID, int[8]{0, 0, 0, 0, 0, 0, 1, 0});
+    stateMap.emplace(FV_ID, int[8]{0, 0, 0, 0, 0, 0, 1, 0});
+    stateMap.emplace(FMV_ID, int[8]{0, 0, 0, 0, 0, 0, 0, 0});
+    stateMap.emplace(FDR_ID, int[8]{0, 0, 0, 0, 1, 1, 0, 0});
+    stateMap.emplace(FDV_ID, int[8]{0, 0, 0, 0, 0, 0, 1, 0});
+    stateMap.emplace(IGN1_ID, int[8]{0, 0, 0, 0, 0, 0, 0, 0});
+    stateMap.emplace(IGN2_ID, int[8]{0, 0, 0, 0, 0, 0, 0, 0});
 }
 
 /*float Rocket::sensorRead(Sensor sensor) {
@@ -38,12 +51,28 @@ bool Rocket::valveRead(int valveID) {
     return valveMap[valveID].getValveOpen();
 }
 
+bool Rocket::getState() {
+    return this->state;
+}
+
 bool Rocket::setIgnitionOn(int igniterID, bool ignitionOn) {
     return igniterMap[igniterID].setIgniterOn(ignitionOn);
 }
 
 bool Rocket::setValveOn(int valveID,bool valveOpen) {
     return valveMap[valveID].setValveOpen(valveOpen);
+}
+
+//TODO fire state method
+bool Rocket::changeState(int state) {
+    for (std::map<int,Valve>::iterator valve = valveMap.begin(); valve != valveMap.end(); ++valve) {
+        setValveOn(valve->first, stateMap[valve->first][state]);
+    }
+    for (std::map<int,Igniter>::iterator Igniter = igniterMap.begin(); vigniter != igniterMap.end(); ++igniter) {
+        setValveOn(igniter->first, stateMap[igniter->first][state]);
+    }
+    this->state = state;
+    return true;
 }
 
 bool Rocket::getExecuting(){

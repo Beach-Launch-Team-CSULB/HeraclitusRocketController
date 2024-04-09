@@ -378,3 +378,13 @@ int main() {
     }
 */
 }
+
+void executeCommand(int commandID) {
+    // TODO build in logic for determining whether a state change is valid
+    if (commandID < 8) myRocket.changeState(commandID);
+    if (myRocket.getState() == 0) {
+        else if (commandID < 12) myRocket.setIgnitionOn(commandID / 2, commandID % 2);
+        else if (commandID < 32) myRocket.setValveOn(commandID / 2, commandID % 2);
+    }
+    // else handle the remaining CAN commands
+}

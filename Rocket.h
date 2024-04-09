@@ -16,7 +16,9 @@ class Rocket{
         std::map<int, Igniter> igniterMap;
         std::map<int, Valve> valveMap;
         std::map<int, Sensor> sensorMap;
+        std::map<int, int[8]> stateMap;
         int sensorArray[8];
+        
 
         // Constructor 
         Rocket(int ALARA);
@@ -26,16 +28,18 @@ class Rocket{
         float sensorRead(int);
         bool ignitionRead(int);
         bool valveRead(int);
+        int getState();
         
         // Commands 
         bool setIgnitionOn(int,bool);
         bool setValveOn(int,bool);
+        bool changeState(int);
 
         // Execution Check
         bool getExecuting();
     
    private: 
-        VehicleState state;
+        int state;
         bool executingCommand;
         int ALARA;                      // 0 = Lower , 1 = Upper  
        
