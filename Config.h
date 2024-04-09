@@ -1,10 +1,13 @@
-// 4/1/2024
+// 4/8/2024
 #ifndef CONFIG_H
 #define CONFIG_H
 
 #include <map>
 #include <string.h>
 #include <cstdint>
+
+// Constant defined for packing sensor data
+#define NO_DECIMAL ((uint8_t) 100)
 
 // Extern definitions for timing.
 extern uint32_t ignitionTime;
@@ -16,6 +19,9 @@ extern uint32_t FMVCloseTime;
 // Valves & Igniters
 #define NUM_VALVES 10
 #define NUM_IGNITERS 2
+
+// Constant define for specifying the number of times per second sensor data & state reports are to be transmitted over CAN (ms).
+#define CAN_INTERVAL ((uint32_t) 333)
 
 // Vehicle Commands
 #define ABORT      ((uint32_t) 0)
@@ -79,7 +85,9 @@ extern uint32_t FMVCloseTime;
 
 // Ping
 #define PING_PI_ROCKET   ((uint32_t) 42)  // *Important*: Pi Box sends a ping to the rocket. 
-#define PING_ROCKET_PI   ((uint32_t) 43)  // Rocket sends a ping to the Pi Box.
+
+// Reserved
+#define RESERVED         ((uint32_t) 43)  // Reserved - Does nothing.
 
 // PT Configuration
 #define ZERO_PTS         ((uint32_t) 44)  // Zero the pressure transducers.
@@ -94,6 +102,15 @@ extern uint32_t FMVCloseTime;
 #define SENS_9_12_ENGINE  ((uint32_t) 131) // Pneumatics, Lox Inlet, Fuel Inlet, Fuel Injector
 #define SENS_13_16_ENGINE ((uint32_t) 132) // Chamber1,   Chamber2,  UNUSED,     UNUSED
 
+// Timing Reports
+#define SEND_IGNITION     ((uint32_t) 133)  // ALARA response to 37. Sends igniter time for confirmation.
+#define SEND_LMV_OPEN     ((uint32_t) 134)  // ALARA response to 38. Sends LMV open time for confirmation. 
+#define SEND_FMV_OPEN     ((uint32_t) 135)  // ALARA response to 39. Sends FMV open time for confirmation.
+#define SEND_LMV_CLOSE    ((uint32_t) 136)  // ALARA response to 40. Sends LMV close time for confirmation.
+#define SEND_FMV_CLOSE    ((uint32_t) 137)  // ALARA response to 41. Sends FMV close time for confirmation.
+
+// Ping Response
+#define PING_ROCKET_PI    ((uint32_t) 138)  // Rocket sends a ping to the Pi Box.
 
 
 // Data Direction Inputs 
