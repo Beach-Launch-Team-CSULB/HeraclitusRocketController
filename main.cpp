@@ -506,9 +506,21 @@ int main() {
 */
 }
 
+int stateTransitions[8][8] = {
+    //                                          FROM
+    //                  ABORT, VENT, FIRE, TANK_PRESS, HIGH_PRESS, STANDBY, PASSIVE, TEST
+    /*      ABORT */     {0,    1,    1,    0,         0,          0,       0,       0},
+    /*      VENT */      {1,    0,    1,    0,         0,          0,       0,       0},
+    /* T    FIRE */      {1,    1,    0,    1,         0,          0,       0,       0},
+    /* O    TANK_PRESS */{1,    1,    0,    0,         1,          0,       0,       0},
+    /*      HIGH_PRESS */{1,    1,    0,    0,         0,          0,       0,       1},
+    /*      STANDBY */   {1,    1,    1,    0,         0,          0,       0,       0},
+    /*      PASSIVE */   {1,    1,    0,    0,         0,          1,       0,       0},
+    /*      TEST */      {1,    1,    0,    0,         0,          0,       1,       0}
+}
+
 void executeCommand(int commandID) {
-    // TODO build in logic for determining whether a state change is valid
-    if (commandID < 8) myRocket.changeState(commandID);
+    if (commandID < 8 && stateTransitions[commandID][myRocket.getState]) myRocket.changeState(commandID);
     if (myRocket.getState() == 0) {
         else if (commandID < 12) myRocket.setIgnitionOn(commandID / 2, commandID % 2);
         else if (commandID < 32) myRocket.setValveOn(commandID / 2, commandID % 2);

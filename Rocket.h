@@ -45,7 +45,7 @@ class Rocket{
         int state;
         bool executingCommand;
         int ALARA;                      // 0 = Lower , 1 = Upper  
-       
+    
         //Sensor* sensorArray[8];
         bool initializeIgniters();
         bool initializeUpperValves();

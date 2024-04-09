@@ -21,6 +21,7 @@ Rocket::Rocket(int ALARA){
         initializeUpperSensors();
     }
 
+    // TODO: swap these so they're in the right order this is embarassing
     stateMap.emplace(HP_ID, int[8]{0, 0, 0, 1, 1, 1, 0, 0});
     stateMap.emplace(HV_ID, int[8]{0, 0, 0, 0, 0, 0, 1, 0});
     stateMap.emplace(LV_ID, int[8]{0, 0, 0, 0, 0, 0, 1, 0});
@@ -33,6 +34,8 @@ Rocket::Rocket(int ALARA){
     stateMap.emplace(FDV_ID, int[8]{0, 0, 0, 0, 0, 0, 1, 0});
     stateMap.emplace(IGN1_ID, int[8]{0, 0, 0, 0, 0, 0, 0, 0});
     stateMap.emplace(IGN2_ID, int[8]{0, 0, 0, 0, 0, 0, 0, 0});
+
+    this->state = 2;
 }
 
 /*float Rocket::sensorRead(Sensor sensor) {
