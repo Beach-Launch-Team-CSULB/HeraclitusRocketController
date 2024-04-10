@@ -51,6 +51,8 @@ CANDriver test = CANDriver();
 #define CANID_9  ((uint32_t) 9)
 #define CANID_10 ((uint32_t) 10)
 
+uint32_t verifier;
+
 
 //TODO reverse, double check transitions are good
 int stateTransitions[8][8] = {
@@ -140,7 +142,7 @@ void setup() {
 
     Can0.begin(CAN2busSpeed);
     Can0.setTxBufferSize(64);
-    uint32_t verifier = 255;
+
 
     // Do we want default values?
     ignitionTime = 0;
@@ -149,8 +151,9 @@ void setup() {
     LMVCloseTime = 0;
     FMVCloseTime = 0;
 
-}
 
+    uint32_t verifier = 255;
+}
 
 void loop() {
 
@@ -168,6 +171,12 @@ void loop() {
     //myRocket.setValveOn(verifier / 2, verifier % 2);
     CANRoutine();
     delay(500);
+
+// Note: 4/10/2024
+// - Test the ability to receive a CAN state report (cast output as an int)
+// Serial.println();
+// - Test the ability to zero PTs.
+
 
  /*
  *   /// CAN 2.0 Propulsion Node ///
