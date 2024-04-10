@@ -95,7 +95,7 @@ std::string generateSDReport() {
 void CANRoutine() {
     uint32_t msgID = 255; // Initialize as unused.
 
-    if (alara == 0) msgID = SENS_1_4_PROP;
+    if (alara == 1) msgID = SENS_1_4_PROP;
     else msgID = SENS_9_12_ENGINE;
     int sensorReads[8] = {0};
     int i = 0;
@@ -182,10 +182,10 @@ void loop() {
 
 
   //Serial.println(LMVOpenTime);
-
+    // Added in this
 
   // Changing this first id only.
-  if(verifier == 33)
+  if(verifier == 1)
   {
     // Added in this
     delay(500);

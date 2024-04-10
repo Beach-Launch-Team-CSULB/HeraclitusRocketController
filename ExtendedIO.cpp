@@ -29,7 +29,8 @@ std::map<RegisterName, uint32_t> baseRegs = {
     {PCR, 0x40049000},
     {PCOR, 0x400FF048},
     {PSOR, 0x400FF044},
-    {PDDR, 0x400FF014}
+    {PDDR, 0x400FF014},
+    {PDOR, 0x400FF000}
 };
 
 
@@ -104,15 +105,15 @@ void ExtendedIO::digitalWriteExtended(int pin, int value) {
     */
     int pinBitOffset = digitalPinToBit_int(pin);                   // Gets bit offset for both PCOR & PSOR Register 
     if (value == 0){  // Clear port to 0: Low
-        uint32_t PCOR_address = fetchRegister(pin,PCOR);     // Gets the exact address of the Port Clear Output Register
-        if(PCOR_address != 0){                                        // If pin is correct & a register is returned 
-            (*(volatile uint32_t*)PCOR_address) = (1 << pinBitOffset);                      // Clears PDOR bit to 0 (Low) at correct bit offset
+        uint32_t PDOR_address = fetchRegister(pin,PDOR);     // Gets the exact address of the Port Clear Output Register
+        if(PDOR_address != 0){                                        // If pin is correct & a register is returned 
+            (*(volatile uint32_t*)PDOR_address) = (0 << pinBitOffset);                      // Clears PDOR bit to 0 (Low) at correct bit offset
         }
     }
     if (value == 1){  // Sets port to 1: High
-        uint32_t PSOR_address = fetchRegister(pin,PSOR);     // Gets the exact address of the Port Set Output Register
-        if(PSOR_address != 0){                                        // If pin is correct & a register is returned
-            (*(volatile uint32_t*)PSOR_address) = (1 << pinBitOffset);                          // Sets PDOR bit to 1 (High) at correct bit offset
+        uint32_t PDOR_address = fetchRegister(pin,PDOR);     // Gets the exact address of the Port Set Output Register
+        if(PDOR_address != 0){                                        // If pin is correct & a register is returned
+            (*(volatile uint32_t*)PDOR_address) = (1 << pinBitOffset);                          // Sets PDOR bit to 1 (High) at correct bit offset
         }
     }
 }
