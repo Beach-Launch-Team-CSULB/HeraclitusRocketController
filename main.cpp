@@ -52,7 +52,7 @@ CANDriver test = CANDriver();
 #define CANID_10 ((uint32_t) 10)
 
 
-
+//TODO reverse, double check transitions are good
 int stateTransitions[8][8] = {
     //                                          FROM
     //                  ABORT, VENT, FIRE, TANK_PRESS, HIGH_PRESS, STANDBY, PASSIVE, TEST
@@ -68,7 +68,7 @@ int stateTransitions[8][8] = {
 
 void executeCommand(int commandID) {
     if (commandID <= TEST && stateTransitions[commandID][myRocket.getState()]) myRocket.changeState(commandID);
-    else if (myRocket.getState() == 0) {
+    else if (myRocket.getState() == TEST) {
         if (commandID <= IGN2_OFF) myRocket.setIgnitionOn(commandID / 2, commandID % 2);
         else if (commandID <= FMV_OPEN) myRocket.setValveOn(commandID / 2, commandID % 2);
     }
@@ -164,9 +164,10 @@ void loop() {
         Serial.println("Main: ");
         Serial.println(verifier);
     }
-    //executeCommand(verifier);
-    //CANRoutine();
-    //delay(500);
+    executeCommand(verifier);
+    //myRocket.setValveOn(verifier / 2, verifier % 2);
+    CANRoutine();
+    delay(500);
 
  /*
  *   /// CAN 2.0 Propulsion Node ///
