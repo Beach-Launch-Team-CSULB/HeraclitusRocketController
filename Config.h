@@ -25,72 +25,85 @@ extern uint32_t FMVCloseTime;
 #define NUM_VALVES 10
 #define NUM_IGNITERS 2
 
-// Vehicle Commands
+
+
+/* 
+ *
+ * 0   -  19: Vehicle Commands  *Change the order for conveniently indexing into an array.
+ * 20  -  43: HPO Commands
+ * 44  -  54: New Commands
+ * 127 - 138: Reports
+ * 
+ */
+
 #define ABORT      ((uint32_t) 0)
 #define VENT       ((uint32_t) 1)
-#define FIRE       ((uint32_t) 2)
-#define TANK_PRESS ((uint32_t) 3)
-#define HIGH_PRESS ((uint32_t) 4)
-#define STANDBY    ((uint32_t) 5)
-#define PASSIVE    ((uint32_t) 6)
-#define TEST       ((uint32_t) 7)
+#define IGNITE     ((uint32_t) 2)  // ***NEW***
+#define FIRE       ((uint32_t) 3)
+#define TANK_PRESS ((uint32_t) 4)
+#define HIGH_PRESS ((uint32_t) 5)
+#define STANDBY    ((uint32_t) 6)
+#define PASSIVE    ((uint32_t) 7)
+#define TEST       ((uint32_t) 8)
+// 9 -19 Reserved for any future states - to avoid doing something like this in the future.
 
-// Valve & Igniter (HPO Commands)
-#define IGN1_OFF   ((uint32_t) 8)   // Igniter One
-#define IGN1_ON    ((uint32_t) 9)
 
-#define IGN2_OFF   ((uint32_t) 10)  // Igniter Two
-#define IGN2_ON    ((uint32_t) 11)
+#define IGN1_OFF   ((uint32_t) 20)   // Igniter One
+#define IGN1_ON    ((uint32_t) 21)
 
-#define HV_CLOSE   ((uint32_t) 12)  // High Vent valve
-#define HV_OPEN    ((uint32_t) 13)
+#define IGN2_OFF   ((uint32_t) 22)  // Igniter Two
+#define IGN2_ON    ((uint32_t) 23)
 
-#define HP_CLOSE   ((uint32_t) 14)  // High Press valve
-#define HP_OPEN    ((uint32_t) 15)
+#define HV_CLOSE   ((uint32_t) 24)  // High Vent valve
+#define HV_OPEN    ((uint32_t) 25)
 
-#define LDV_CLOSE  ((uint32_t) 16)  // Lox Dome Vent valve
-#define LDV_OPEN   ((uint32_t) 17)
+#define HP_CLOSE   ((uint32_t) 26)  // High Press valve
+#define HP_OPEN    ((uint32_t) 27)
 
-#define FDV_CLOSE  ((uint32_t) 18)  // Fuel Dome Vent valve
-#define FDV_OPEN   ((uint32_t) 19)
+#define LDV_CLOSE  ((uint32_t) 28)  // Lox Dome Vent valve
+#define LDV_OPEN   ((uint32_t) 29)
 
-#define LDR_CLOSE  ((uint32_t) 20)  // Lox Dome Reg valve
-#define LDR_OPEN   ((uint32_t) 21)
+#define FDV_CLOSE  ((uint32_t) 30)  // Fuel Dome Vent valve
+#define FDV_OPEN   ((uint32_t) 31)
 
-#define FDR_CLOSE  ((uint32_t) 22)  // Fuel Dome Reg valve
-#define FDR_OPEN   ((uint32_t) 23)
+#define LDR_CLOSE  ((uint32_t) 32)  // Lox Dome Reg valve
+#define LDR_OPEN   ((uint32_t) 33)
 
-#define LV_CLOSE   ((uint32_t) 24)  // Lox Vent valve
-#define LV_OPEN    ((uint32_t) 25)
+#define FDR_CLOSE  ((uint32_t) 34)  // Fuel Dome Reg valve
+#define FDR_OPEN   ((uint32_t) 35)
 
-#define FV_CLOSE   ((uint32_t) 26)  // Fuel Vent valve
-#define FV_OPEN    ((uint32_t) 27)
+#define LV_CLOSE   ((uint32_t) 36)  // Lox Vent valve
+#define LV_OPEN    ((uint32_t) 37)
 
-#define LMV_CLOSE  ((uint32_t) 28)  // Lox Main valve
-#define LMV_OPEN   ((uint32_t) 29)
+#define FV_CLOSE   ((uint32_t) 38)  // Fuel Vent valve
+#define FV_OPEN    ((uint32_t) 39)
 
-#define FMV_CLOSE  ((uint32_t) 30)  // Fuel Main valve
-#define FMV_OPEN   ((uint32_t) 31)
+#define LMV_CLOSE  ((uint32_t) 40)  // Lox Main valve
+#define LMV_OPEN   ((uint32_t) 41)
+
+#define FMV_CLOSE  ((uint32_t) 42)  // Fuel Main valve
+#define FMV_OPEN   ((uint32_t) 43)
 
 // Timing
-#define SET_IGNITION     ((uint32_t) 32)  // Set ignition time for both igniters.
-#define SET_LMV_OPEN     ((uint32_t) 33)  // Set LMV open time.
-#define SET_FMV_OPEN     ((uint32_t) 34)  // Set FMV open time. 
-#define SET_LMV_CLOSE    ((uint32_t) 35)  // Set LMV close time.
-#define SET_FMV_CLOSE    ((uint32_t) 36)  // Set FMV close time.
+#define SET_IGNITION     ((uint32_t) 44)  // Set ignition time for both igniters.
+#define SET_LMV_OPEN     ((uint32_t) 45)  // Set LMV open time.
+#define SET_FMV_OPEN     ((uint32_t) 46)  // Set FMV open time. 
+#define SET_LMV_CLOSE    ((uint32_t) 47)  // Set LMV close time.
+#define SET_FMV_CLOSE    ((uint32_t) 48)  // Set FMV close time.
 
-#define GET_IGNITION     ((uint32_t) 37)  // Confirm ignition time for both igniters.
-#define GET_LMV_OPEN     ((uint32_t) 38)  // Confirm LMV open time.
-#define GET_FMV_OPEN     ((uint32_t) 39)  // Confirm FMV open time.
-#define GET_LMV_CLOSE    ((uint32_t) 40)  // Confirm LMV close time.
-#define GET_FMV_CLOSE    ((uint32_t) 41)  // Confirm FMV close time.
+#define GET_IGNITION     ((uint32_t) 49)  // Confirm ignition time for both igniters.
+#define GET_LMV_OPEN     ((uint32_t) 50)  // Confirm LMV open time.
+#define GET_FMV_OPEN     ((uint32_t) 51)  // Confirm FMV open time.
+#define GET_LMV_CLOSE    ((uint32_t) 52)  // Confirm LMV close time.
+#define GET_FMV_CLOSE    ((uint32_t) 53)  // Confirm FMV close time.
 
 // Ping
-#define PING_PI_ROCKET   ((uint32_t) 42)  // *Important*: Pi Box sends a ping to the rocket. 
-#define PING_ROCKET_PI   ((uint32_t) 43)  // Rocket sends a ping to the Pi Box.
+#define PING_PI_ROCKET   ((uint32_t) 54)  // *Important*: Pi Box sends a ping to the rocket. 
 
 // PT Configuration
-#define ZERO_PTS         ((uint32_t) 44)  // Zero the pressure transducers.
+#define ZERO_PTS         ((uint32_t) 55)  // Zero the pressure transducers.
+
+
 
 // State Reports
 #define SR_PROP   ((uint32_t) 127)
@@ -101,6 +114,20 @@ extern uint32_t FMVCloseTime;
 #define SENS_5_8_PROP     ((uint32_t) 130) // Lox Tank1,  Lox Tank2, Fuel Tank1, Fuel Tank2
 #define SENS_9_12_ENGINE  ((uint32_t) 131) // Pneumatics, Lox Inlet, Fuel Inlet, Fuel Injector
 #define SENS_13_16_ENGINE ((uint32_t) 132) // Chamber1,   Chamber2,  UNUSED,     UNUSED
+
+// Timing Reports
+#define SEND_IGNITION     ((uint32_t) 133)  // ALARA response to 37. Sends igniter time for confirmation.
+#define SEND_LMV_OPEN     ((uint32_t) 134)  // ALARA response to 38. Sends LMV open time for confirmation. 
+#define SEND_FMV_OPEN     ((uint32_t) 135)  // ALARA response to 39. Sends FMV open time for confirmation.
+#define SEND_LMV_CLOSE    ((uint32_t) 136)  // ALARA response to 40. Sends LMV close time for confirmation.
+#define SEND_FMV_CLOSE    ((uint32_t) 137)  // ALARA response to 41. Sends FMV close time for confirmation.
+
+// Ping Response
+#define PING_ROCKET_PI    ((uint32_t) 138)  // Rocket sends a ping to the Pi Box.
+
+
+
+
 
 
 
