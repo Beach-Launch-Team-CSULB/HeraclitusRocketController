@@ -21,21 +21,42 @@ Rocket::Rocket(int ALARA){
         initializeUpperSensors();
     }
 
-    // TODO: swap these so they're in the right order this is embarassing
-    stateMap.emplace(HP_ID, int[8]{0, 0, 0, 1, 1, 1, 0, 0});
-    stateMap.emplace(HV_ID, int[8]{0, 0, 0, 0, 0, 0, 1, 0});
-    stateMap.emplace(LV_ID, int[8]{0, 0, 0, 0, 0, 0, 1, 0});
-    stateMap.emplace(LMV_ID, int[8]{0, 0, 0, 0, 0, 0, 0, 0});
-    stateMap.emplace(LDR_ID, int[8]{0, 0, 0, 0, 1, 1, 0, 0});
-    stateMap.emplace(LDV_ID, int[8]{0, 0, 0, 0, 0, 0, 1, 0});
-    stateMap.emplace(FV_ID, int[8]{0, 0, 0, 0, 0, 0, 1, 0});
-    stateMap.emplace(FMV_ID, int[8]{0, 0, 0, 0, 0, 0, 0, 0});
-    stateMap.emplace(FDR_ID, int[8]{0, 0, 0, 0, 1, 1, 0, 0});
-    stateMap.emplace(FDV_ID, int[8]{0, 0, 0, 0, 0, 0, 1, 0});
-    stateMap.emplace(IGN1_ID, int[8]{0, 0, 0, 0, 0, 0, 0, 0});
-    stateMap.emplace(IGN2_ID, int[8]{0, 0, 0, 0, 0, 0, 0, 0});
+    // TODO: Old One.
+                                            //  TE  P  S  H  TA  F  V  A
+    stateMap.emplace(HP_ID,   std::vector<int>{0, 0, 0, 1, 1, 1, 0, 0});
+    stateMap.emplace(HV_ID,   std::vector<int>{0, 0, 0, 0, 0, 0, 1, 0});
+    stateMap.emplace(LV_ID,   std::vector<int>{0, 0, 0, 0, 0, 0, 1, 0});
+    stateMap.emplace(LMV_ID,  std::vector<int>{0, 0, 0, 0, 0, 0, 0, 0});
+    stateMap.emplace(LDR_ID,  std::vector<int>{0, 0, 0, 0, 1, 1, 0, 0});
+    stateMap.emplace(LDV_ID,  std::vector<int>{0, 0, 0, 0, 0, 0, 1, 0});
+    stateMap.emplace(FV_ID,   std::vector<int>{0, 0, 0, 0, 0, 0, 1, 0});
+    stateMap.emplace(FMV_ID,  std::vector<int>{0, 0, 0, 0, 0, 0, 0, 0});
+    stateMap.emplace(FDR_ID,  std::vector<int>{0, 0, 0, 0, 1, 1, 0, 0});
+    stateMap.emplace(FDV_ID,  std::vector<int>{0, 0, 0, 0, 0, 0, 1, 0});
+    stateMap.emplace(IGN1_ID, std::vector<int>{0, 0, 0, 0, 0, 0, 0, 0});
+    stateMap.emplace(IGN2_ID, std::vector<int>{0, 0, 0, 0, 0, 0, 0, 0});
 
-    changeState(STANDBY)
+    //Test //Passive //Standby //High-Press //Tank-Press //Fire //Vent //Abort
+    // New One.
+
+                                            //   A  V  F  TP H 
+    //stateMap.emplace(HP_ID,   std::vector<int>{0, 0, 0, 1, 1, 1, 0, 0});
+    //stateMap.emplace(HV_ID,   std::vector<int>{0, 0, 0, 0, 0, 0, 1, 0});
+    //stateMap.emplace(LV_ID,   std::vector<int>{0, 0, 0, 0, 0, 0, 1, 0});
+    //stateMap.emplace(LMV_ID,  std::vector<int>{0, 0, 0, 0, 0, 0, 0, 0});
+    //stateMap.emplace(LDR_ID,  std::vector<int>{0, 0, 0, 0, 1, 1, 0, 0});
+    //stateMap.emplace(LDV_ID,  std::vector<int>{0, 0, 0, 0, 0, 0, 1, 0});
+    //stateMap.emplace(FV_ID,   std::vector<int>{0, 0, 0, 0, 0, 0, 1, 0});
+    //stateMap.emplace(FMV_ID,  std::vector<int>{0, 0, 0, 0, 0, 0, 0, 0});
+    //stateMap.emplace(FDR_ID,  std::vector<int>{0, 0, 0, 0, 1, 1, 0, 0});
+    //stateMap.emplace(FDV_ID,  std::vector<int>{0, 0, 0, 0, 0, 0, 1, 0});
+    //stateMap.emplace(IGN1_ID, std::vector<int>{0, 0, 0, 0, 0, 0, 0, 0});
+    //stateMap.emplace(IGN2_ID, std::vector<int>{0, 0, 0, 0, 0, 0, 0, 0}); 
+
+
+
+
+    changeState(TEST);
 }
 
 /*float Rocket::sensorRead(Sensor sensor) {
@@ -66,8 +87,8 @@ bool Rocket::changeState(int state) {
     for (std::map<int,Valve>::iterator valve = valveMap.begin(); valve != valveMap.end(); ++valve) {
         setValveOn(valve->first, stateMap[valve->first][state]);
     }
-    for (std::map<int,Igniter>::iterator Igniter = igniterMap.begin(); igniter != igniterMap.end(); ++igniter) {
-        setValveOn(igniter->first, stateMap[igniter->first][state]);
+    for (std::map<int,Igniter>::iterator Igniter = igniterMap.begin(); Igniter != igniterMap.end(); ++Igniter) {
+        setValveOn(Igniter->first, stateMap[Igniter->first][state]);
     }
     this->state = state;
     return true;

@@ -53,6 +53,79 @@ CANDriver test = CANDriver();
 
 
 
+int stateTransitions[8][8] = {
+    //                                          FROM
+    //                  ABORT, VENT, FIRE, TANK_PRESS, HIGH_PRESS, STANDBY, PASSIVE, TEST
+    /*      ABORT */     {0,    1,    1,    0,         0,          0,       0,       0},
+    /*      VENT */      {1,    0,    1,    0,         0,          0,       0,       0},
+    /* T    FIRE */      {1,    1,    0,    1,         0,          0,       0,       0},
+    /* O    TANK_PRESS */{1,    1,    0,    0,         1,          0,       0,       0},
+    /*      HIGH_PRESS */{1,    1,    0,    0,         0,          0,       0,       1},
+    /*      STANDBY */   {1,    1,    1,    0,         0,          0,       0,       0},
+    /*      PASSIVE */   {1,    1,    0,    0,         0,          1,       0,       0},
+    /*      TEST */      {1,    1,    0,    0,         0,          0,       1,       0}
+};
+
+void executeCommand(int commandID) {
+    if (commandID <= TEST && stateTransitions[commandID][myRocket.getState()]) myRocket.changeState(commandID);
+    else if (myRocket.getState() == 0) {
+        if (commandID <= IGN2_OFF) myRocket.setIgnitionOn(commandID / 2, commandID % 2);
+        else if (commandID <= FMV_OPEN) myRocket.setValveOn(commandID / 2, commandID % 2);
+    }
+    // else handle the remaining CAN commands
+}
+
+std::string generateSDReport() {
+    std::string entry = std::to_string(millis());
+    entry = entry + " | State: " + std::to_string(myRocket.getState());
+
+    for (std::map<int,Sensor>::iterator sensor = myRocket.sensorMap.begin(); sensor != myRocket.sensorMap.end(); ++sensor) {
+        entry = entry + " | " + std::to_string(sensor->first) + ":" + std::to_string(myRocket.sensorRead(sensor->first));
+    }
+    for (std::map<int,Valve>::iterator valve = myRocket.valveMap.begin(); valve != myRocket.valveMap.end(); ++valve) {
+        entry = entry + " | " + std::to_string(valve->first) + ":" + std::to_string(myRocket.valveRead(valve->first));
+    }
+    for (std::map<int,Igniter>::iterator igniter = myRocket.igniterMap.begin(); igniter != myRocket.igniterMap.end(); ++igniter) {
+        entry = entry + " | " + std::to_string(igniter->first) + ":" + std::to_string(myRocket.ignitionRead(igniter->first));
+    }
+
+    return entry + '\n';
+}
+
+void CANRoutine() {
+    uint32_t msgID = 255; // Initialize as unused.
+
+    if (alara == 0) msgID = SENS_1_4_PROP;
+    else msgID = SENS_9_12_ENGINE;
+    int sensorReads[8] = {0};
+    int i = 0;
+
+    for (std::map<int,Sensor>::iterator sensor = myRocket.sensorMap.begin(); sensor != myRocket.sensorMap.end(); ++sensor) {
+        sensorReads[i++] = myRocket.sensorRead(sensor->first);
+    }
+
+    test.sendSensorData(msgID,sensorReads[0], sensorReads[1], sensorReads[2], sensorReads[3]);
+    test.sendSensorData(msgID+1,sensorReads[4], sensorReads[5], sensorReads[6], sensorReads[7]);
+    test.sendStateReport(millis(), myRocket.getState(), myRocket, alara);
+}
+
+// TODO:: helper function for safety features
+//      Ping loss
+//      Lox pressure
+
+// TODO:: fire sequence function
+
+// TODO:: add LEDs
+
+/*
+ *
+ *  To do: 
+ *          1.) See if idea for "zeroing" the PTs will work.
+ * 
+ * 
+ */
+
+
 void setup() {
     
     Serial.begin(9600);
@@ -84,77 +157,16 @@ void loop() {
     // See if this works - 
     static uint32_t nextCANTime;
 
-    //return;
-    /*Igniter();
-    for (const auto& pair : myRocket.igniterMap) {
-        myRocket.setIgnitionOn(pair.first, true);
- S       //sleep(1);
-        delay(1);
-        myRocket.setIgnitionOn(pair.first, false);
-        //sleep(1);
-        delay(1);
-    }*/
-
-
-
-
-    // ONLY COMMENTED OUT FOR CAN TEST. 
-
-
-    /*
-    // You need a delay here or the first print will not work. 
-    delay(1000);
-    int address = 0x400FF100;       //PDOR for LV valve 
-    int* pcontent = (int*)address;
-    int content = *pcontent;
-
-    int pcr_address = 0x4004C028;       //PCR for LV valve PTD10
-    int* pcr_pcontent = (int*)address;
-    int pcr_content = *pcontent;
-
-    int pddr_address = 0x400FF0D4;       //PDDR for LV valve
-    int* pddr_pcontent = (int*)address;
-    int pddr_content = *pcontent;
-    
-
-    Serial.println("PDOR BeforeVVV");
-    Serial.println(content);
-    Serial.println("PCR BeforeVVV");
-    Serial.println(pcr_content);
-    Serial.println("PDDR BeforeVVV");
-    Serial.println(pddr_content);
-   
-    //for (const auto& pair : myRocket.valveMap) {
-        myRocket.setValveOn(24, true);
-        //sleep(1);
-        delay(1000);
-        Serial.println("PDOR AfterVVV");
-        Serial.println(content);
-
-        Serial.println("PCR AfterVVV");
-        Serial.println(pcr_content);
-
-        Serial.println("PDDR AfterVVV");
-        Serial.println(pddr_content);
-
-        myRocket.setValveOn(20, false);
-        */
-
-    // TO BE REMOVED AT THE CONCLUSION OF THE CAN TEST
-
-
-    // Do static methods
+    // Static Methods?
     uint32_t verifier = test.readMessage();
     if (verifier != 255)
     {
         Serial.println("Main: ");
         Serial.println(verifier);
     }
-    //Serial.println("Working");
-    //Serial.println(verifier);
-
-    
-
+    //executeCommand(verifier);
+    //CANRoutine();
+    //delay(500);
 
  /*
  *   /// CAN 2.0 Propulsion Node ///
@@ -169,7 +181,7 @@ void loop() {
  */ 
 
 
-  Serial.println(LMVOpenTime);
+  //Serial.println(LMVOpenTime);
 
 
   // Changing this first id only.
@@ -203,7 +215,7 @@ void loop() {
 // SD Card and CAN Send
 
 // *** Note: The enum for the rocket states have values that are inconsistent with the IDs for CAN messages. Ask about this. ***
-    if(alara == 1) // Propulsion Node
+/*    if(alara == 1) // Propulsion Node
     {
         int time = millis(); // Double check. This should be fine as long as the ALARA doesn't run for 3 weeks+.
         uint8_t state = myRocket.getState();
@@ -315,148 +327,5 @@ void loop() {
             test.sendSensorData(SENS_13_16_ENGINE,PTChamber1, PTChamber2, 0, 0);
             test.sendStateReport(time, state, myRocket, alara);
         }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //(*(volatile uint32_t *)0x400FF0C0) = (0<<10); //PDOR
-        //sleep(1);
-        
-        /*
-
-        /// MILISECONDS
-        delay(1000);
- 
-
-        myRocket.setValveOn(21, true);
-        //sleep(1);
-        delay(1000);
-        myRocket.setValveOn(21, false);
-        //sleep(1);
-
-        
-
-        /// MILISECONDS
-        delay(1000);
-        myRocket.setValveOn(22, true);
-        //sleep(1);
-        delay(1000);
-        myRocket.setValveOn(22, false);
-        //sleep(1);
-
-        /// MILISECONDS
-        delay(1000);
-        myRocket.setValveOn(23, true);
-        //sleep(1);
-        delay(1000);
-        myRocket.setValveOn(23, false);
-        //sleep(1);
-
-        /// MILISECONDS
-        delay(1000);
-        myRocket.setValveOn(28, true);
-        //sleep(1);
-        delay(1000);
-        myRocket.setValveOn(28, false);
-        //sleep(1);
-
-        /// MILISECONDS
-        delay(1000);
-        myRocket.setValveOn(29, true);
-        //sleep(1);
-        delay(1000);
-        myRocket.setValveOn(29, false);
-        //sleep(1);
-
-        /// MILISECONDS
-        delay(1000);
-    //}
-
-    
-    int address = 0x40048038;
-    int* pcontent = (int*)address;
-    int content = *pcontent;
-    Serial.println(content);
-
-    if (sd_write) {
-        File onBoardLog = SD.open(fileLogName, FILE_WRITE);
-        for (const auto& sensor : myRocket.sensorMap) {
-            onBoardLog.println(myRocket.sensorRead(sensor.first));
-        }
-    }
+    }*/
 }
-*/
-}
-
-int stateTransitions[8][8] = {
-    //                                          FROM
-    //                  ABORT, VENT, FIRE, TANK_PRESS, HIGH_PRESS, STANDBY, PASSIVE, TEST
-    /*      ABORT */     {0,    1,    1,    0,         0,          0,       0,       0},
-    /*      VENT */      {1,    0,    1,    0,         0,          0,       0,       0},
-    /* T    FIRE */      {1,    1,    0,    1,         0,          0,       0,       0},
-    /* O    TANK_PRESS */{1,    1,    0,    0,         1,          0,       0,       0},
-    /*      HIGH_PRESS */{1,    1,    0,    0,         0,          0,       0,       1},
-    /*      STANDBY */   {1,    1,    1,    0,         0,          0,       0,       0},
-    /*      PASSIVE */   {1,    1,    0,    0,         0,          1,       0,       0},
-    /*      TEST */      {1,    1,    0,    0,         0,          0,       1,       0}
-}
-
-void executeCommand(int commandID) {
-    if (commandID < 8 && stateTransitions[commandID][myRocket.getState]) myRocket.changeState(commandID);
-    if (myRocket.getState() == 0) {
-        else if (commandID < 12) myRocket.setIgnitionOn(commandID / 2, commandID % 2);
-        else if (commandID < 32) myRocket.setValveOn(commandID / 2, commandID % 2);
-    }
-    // else handle the remaining CAN commands
-}
-
-std::string generateSDReport() {
-    std::string entry = std::to_string(millis());
-    entry = entry + " | State: " + std::to_string(myRocket.getState());
-
-    for (std::map<int,Sensor>::iterator sensor = myRocket.sensorMap.begin(); sensor != myRocket.sensorMap.end(); ++sensor) {
-        entry = entry + " | " + std::to_string(sensor->first) + ":" + std::to_string(myRocket.sensorRead(sensor->first));
-    }
-    for (std::map<int,Valve>::iterator valve = myRocket.valveMap.begin(); valve != myRocket.valveMap.end(); ++valve) {
-        entry = entry + " | " + std::to_string(sensor->first) + ":" + std::to_string(myRocket.valveRead(valve->first));
-    }
-    for (std::map<int,Igniter>::iterator igniter = myRocket.igniterMap.begin(); igniter != myRocket.igniterMap.end(); ++igniter) {
-        entry = entry + " | " + std::to_string(sensor->first) + ":" + std::to_string(myRocket.ignitionRead(igniter->first));
-    }
-
-    return entry + '\n';
-}
-
-void CANRoutine() {
-    if (alara == 0) msgID = SENS_1_4_PROP;
-    else msgID = SENS_9_12_ENGINE;
-    int sensorReads[8] = {0};
-    int i = 0;
-
-    for (std::map<int,Sensor>::iterator sensor = myRocket.sensorMap.begin(); sensor != myRocket.sensorMap.end(); ++sensor) {
-        sensorReads[i++] = myRocket.sensorRead(sensor->first);
-    }
-
-    test.sendSensorData(msgID,sensorReads[0], sensorReads[1], sensorReads[2], sensorReads[3]);
-    test.sendSensorData(msgID+1,sensorReads[4], sensorReads[5], sensorReads[6], sensorReads[7]);
-    test.sendStateReport(millis(), myRocket.getState(), myRocket, alara);
-}
-
-// TODO:: helper function for safety features
-//      Ping loss
-//      Lox pressure
-
-// TODO:: fire sequence function
-
-// TODO:: add LEDs

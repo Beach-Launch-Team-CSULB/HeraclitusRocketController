@@ -8,6 +8,7 @@
 #include "Igniter.h"
 #include "Valve.h"
 #include "Sensor.h"
+#include <vector>
 
 
 class Rocket{ 
@@ -16,7 +17,12 @@ class Rocket{
         std::map<int, Igniter> igniterMap;
         std::map<int, Valve> valveMap;
         std::map<int, Sensor> sensorMap;
-        std::map<int, int[8]> stateMap;
+        //std::map<int, int[8]> stateMap;
+        // 4/9/2024
+        std::map<int, std::vector<int> > stateMap;
+
+
+
         //int sensorArray[8];
         
 
@@ -28,7 +34,10 @@ class Rocket{
         float sensorRead(int);
         bool ignitionRead(int);
         bool valveRead(int);
-        int getState();
+       // int getState();
+
+        // 4/9/2024
+        uint8_t getState();
         
         // Commands 
         bool setIgnitionOn(int,bool);
@@ -38,8 +47,6 @@ class Rocket{
         // Execution Check
         bool getExecuting();
 
-        // Getter for Rocket's state
-        uint8_t getState();
     
    private: 
         int state;

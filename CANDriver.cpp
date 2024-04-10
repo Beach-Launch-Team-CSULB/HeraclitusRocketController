@@ -1,4 +1,4 @@
-// 4/8/2024
+// 4/9/2024 - Added safety feature to sensor reports and sendTiming();
 #include "CANDriver.h"
 #include "Config.h"
 
@@ -116,7 +116,13 @@ void CANDriver::sendStateReport(int time, uint8_t rocketState, Rocket node, bool
 void CANDriver::sendSensorData(int sensorID, float sensorData1, float sensorData2, float sensorData3, float sensorData4)
 {
   static CAN_message_t msg;
-  msg.id = sensorID;  // Ensure CAN id corresponds to the correct sensor ids.
+  /*
+  if(sensorID >= SENS_1_4_PROP && sensorID <= SENS_13_16_ENGINE)                
+    msg.id = sensorID;  // Ensure CAN id corresponds to the correct sensor ids.
+  else
+    msg.id = 255;       // Safety so that nobbody accidentally enters a command that they shouldn't.
+  */
+ msg.id = sensorID;
   msg.flags.extended = 0;
   msg.flags.remote = 0;
   msg.len = 8;
@@ -152,6 +158,7 @@ void CANDriver::sendSensorData(int sensorID, float sensorData1, float sensorData
 void CANDriver::sendTiming(uint32_t getTimeID)
 {
   static CAN_message_t msg;
+  //msg.id = 255;            // New. Added for safety. Static makes id 0 which is implemented.
   uint32_t aTime = 0;
 
   // msg.id and aTime receive appropriate assignment based on input.
