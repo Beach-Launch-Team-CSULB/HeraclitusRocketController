@@ -98,6 +98,9 @@ void ExtendedIO::pinModeExtended(int pin, int isGPIO, int dataDirection) {
     }
 }
 
+
+// 4/10/2024
+// Added |= **********************************************************
 void ExtendedIO::digitalWriteExtended(int pin, int value) {
     /*  Argument 1: Pin # designation specified on the ALARA V2.x MCU Pin Map and gets the address 
         Argument 2: 1 High, 0 Low
@@ -107,13 +110,13 @@ void ExtendedIO::digitalWriteExtended(int pin, int value) {
     if (value == 0){  // Clear port to 0: Low
         uint32_t PDOR_address = fetchRegister(pin,PDOR);     // Gets the exact address of the Port Clear Output Register
         if(PDOR_address != 0){                                        // If pin is correct & a register is returned 
-            (*(volatile uint32_t*)PDOR_address) = (0 << pinBitOffset);                      // Clears PDOR bit to 0 (Low) at correct bit offset
+            (*(volatile uint32_t*)PDOR_address) |= (0 << pinBitOffset);                      // Clears PDOR bit to 0 (Low) at correct bit offset
         }
     }
     if (value == 1){  // Sets port to 1: High
         uint32_t PDOR_address = fetchRegister(pin,PDOR);     // Gets the exact address of the Port Set Output Register
         if(PDOR_address != 0){                                        // If pin is correct & a register is returned
-            (*(volatile uint32_t*)PDOR_address) = (1 << pinBitOffset);                          // Sets PDOR bit to 1 (High) at correct bit offset
+            (*(volatile uint32_t*)PDOR_address) |= (1 << pinBitOffset);                          // Sets PDOR bit to 1 (High) at correct bit offset
         }
     }
 }

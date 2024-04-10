@@ -167,10 +167,14 @@ void loop() {
         Serial.println("Main: ");
         Serial.println(verifier);
     }
+
+
+    /*
     executeCommand(verifier);
     //myRocket.setValveOn(verifier / 2, verifier % 2);
     CANRoutine();
     delay(500);
+    */
 
 // Note: 4/10/2024
 // - Test the ability to receive a CAN state report (cast output as an int)
@@ -198,13 +202,25 @@ void loop() {
   if(verifier == 1)
   {
     // Added in this
-    delay(500);
+    delay(5000);
     myRocket.setValveOn(LDV_ID, true);
+    test.sendStateReport(0, TEST, myRocket, 1);     // Added
+    delay(10);                                      // Added
+    myRocket.setValveOn(LV_ID, true);               // Added
+    test.sendStateReport(0, TEST, myRocket, 1);     // Added
     delay(500);
     // Try passing in the value of "alara" from setup as the boolean value.
     //test.sendStateReport(1, TEST, myRocket, true);
-    delay(500);
-    myRocket.setValveOn(LDV_ID, false);
+    delay(500);                                    // Added 
+    myRocket.setValveOn(LDV_ID, false);            // Added 
+    test.sendStateReport(0, TEST, myRocket, 1);    // Added 
+    test.sendStateReport(0, TEST, myRocket, 1);    // Added 
+    test.sendStateReport(0, TEST, myRocket, 1);    // Added 
+    delay(100);                                    // Added 
+    myRocket.setValveOn(LV_ID, false);             // Added 
+    test.sendStateReport(0, TEST, myRocket, 1);    // Added 
+    test.sendStateReport(0, TEST, myRocket, 1);    // Added
+    test.sendStateReport(0, TEST, myRocket, 1);    // Added 
 
     //Serial.println(ignitionTime);
     test.sendTiming(GET_LMV_OPEN);
@@ -214,13 +230,19 @@ void loop() {
   if(verifier == CANID_5)
   {
     test.sendSensorData(6,FAKEDATA1,FAKEDATA2,FAKEDATA3,FAKEDATA4);
+    test.sendStateReport(0, TEST, myRocket, 1); // Added
     verifier = 0;
   }
   if(verifier == CANID_9)
   {
     test.sendSensorData(10,FAKEDATA1,FAKEDATA2,FAKEDATA3,FAKEDATA4);
+    test.sendStateReport(0, TEST, myRocket, 1); // Added
     verifier = 0;
   }
+
+  delay(1000);                                   // Added
+  test.sendStateReport(0, TEST, myRocket, 1);    // Added
+  
 
 // SD Card and CAN Send
 
