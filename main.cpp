@@ -56,20 +56,21 @@ uint32_t verifier;
 
 //TODO reverse, double check transitions are good
 int stateTransitions[8][8] = {
-    //                                          FROM
-    //                  ABORT, VENT, FIRE, TANK_PRESS, HIGH_PRESS, STANDBY, PASSIVE, TEST
-    /*      ABORT */     {0,    1,    1,    0,         0,          0,       0,       0},
-    /*      VENT */      {1,    0,    1,    0,         0,          0,       0,       0},
-    /* T    FIRE */      {1,    1,    0,    1,         0,          0,       0,       0},
-    /* O    TANK_PRESS */{1,    1,    0,    0,         1,          0,       0,       0},
-    /*      HIGH_PRESS */{1,    1,    0,    0,         0,          0,       0,       1},
-    /*      STANDBY */   {1,    1,    1,    0,         0,          0,       0,       0},
-    /*      PASSIVE */   {1,    1,    0,    0,         0,          1,       0,       0},
-    /*      TEST */      {1,    1,    0,    0,         0,          0,       1,       0}
+    //                                          TO
+    //                  ABORT, VENT, IGNITE   FIRE, TANK_PRESS, HIGH_PRESS, STANDBY, PASSIVE, TEST
+    /*      ABORT */     {0,    1,     0,       0,    0,         0,          1,       0,       0},
+    /*      VENT */      {1,    0,     0,       0,    0,         0,          1,       0,       0},
+    /* F    IGNITE*/     {1,    1,     0,       1,    0,         0,          0,       0,       0}
+    /* R    FIRE */      {1,    1,     0,       0,    0,         0,          1,       0,       0},
+    /* O    TANK_PRESS */{1,    1,     0,       0,    0,         1,          0,       0,       0},
+    /* M    HIGH_PRESS */{1,    1,     1,       0,    0,         0,          0,       0,       0},
+    /*      STANDBY */   {1,    1,     0,       0,    0,         0,          0,       1,       0},
+    /*      PASSIVE */   {1,    1,     0,       0,    0,         0,          0,       0,       1},
+    /*      TEST */      {1,    1,     0,       0,    1,         0,          0,       0,       0}
 };
 
 void executeCommand(int commandID) {
-    if (commandID <= TEST && stateTransitions[commandID][myRocket.getState()]) myRocket.changeState(commandID);
+    if (commandID <= TEST && stateTransitions[myRocket.getState()][commandID]) myRocket.changeState(commandID);
     else if (myRocket.getState() == TEST) {
         if (commandID <= IGN2_OFF) myRocket.setIgnitionOn(commandID / 2, commandID % 2);
         else if (commandID <= FMV_OPEN) myRocket.setValveOn(commandID / 2, commandID % 2);
