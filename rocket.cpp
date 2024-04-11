@@ -10,7 +10,7 @@
 #include "Config.h"
 
 // Constructor definition
-Rocket::Rocket(int ALARA){
+Rocket::Rocket(int ALARA) {
     if (ALARA == 0){                             // Lower ALARA Setup 
         initializeIgniters();
         initializeLowerValves();
@@ -21,6 +21,17 @@ Rocket::Rocket(int ALARA){
         initializeUpperSensors();
     }
 
+
+    /*
+    *
+    *   Analicia_4/11/24_Midnight
+    *   TODO:: Update this to match the current state set
+    *   TODO:: Add LED states. If they differ depending on the ALARA, then
+    *           add a function to initialize based on ALARA. Else add
+    *           here
+    *   NOTE:: Should this go in config?
+    * 
+    */
     // TODO: Old One.
                                             //  TE  P  S  H  TA  F  V  A
     stateMap.emplace(HP_ID,   std::vector<int>{0, 0, 0, 1, 1, 1, 0, 0});
@@ -58,10 +69,6 @@ Rocket::Rocket(int ALARA){
 
     changeState(TEST);
 }
-
-/*float Rocket::sensorRead(Sensor sensor) {
-    return sensor.readDataRaw();
-}*/
 
 float Rocket::sensorRead(int sensorId) {
     return sensorMap[sensorId].getCurrentValue();
@@ -178,5 +185,4 @@ bool Rocket::initializeLowerSensors()
 
     return true;
 }
-
 

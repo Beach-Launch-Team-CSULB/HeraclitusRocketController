@@ -49,6 +49,10 @@ uint32_t CANDriver::readMessage()
       FMVCloseTime = time;
       sendTiming(GET_FMV_CLOSE);
     }
+    else if(msg.id == PING_PI_ROCKET) 
+    {
+      ping();
+    }
   }
 
   return msg.id;
