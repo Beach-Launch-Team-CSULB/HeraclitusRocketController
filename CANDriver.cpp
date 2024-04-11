@@ -1,4 +1,4 @@
-// 4/9/2024 - Added safety feature to sensor reports and sendTiming();
+// 4/11/2024 - Added safety feature to sensor reports and sendTiming();
 #include "CANDriver.h"
 #include "Config.h"
 
@@ -32,26 +32,18 @@ uint32_t CANDriver::readMessage()
     if(msg.id == SET_LMV_OPEN)
     {
       LMVOpenTime = time;
-      sendTiming(GET_LMV_OPEN);
     }
     else if(msg.id == SET_FMV_OPEN)
     {
       FMVOpenTime = time;
-      sendTiming(GET_FMV_OPEN);
     }
     else if(msg.id == SET_LMV_CLOSE)
     {
       LMVCloseTime = time;
-      sendTiming(GET_LMV_CLOSE);
     }
     else if(msg.id == SET_FMV_CLOSE)
     {
       FMVCloseTime = time;
-      sendTiming(GET_FMV_CLOSE);
-    }
-    else if(msg.id == PING_PI_ROCKET) 
-    {
-      ping();
     }
   }
 

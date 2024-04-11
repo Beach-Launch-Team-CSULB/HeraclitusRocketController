@@ -40,7 +40,8 @@ class Rocket{
         bool setIgnitionOn(int,bool);
         bool setValveOn(int,bool);
         bool changeState(int);
-        bool calibrateSensors();
+        //bool calibrateSensors(); 4/11
+        void calibrateSensors();
 
         // Execution Check
         bool getExecuting();

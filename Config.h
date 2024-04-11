@@ -1,4 +1,4 @@
-// 4/8/2024
+// 4/11/2024
 #ifndef CONFIG_H
 #define CONFIG_H
 
@@ -9,7 +9,7 @@
 // Constant defined for packing sensor data
 #define NO_DECIMAL ((uint8_t) 100)
 
-#define ALARA 1
+#define ALARA_ID 1
 
 // Extern definitions for timing.
 extern uint32_t LMVOpenTime;
@@ -17,10 +17,10 @@ extern uint32_t FMVOpenTime;
 extern uint32_t LMVCloseTime;
 extern uint32_t FMVCloseTime;
 
-#define LMV_OPEN_TIME_DEFAULT 0
-#define FMV_OPEN_TIME_DEFAULT 0
-#define LMV_CLOSE_TIME_DEFAULT 0
-#define FMV_CLOSE_TIME_DEFAULT 0
+#define LMV_OPEN_TIME_DEFAULT   0
+#define FMV_OPEN_TIME_DEFAULT   0
+#define LMV_CLOSE_TIME_DEFAULT  0
+#define FMV_CLOSE_TIME_DEFAULT  0
 
 // Valves & Igniters
 #define NUM_VALVES 10
@@ -39,19 +39,8 @@ extern uint32_t FMVCloseTime;
 *          I think the rows need reshuffling to match the IDs again
 *
 */
-#define STATE_TRANSITIONS[9][9] = {
-    //                                          TO
-    //                  ABORT, VENT, IGNITE   FIRE, TANK_PRESS, HIGH_PRESS, STANDBY, TEST, MANUAL_VENT
-    /*      ABORT */     {0,    1,     0,       0,    0,         0,          1,       0,    0},
-    /*      VENT */      {1,    0,     0,       0,    0,         0,          1,       0,    0},
-    /* F    IGNITE*/     {1,    1,     0,       1,    0,         0,          0,       0,    1},
-    /* R    FIRE */      {1,    1,     0,       0,    0,         0,          1,       0,    0},
-    /* O    TANK_PRESS */{1,    1,     0,       0,    0,         1,          0,       0,    1},
-    /* M    HIGH_PRESS */{1,    1,     1,       0,    0,         0,          0,       0,    1},
-    /*      STANDBY */   {1,    1,     0,       0,    0,         0,          0,       0,    1},
-    /*      TEST */      {1,    1,     0,       0,    1,         0,          0,       0,    0},
-    /*      MANUAL_VENT*/{1,    1,     0,       0,    0,         0,          0,       0,    0}
-};
+
+
 
 // Vehicle Commands
 #define ABORT      ((uint32_t) 0)
@@ -60,7 +49,7 @@ extern uint32_t FMVCloseTime;
 #define TANK_PRESS ((uint32_t) 3)
 #define HIGH_PRESS ((uint32_t) 4)
 #define STANDBY    ((uint32_t) 5)
-#define IGNITE    ((uint32_t) 6)
+#define IGNITE     ((uint32_t) 6)
 #define TEST       ((uint32_t) 7)
 
 // Valve & Igniter (HPO Commands)
@@ -300,128 +289,5 @@ struct Color{int r, g, b;}; //Custom color structure where each value is an int 
 #define PURPLE Color{3072, 4096, 2048} //Led2 for Vent
 #define MAGENTA Color{1024, 4096, 1024} //                                  Vent
 #define PINK Color{64, 3584, 256} //Led 2 for Abort
-
-
-
-//Prop Node Initialization Information
-//#define UPPER_SENSOR_ARRAY_DECL  {PT_LOX_HIGH_ID, 
-
-
-//Engine Node Initialization Information
-
-
-/*****************************************CAN DBC (Database File)****************************************
- *
- *       *Note: Out of 2048 unique CAN ids only 25 have been used so far (~1%).
- *       **Note: If we need unique ids for the Engine node this number will increase.
- *
- *
- *       Vehicle Commands:
- *
- *
- *       id      meaning
- *
- *       0       Abort
- *       1       Vent
- *       2       Fire
- *       3       Tank Press 
- *       4       High Press
- *       5       Standby
- *       6       Passive
- *       7       Test
- * 
- *
- *       Igniter/Valve (High Power Object) Commands:
- *
- *
- *       id      meaning
- *
- *        8      IGN1_OFF   (Igniter1)
- *        9      IGN1_ON    (Igniter1)
- * 
- *       10      IGN2_OFF   (Igniter2)
- *       11      IGN2_ON    (Igniter2)
- *       
- *       12      HV_CLOSE   (High Vent Valve)
- *       13      HV_OPEN    (High Vent Valve)
- * 
- *       14      HP_CLOSE   (High Press Valve)
- *       15      HP_OPEN    (High Press Valve)
- * 
- *       16      LDV_CLOSE  (Lox Dome Vent Valve)
- *       17      LDV_OPEN   (Lox Dome Vent Valve)      
- * 
- *       18      FDV_CLOSE  (Fuel Dome Vent Valve)
- *       19      FDV_OPEN   (Fuel Dome Vent Valve)
- * 
- *       20      LDR_CLOSE  (Lox Dome Reg Valve)
- *       21      LDR_OPEN   (Lox Dome Reg Valve)
- * 
- *       22      FDR_CLOSE  (Fuel Dome Reg Valve)
- *       23      FDR_OPEN   (Fuel Dome Reg Valve)
- * 
- *       24      LV_CLOSE   (Lox Vent Valve)
- *       25      LV_OPEN    (Lox Vent Valve)
- * 
- *       26      FV_CLOSE   (Fuel Vent Valve)
- *       27      FV_OPEN    (Fuel Vent Valve)
- * 
- *       28      LMV_CLOSE  (Lox Main Valve)
- *       29      LMV_OPEN   (Lox Main Valve)
- * 
- *       30      FMV_CLOSE  (Fuel Main Valve)
- *       31      FMV_OPEN   (Fuel Main Valve)
- * 
- * 
- *
- *       List of Sensors:
- *
- *       *Note: Order subject to change.
- *
- *       #1      PT High Lox Side
- *       #2      PT High Fuel Side
- *       #3      PT Lox Dome
- *       #4      PT Fuel Dome
- * 
- *       #5      PT Lox Tank 1
- *       #6      PT Lox Tank 2
- *       #7      PT Fuel Tank 1
- *       #8      PT Fuel Tank 2
- * 
- *       #9      PT Pneumatics
- *       #10     PT Lox Inlet
- *       #11     PT Fuel Inlet
- *       #12     PT Fuel Injector
- * 
- *       #13     PT Chamber 1
- *       #14     PT Chamber 2
- *       #15     _________________
- *       #16     _________________
- *
- *       *Note: The timestamp in frame 127 could be used to monitor the speed of the CAN bus during operation 
- *              (by adding a received timestamp from the CAN clock - they should be synched). If the group decides 
- *              that we do not need this data - then it could be filled with data for two of the sensors.
- * 
- *       **Note: After CAN FD has been implemented we could do something like: 127, 129, and 130 = propReport
- *                                                                             128, 131, and 132 = engineReport  
- *
- *
- *       id      meaning
- *
- *       127     State Report: Timestamp, Vehicle State, Valve State, and Pyro States from Propulsion Node.
- *       128     State Report: Timestamp, Vehicle State, Valve State, and Pyro States from Engine Node.
- *
- *       129     Sensors   1,  2,  3, and 4 from Propulsion Node.
- *       130     Sensors   5,  6,  7, and 8 from Propulsion Node.
- *       131     Sensors   9, 10, 11, and 12 from Propulsion Node.
- *       132     Sensors  13, 14, 15, and 16 from Propulsion Node.
- *
- *       *Check with someone to see if these are even necessary 
- *        (I think they're the same sensors for each node - the only thing that varies is the high power output channels):
- *       133     Sensors  1,  2,  3, and 4 from Engine Node.
- *       134     Sensors  5,  6,  7, and 8 from Engine Node.
- *       135     Sensors  9, 10, 11, and 12 from Engine Node.
- *       136     Sensors 13, 14, 15, and 16 from Engine Node.
- */
 
 #endif
