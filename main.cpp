@@ -117,6 +117,30 @@ void CANRoutine() {
 //      Lox pressure
 
 // TODO:: fire sequence function
+void fireRoutineSetup() {
+    int time = millis();
+    return fireRoutine(time);
+}
+
+void fireRoutine(int zeroTime) {
+    curMillis = (millis() - zeroTime)
+    if (curMillis > LMVCloseTime) {
+        myRocket.setValveOn(LMV_ID, false);
+    }
+    else if (curMillis > LMVOpenTime) {
+        myRocket.setValveOn(LMV_ID, true);
+    }
+    if (curMillis > FMVCloseTime) {
+        myRocket.setValveOn(FMV_ID, false);
+    }
+    else if (curMillis > FMVOpenTime) {
+        myRocket.setValveOn(FMV_ID, true);
+    }
+    if (curMillis > FMVCloseTime && curMillis > FMVCloseTime) {
+        return;
+    }
+}
+
 
 // TODO:: add LEDs
 
