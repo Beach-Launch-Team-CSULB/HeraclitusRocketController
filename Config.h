@@ -9,12 +9,18 @@
 // Constant defined for packing sensor data
 #define NO_DECIMAL ((uint8_t) 100)
 
+#define ALARA 1
+
 // Extern definitions for timing.
-extern uint32_t ignitionTime;
 extern uint32_t LMVOpenTime;
 extern uint32_t FMVOpenTime;
 extern uint32_t LMVCloseTime;
 extern uint32_t FMVCloseTime;
+
+#define LMV_OPEN_TIME_DEFAULT 0
+#define FMV_OPEN_TIME_DEFAULT 0
+#define LMV_CLOSE_TIME_DEFAULT 0
+#define FMV_CLOSE_TIME_DEFAULT 0
 
 // Valves & Igniters
 #define NUM_VALVES 10
@@ -22,6 +28,29 @@ extern uint32_t FMVCloseTime;
 
 // Constant define for specifying the number of times per second sensor data & state reports are to be transmitted over CAN (ms).
 #define CAN_INTERVAL ((uint32_t) 333)
+#define CAN_BAUD_RATE 500000
+#define CAN_TX_BUFFER 64
+
+/*
+*
+*   TODO:: MANUAL_VENT transitions
+*          Add CAN id for MANUAL_VENT
+*          I think the rows need reshuffling to match the IDs again
+*
+*/
+#define STATE_TRANSITIONS[9][9] = {
+    //                                          TO
+    //                  ABORT, VENT, IGNITE   FIRE, TANK_PRESS, HIGH_PRESS, STANDBY, TEST, MANUAL_VENT
+    /*      ABORT */     {0,    1,     0,       0,    0,         0,          1,       0,    0},
+    /*      VENT */      {1,    0,     0,       0,    0,         0,          1,       0,    0},
+    /* F    IGNITE*/     {1,    1,     0,       1,    0,         0,          0,       0,    1},
+    /* R    FIRE */      {1,    1,     0,       0,    0,         0,          1,       0,    0},
+    /* O    TANK_PRESS */{1,    1,     0,       0,    0,         1,          0,       0,    1},
+    /* M    HIGH_PRESS */{1,    1,     1,       0,    0,         0,          0,       0,    1},
+    /*      STANDBY */   {1,    1,     0,       0,    0,         0,          0,       0,    1},
+    /*      TEST */      {1,    1,     0,       0,    1,         0,          0,       0,    0},
+    /*      MANUAL_VENT*/{1,    1,     0,       0,    0,         0,          0,       0,    0}
+};
 
 // Vehicle Commands
 #define ABORT      ((uint32_t) 0)
@@ -30,7 +59,7 @@ extern uint32_t FMVCloseTime;
 #define TANK_PRESS ((uint32_t) 3)
 #define HIGH_PRESS ((uint32_t) 4)
 #define STANDBY    ((uint32_t) 5)
-#define PASSIVE    ((uint32_t) 6)
+#define IGNITE    ((uint32_t) 6)
 #define TEST       ((uint32_t) 7)
 
 // Valve & Igniter (HPO Commands)
@@ -252,6 +281,24 @@ extern uint32_t FMVCloseTime;
 #define PT_CHAMBER_2_CAL_M      1.0f
 #define PT_CHAMBER_2_CAL_B      0.0f
 
+
+struct Color{int r, g, b;}; //Custom color structure where each value is an int 0-4096
+
+#define BLACK Color{4096, 4096, 4096} //turns LED off
+#define GRAY Color{3072, 3072, 3072} // Startup LED Color
+#define WHITE Color{0, 0, 0} // Led1 for Standby
+
+#define RED Color{0, 4096, 4096} // Led2 for Fire                           Used for Fire
+#define ORANGE Color{0, 3584, 4096} // Led1 for Launch Sequence States      Led1 for Launch Sequence
+#define YELLOW Color{256, 3072, 4096} // Led1 for Launch Sequence Arm       Abort
+#define LIME Color{512, 128, 4096} //                                       Tank Press Arm
+#define GREEN Color{4096, 256, 4096} // Led2 for Tank Press                 Tank Press
+#define CYAN Color{4096, 256, 3072}
+#define TEAL Color{4096, 3072, 2048} //                                     High Press Arm
+#define BLUE Color{4096, 4096, 256} // Led2 for High Press                  High Press
+#define PURPLE Color{3072, 4096, 2048} //Led2 for Vent
+#define MAGENTA Color{1024, 4096, 1024} //                                  Vent
+#define PINK Color{64, 3584, 256} //Led 2 for Abort
 
 
 

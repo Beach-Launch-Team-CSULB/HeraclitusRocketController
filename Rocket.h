@@ -8,6 +8,7 @@
 #include "Igniter.h"
 #include "Valve.h"
 #include "Sensor.h"
+#include "LEDController.h"
 #include <vector>
 
 
@@ -34,15 +35,13 @@ class Rocket{
         float sensorRead(int);
         bool ignitionRead(int);
         bool valveRead(int);
-       // int getState();
-
-        // 4/9/2024
         uint8_t getState();
         
         // Commands 
         bool setIgnitionOn(int,bool);
         bool setValveOn(int,bool);
         bool changeState(int);
+        bool calibrateSensors();
 
         // Execution Check
         bool getExecuting();

@@ -7,7 +7,8 @@
 
 CANDriver::CANDriver()
 {
-  // 
+    Can0.begin(CAN_BAUD_RATE);
+    Can0.setTxBufferSize(CAN_TX_BUFFER);
 };
 
 uint32_t CANDriver::readMessage()
@@ -28,25 +29,25 @@ uint32_t CANDriver::readMessage()
     std::string num5 = std::to_string(msg.buf[4]);
     time = stoi(num1+num2+num3+num4+num5);
 
-    if(msg.id == SET_IGNITION)
-    {
-      ignitionTime = time;
-    }
     if(msg.id == SET_LMV_OPEN)
     {
       LMVOpenTime = time;
+      sendTiming(GET_LMV_OPEN);
     }
-    if(msg.id == SET_FMV_OPEN)
+    else if(msg.id == SET_FMV_OPEN)
     {
       FMVOpenTime = time;
+      sendTiming(GET_FMV_OPEN);
     }
-    if(msg.id == SET_LMV_CLOSE)
+    else if(msg.id == SET_LMV_CLOSE)
     {
       LMVCloseTime = time;
+      sendTiming(GET_LMV_CLOSE);
     }
-    if(msg.id == SET_FMV_CLOSE)
+    else if(msg.id == SET_FMV_CLOSE)
     {
       FMVCloseTime = time;
+      sendTiming(GET_FMV_CLOSE);
     }
   }
 
@@ -164,28 +165,22 @@ void CANDriver::sendTiming(uint32_t getTimeID)
   uint32_t aTime = 0;
 
   // msg.id and aTime receive appropriate assignment based on input.
-  if (getTimeID == GET_IGNITION)
-  {
-    msg.id = SEND_IGNITION;
-    // int aTime = time;
-    aTime = ignitionTime;
-  }
   if (getTimeID == GET_LMV_OPEN)
   {
     msg.id = SEND_LMV_OPEN;
     aTime = LMVOpenTime;
   }
-  if (getTimeID == GET_FMV_OPEN)
+  else if (getTimeID == GET_FMV_OPEN)
   {
     msg.id = SEND_FMV_OPEN;
     aTime = FMVOpenTime;
   }
-  if (getTimeID == GET_LMV_CLOSE)
+  else if (getTimeID == GET_LMV_CLOSE)
   {
     msg.id = SEND_LMV_CLOSE;
     aTime = LMVCloseTime;
   }
-  if (getTimeID == GET_FMV_CLOSE)
+  else if (getTimeID == GET_FMV_CLOSE)
   {
     msg.id = SEND_FMV_CLOSE;
     aTime = FMVCloseTime;
@@ -202,5 +197,11 @@ void CANDriver::sendTiming(uint32_t getTimeID)
   msg.buf[2] = littleElf[1];
   msg.buf[3] = littleElf[0];
 
+  Can0.write(msg);
+}
+
+void CANDriver::ping() {
+  static CAN_message_t msg;
+  msg.id = PING_ROCKET_PI;
   Can0.write(msg);
 }
