@@ -91,6 +91,7 @@ bool Rocket::changeState(int state) {
         setValveOn(Igniter->first, stateMap[Igniter->first][state]);
     }
     this->state = state;
+    Serial.println(state);
     return true;
 }
 

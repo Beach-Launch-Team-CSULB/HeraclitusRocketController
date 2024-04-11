@@ -58,15 +58,15 @@ uint32_t verifier;
 int stateTransitions[8][8] = {
     //                                          TO
     //                  ABORT, VENT, IGNITE   FIRE, TANK_PRESS, HIGH_PRESS, STANDBY, PASSIVE, TEST
-    /*      ABORT */     {0,    1,     0,       0,    0,         0,          1,       0,       0},
-    /*      VENT */      {1,    0,     0,       0,    0,         0,          1,       0,       0},
-    /* F    IGNITE*/     {1,    1,     0,       1,    0,         0,          0,       0,       0}
-    /* R    FIRE */      {1,    1,     0,       0,    0,         0,          1,       0,       0},
-    /* O    TANK_PRESS */{1,    1,     0,       0,    0,         1,          0,       0,       0},
-    /* M    HIGH_PRESS */{1,    1,     1,       0,    0,         0,          0,       0,       0},
-    /*      STANDBY */   {1,    1,     0,       0,    0,         0,          0,       1,       0},
-    /*      PASSIVE */   {1,    1,     0,       0,    0,         0,          0,       0,       1},
-    /*      TEST */      {1,    1,     0,       0,    1,         0,          0,       0,       0}
+    /*      ABORT */     {0,    1,     /*0,*/       0,    0,         0,          1,       0,       0},
+    /*      VENT */      {1,    0,     /*0,*/       0,    0,         0,          1,       0,       0},
+    /* F    IGNITE*/     {1,    1,     /*0,*/       1,    0,         0,          0,       0,       0},
+    /* R    FIRE */      /*{1,    1,     0,       0,    0,         0,          1,       0,       0},*/
+    /* O    TANK_PRESS */{1,    1,     /*0,*/       0,    0,         1,          0,       0,       0},
+    /* M    HIGH_PRESS */{1,    1,     /*1,*/       0,    0,         0,          0,       0,       0},
+    /*      STANDBY */   {1,    1,     /*0,*/       0,    0,         0,          0,       1,       0},
+    /*      PASSIVE */   {1,    1,     /*0,*/       0,    0,         0,          0,       0,       1},
+    /*      TEST */      {1,    1,     /*0,*/       0,    1,         0,          0,       0,       0}
 };
 
 void executeCommand(int commandID) {
@@ -117,13 +117,8 @@ void CANRoutine() {
 //      Lox pressure
 
 // TODO:: fire sequence function
-void fireRoutineSetup() {
-    int time = millis();
-    return fireRoutine(time);
-}
-
 void fireRoutine(int zeroTime) {
-    curMillis = (millis() - zeroTime)
+    int curMillis = (millis() - zeroTime);
     if (curMillis > LMVCloseTime) {
         myRocket.setValveOn(LMV_ID, false);
     }
@@ -139,6 +134,11 @@ void fireRoutine(int zeroTime) {
     if (curMillis > FMVCloseTime && curMillis > FMVCloseTime) {
         return;
     }
+}
+
+void fireRoutineSetup() {
+    int time = millis();
+    return fireRoutine(time);
 }
 
 
@@ -194,12 +194,10 @@ void loop() {
     }
 
 
-    /*
     executeCommand(verifier);
     //myRocket.setValveOn(verifier / 2, verifier % 2);
     CANRoutine();
     delay(500);
-    */
 
 // Note: 4/10/2024
 // - Test the ability to receive a CAN state report (cast output as an int)
@@ -207,32 +205,23 @@ void loop() {
 // - Test the ability to zero PTs.
 
 
- /*
- *   /// CAN 2.0 Propulsion Node ///
- *   1.)  Receives [1] from Pi Box
- *   2.)  Sends [2] to Pi Box
- *  
- *   3.)  Receives [5] from Pi Box
- *   4.)  Sends [6] to Engine Node
- * 
- *   6.)  Receives [9] from Engine Node
- *   5.)  Sends [10] to Pi Box
- */ 
-
+  
 
   //Serial.println(LMVOpenTime);
     // Added in this
 
+
+/*
   // Changing this first id only.
   if(verifier == 1)
   {
     // Added in this
-    delay(5000);
+    // Fuel Vent.////
     myRocket.setValveOn(LDV_ID, true);
-    test.sendStateReport(0, TEST, myRocket, 1);     // Added
-    delay(10);                                      // Added
-    myRocket.setValveOn(LV_ID, true);               // Added
-    test.sendStateReport(0, TEST, myRocket, 1);     // Added
+    test.sendStateReport(0, FIRE, myRocket, 1);     // Added
+    delay(500);                                      // Added
+    myRocket.setValveOn(FDV_ID, true);               // Added
+    test.sendStateReport(0, FIRE, myRocket, 1);     // Added
     delay(500);
     // Try passing in the value of "alara" from setup as the boolean value.
     //test.sendStateReport(1, TEST, myRocket, true);
@@ -241,8 +230,8 @@ void loop() {
     test.sendStateReport(0, TEST, myRocket, 1);    // Added 
     test.sendStateReport(0, TEST, myRocket, 1);    // Added 
     test.sendStateReport(0, TEST, myRocket, 1);    // Added 
-    delay(100);                                    // Added 
-    myRocket.setValveOn(LV_ID, false);             // Added 
+    delay(500);                                    // Added 
+    myRocket.setValveOn(FDV_ID, false);             // Added 
     test.sendStateReport(0, TEST, myRocket, 1);    // Added 
     test.sendStateReport(0, TEST, myRocket, 1);    // Added
     test.sendStateReport(0, TEST, myRocket, 1);    // Added 
@@ -266,8 +255,16 @@ void loop() {
   }
 
   delay(1000);                                   // Added
-  test.sendStateReport(0, TEST, myRocket, 1);    // Added
+  test.sendStateReport(0, FIRE, myRocket, 1);    // Added
+  */
   
+
+  
+
+
+
+
+
 
 // SD Card and CAN Send
 

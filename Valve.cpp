@@ -3,7 +3,9 @@
 
     // Constructor
     Valve::Valve(int id, int pinPWM, int pinDigital) 
-        : id(id), pinPWM(pinPWM), pinDigital(pinDigital), valveOpen(false) {}
+        : id(id), pinPWM(pinPWM), pinDigital(pinDigital), valveOpen(false) {
+            ExtendedIO::pinModeExtended(pinDigital, 1, 1);
+        }
 
 
     // Getters
@@ -36,7 +38,7 @@
         /*Sets the state of Valve Objet: True (Open) | False (Close)
         Returns true if successful*/
         this->valveOpen = ValveOpenInput;
-        ExtendedIO::pinModeExtended(this->pinDigital,1,1);     // Sets Manual Pinmode to GPIO, Data Direction OUTPUT
+        //ExtendedIO::pinModeExtended(this->pinDigital,1,1);     // Sets Manual Pinmode to GPIO, Data Direction OUTPUT
         pinMode(this->pinPWM,1);
 
         if(ValveOpenInput == true){

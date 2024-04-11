@@ -110,8 +110,7 @@ void CANDriver::sendStateReport(int time, uint8_t rocketState, Rocket node, bool
     msg.buf[5] = uint8_t(stoi(ultraElf, nullptr, 2));
   }
 
-  // TEST 4/10/'24 **********************************************
-  Serial.println( (int)msg.buf[5]);
+Serial.println((int)msg.buf[4]);
 
   Can0.write(msg);
 };
