@@ -23,6 +23,9 @@ class Rocket{
         std::map<int, std::vector<int>> stateMap;
         LEDController ledController;
 
+        //4/11/2024
+        std::map<int, float> sensorZeroMap;
+
 
 
         
@@ -41,7 +44,7 @@ class Rocket{
         bool setValveOn(int,bool);
         bool changeState(int);
         //bool calibrateSensors(); 4/11
-        void calibrateSensors();
+        void calibrateSensors(int node);
 
         // Execution Check
         bool getExecuting();
@@ -57,7 +60,6 @@ class Rocket{
         bool initializeLowerValves();
         bool initializeUpperSensors();
         bool initializeLowerSensors();
-    
 };
 
 #endif

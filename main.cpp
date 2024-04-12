@@ -21,7 +21,7 @@
 /*
  *
  *   Analicia_4/11/24_Midnight
- *   NOTE: Do these need to be declared here? They're already declared in config
+ *   NOTE: Do these need to be declared here? They're already declared in config.
  *
  */
 uint32_t LMVOpenTime;
@@ -91,8 +91,8 @@ int lastCANReport;
 #define CANID_10 ((uint32_t) 10)
 
 uint32_t verifier;
-
 CANDriver test = CANDriver();
+bool calibratedPTs; // Global variable initialized as zero.
 
 /*
 *
@@ -137,7 +137,17 @@ void executeCommand(uint32_t commandID) {
     else if (commandID == 42) {
         lastPing = millis() - lastPing;
     }
-    else if (commandID == 44) myRocket.calibrateSensors();
+    else if (commandID == ZERO_PTS)
+    {
+        if(calibratedPTs == true)
+        {
+            myRocket.calibrateSensors(alara);
+        }
+        else
+        {
+            // Go fish.
+        }
+    }
     else if (commandID == GET_LMV_OPEN)
         test.sendTiming(SEND_LMV_OPEN);
     else if (commandID == GET_FMV_OPEN)
@@ -238,6 +248,9 @@ void setup() {
     FMVOpenTime = FMV_OPEN_TIME_DEFAULT;
     LMVCloseTime = LMV_CLOSE_TIME_DEFAULT;
     FMVCloseTime = FMV_CLOSE_TIME_DEFAULT;
+
+    calibratedPTs = false;
+
 
 }
 
