@@ -94,6 +94,9 @@ bool Rocket::enterState(E_RocketState stateToEnter)
         case Fire:
             enterFire();
             return true;
+        case Ignite:
+            enterIgnite();
+            return true;
         case TankPress:
             enterTankPress();
             return true;
@@ -102,15 +105,6 @@ bool Rocket::enterState(E_RocketState stateToEnter)
             return true;
         case Test:
             enterTest();
-            return true;
-        case FireArm:
-            enterFireArm();
-            return true;
-        case TankPressArm:
-            enterTankPressArm();
-            return true;
-        case HighPressArm:
-            enterHighPressArm();
             return true;
         case Standby:
             enterStandby();
@@ -130,24 +124,21 @@ bool Rocket::canEnterState(E_RocketState stateToEnter)
         case Abort: // Abort is always valid
             return currentState != Abort;
         */
+        // Procedural State Check Operations, in reverse order
+        case Fire:
+            return currentState == Ignite;
+        case Ignite:
+            return TankPress;
+        case TankPress:
+            return currentState == HighPress;
+        case HighPress:
+            return currentState == Standby;
+            
         case Standby: // Standby is allowable in any other neutral state
             return (/*currentState == Vent || currentState == Abort || */currentState == Fire || currentState == Test || currentState == Standby);
         case Test: // Can only be entered from Standby
             return currentState == Standby;
 
-        // Procedural State Check Operations, ordered by importance
-        case HighPress:
-            return currentState == HighPressArm;
-        case TankPress:
-            return currentState == TankPressArm;
-        case Fire:
-            return currentState == FireArm;
-        case HighPressArm:
-            return currentState == Standby;
-        case TankPressArm:
-            return currentState == HighPress;
-        case FireArm:
-            return currentState == TankPress;
     }
 }
 
@@ -237,20 +228,10 @@ bool Rocket::enterTest()
 // Closes all valves and sets rocket for Standby
 bool Rocket::enterStandby()
 {
-    //setValvesOpen(false, (std::vector<int>){HP_ID, HV_ID, FMV_ID, LMV_ID, LV_ID, LDV_ID, LDR_ID, FV_ID, FDV_ID, FDR_ID});
+    setValvesOpen(false, (std::vector<int>){HP_ID, HV_ID, FMV_ID, LMV_ID, LV_ID, LDV_ID, LDR_ID, FV_ID, FDV_ID, FDR_ID});
     currentState = Standby;
     setLED(0, WHITE);
     setLED(1, WHITE);
-    return true;
-}
-
-// Prepares rocket for HighPress
-bool Rocket::enterHighPressArm()
-{
-    setValvesOpen(false, (std::vector<int>){HP_ID, HV_ID, FMV_ID, LMV_ID, LV_ID, LDV_ID, LDR_ID, FV_ID, FDV_ID, FDR_ID});
-    currentState = HighPressArm;
-    setLED(0, ORANGE);
-    setLED(1, TEAL);
     return true;
 }
 
@@ -264,15 +245,6 @@ bool Rocket::enterHighPress()
     return true;
 }
 
-// Prepares rocket for TankPress
-bool Rocket::enterTankPressArm()
-{
-    currentState = TankPressArm;
-    setLED(0, ORANGE);
-    setLED(1, LIME);
-    return true;
-}
-
 // Opens LDR and FDR
 bool Rocket::enterTankPress()
 {
@@ -283,10 +255,10 @@ bool Rocket::enterTankPress()
     return true;
 }
 
-// Prepares rocket for TankPress
-bool Rocket::enterFireArm()
+//TODO: Add igniter timings and countdown
+bool Rocket::enterIgnite()
 {
-    currentState = FireArm;
+    currentState = Ignite;
     setLED(0, ORANGE);
     setLED(1, ORANGE);
     return true;
@@ -297,7 +269,7 @@ bool Rocket::enterFire()
 {
     //TODO ***************************************************************************** TODO
     currentState = Fire;
-    setLED(0, RED);
+    setLED(0, ORANGE);
     setLED(1, RED);
     return true;
 }
@@ -309,7 +281,7 @@ bool Rocket::vent()
     setValvesOpen(false, (std::vector<int>){HP_ID, LMV_ID, LDR_ID, FMV_ID, FDR_ID});
     //currentState = Vent;
     currentState = Standby;
-    setLED(1, PINK);
+    setLED(0, PINK);
     return true;
 }
 
@@ -319,7 +291,7 @@ bool Rocket::abort()
     setValvesOpen(false, (std::vector<int>){HP_ID, HV_ID, FMV_ID, LMV_ID, LV_ID, LDV_ID, LDR_ID, FV_ID, FDV_ID, FDR_ID});
     //currentState = Abort;
     currentState = Standby;
-    setLED(1, YELLOW);
+    setLED(0, YELLOW);
     return true;
 }
 

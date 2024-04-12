@@ -14,7 +14,7 @@
 
 
 
-enum E_RocketState {Standby, HighPressArm, HighPress, TankPressArm, TankPress, FireArm, Fire,/* Vent, Abort,*/ Test};
+enum E_RocketState {Standby, HighPress, TankPress, Ignite, Fire,/* Vent, Abort,*/ Test};
 
 class Rocket{ 
     public:
@@ -79,11 +79,12 @@ class Rocket{
         //Called by enterState()
         bool enterTest();
         bool enterStandby();
-        bool enterHighPressArm();
+        //bool enterHighPressArm();
         bool enterHighPress();
-        bool enterTankPressArm();
+        //bool enterTankPressArm();
         bool enterTankPress();
-        bool enterFireArm();
+        //bool enterFireArm();
+        bool enterIgnite();
         bool enterFire();
 };
 
