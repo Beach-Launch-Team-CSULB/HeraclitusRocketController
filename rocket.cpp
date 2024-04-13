@@ -8,7 +8,6 @@
 #include "Sensor.h"
 #include "PressureTransducer.h"
 #include "Config.h"
-#include "LEDController.h"
 
 // Constructor definition
 // 4/11: You can't declare a variable with the same name as a macro.
@@ -22,7 +21,7 @@ Rocket::Rocket(int alara) {
         initializeUpperValves();
         initializeUpperSensors();
     }
-    LEDController LED = LEDController(); // LEDCONTROLLER set up TJ 4/12 WIP**********
+
 
     /*
     *
@@ -34,24 +33,20 @@ Rocket::Rocket(int alara) {
     *   NOTE:: Should this go in config?
     * 
     */
-                                            // Abort, Vent, Fire, Tank Press, High Press, Standby, Ignite, Test 
-                                            //  A  V  F  T  H  S  I  T 
-                                            //TJ 4/12 changed state map WIP*****
-    stateMap.emplace(HP_ID,   std::vector<int>{0, 0, 1, 1, 1, 0, 1, 0});
-    stateMap.emplace(HV_ID,   std::vector<int>{0, 1, 0, 0, 0, 0, 0, 0});
-    stateMap.emplace(LV_ID,   std::vector<int>{0, 1, 0, 0, 0, 0, 0, 0});
+    // TODO: Old One.
+                                            //  TE  P  S  H  TA  F  V  A
+    stateMap.emplace(HP_ID,   std::vector<int>{0, 0, 0, 1, 1, 1, 0, 0});
+    stateMap.emplace(HV_ID,   std::vector<int>{0, 0, 0, 0, 0, 0, 1, 0});
+    stateMap.emplace(LV_ID,   std::vector<int>{0, 0, 0, 0, 0, 0, 1, 0});
     stateMap.emplace(LMV_ID,  std::vector<int>{0, 0, 0, 0, 0, 0, 0, 0});
-    stateMap.emplace(LDR_ID,  std::vector<int>{0, 0, 1, 1, 0, 0, 1, 0});
-    stateMap.emplace(LDV_ID,  std::vector<int>{0, 1, 0, 0, 0, 0, 0, 0});
-    stateMap.emplace(FV_ID,   std::vector<int>{0, 1, 0, 0, 0, 0, 0, 0});
+    stateMap.emplace(LDR_ID,  std::vector<int>{0, 0, 0, 0, 1, 1, 0, 0});
+    stateMap.emplace(LDV_ID,  std::vector<int>{0, 0, 0, 0, 0, 0, 1, 0});
+    stateMap.emplace(FV_ID,   std::vector<int>{0, 0, 0, 0, 0, 0, 1, 0});
     stateMap.emplace(FMV_ID,  std::vector<int>{0, 0, 0, 0, 0, 0, 0, 0});
-    stateMap.emplace(FDR_ID,  std::vector<int>{0, 0, 1, 1, 0, 0, 1, 0});
-    stateMap.emplace(FDV_ID,  std::vector<int>{0, 1, 0, 0, 0, 0, 0, 0});
-    stateMap.emplace(IGN1_ID, std::vector<int>{0, 0, 1, 0, 0, 0, 1, 0});
-    stateMap.emplace(IGN2_ID, std::vector<int>{0, 0, 1, 0, 0, 0, 1, 0});
-    stateMap.emplace(LED0, std::vector<Color>{GREEN, PURPLE, RED, ORANGE, ORANGE, WHITE, ORANGE, GREEN});
-    stateMap.emplace(LED1, std::vector<Color>{PURPLE, PURPLE, RED, GREEN, BLUE, WHITE, ORANGE, GREEN});
-    
+    stateMap.emplace(FDR_ID,  std::vector<int>{0, 0, 0, 0, 1, 1, 0, 0});
+    stateMap.emplace(FDV_ID,  std::vector<int>{0, 0, 0, 0, 0, 0, 1, 0});
+    stateMap.emplace(IGN1_ID, std::vector<int>{0, 0, 0, 0, 0, 0, 0, 0});
+    stateMap.emplace(IGN2_ID, std::vector<int>{0, 0, 0, 0, 0, 0, 0, 0});
 
     //Test //Passive //Standby //High-Press //Tank-Press //Fire //Vent //Abort
     // New One.
