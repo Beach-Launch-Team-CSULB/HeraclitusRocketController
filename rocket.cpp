@@ -59,18 +59,22 @@ bool Rocket::setIgnitionOn(int igniterID, bool ignitionOn) {
     return igniterMap[igniterID].setIgniterOn(ignitionOn); }
 
 bool Rocket::setValve(int valveID,bool valveOpen) {
+        std::map<int,Valve>::iterator it = valveMap.find(valveID);
+        if(it != valveMap.end())
+            it->second.setValveOpen(valveOpen);
+
     return valveMap[valveID].setValveOpen(valveOpen); }
 
 void Rocket::setValveOpen(int valveID) {
-    valveMap[valveID].setValveOpen(true); }
+    setValve(valveID, true); }
 
 void Rocket::setValveClosed(int valveID) {
-    valveMap[valveID].setValveOpen(false); }
+    setValve(valveID, false); }
 
 void Rocket::setValveOpenIfFire(int valveID) 
 {
-    if(currentState == Fire)
-        valveMap[valveID].setValveOpen(true); 
+    if(currentState == Fire || currentState == Ignite)
+        setValve(valveID, true);
 }
 
 bool Rocket::getExecuting(){
@@ -258,6 +262,8 @@ bool Rocket::enterTankPress()
 //TODO: Add igniter timings and countdown
 bool Rocket::enterIgnite()
 {
+    DelayedAction::addAction(millis() + 15000 - ignitionTime, &setValveOpenIfFire, IGN1_ID);
+    DelayedAction::addAction(millis() + 15000 - ignitionTime, &setValveOpenIfFire, IGN2_ID);
     currentState = Ignite;
     setLED(0, ORANGE);
     setLED(1, ORANGE);
@@ -267,7 +273,11 @@ bool Rocket::enterIgnite()
 //TODO: Add igniter timings and countdown
 bool Rocket::enterFire()
 {
-    //TODO ***************************************************************************** TODO
+    DelayedAction::addAction(millis() + LMVOpenTime, &setValveOpenIfFire, LMV_ID);
+    DelayedAction::addAction(millis() + FMVOpenTime, &setValveOpenIfFire, FMV_ID);
+    DelayedAction::addAction(millis() + LMVCloseTime, &setValveClosed, LMV_ID);
+    DelayedAction::addAction(millis() + FMVCloseTime, &setValveClosed, FMV_ID);
+
     currentState = Fire;
     setLED(0, ORANGE);
     setLED(1, RED);
@@ -307,13 +317,14 @@ void Rocket::setValvesOpen(bool valvesOpenInput, const std::vector<int> &valveID
     }
 }
 
-/*
+
 void Rocket::testDelay()
 {
     void (Rocket::*testfunc)(int);
     testfunc = &setValveOpen;
-    DelayedAction::addAction(millis() + 5000, testfunc, LMV_ID);
+    DelayedAction::addAction(millis() + 5000, testfunc, LMV_ID); //test general function
+    DelayedAction::addAction(millis() + 5500, &setValveClosed, LMV_ID); //test syntax
     //setValveOpen(LMV_ID);
     //delay(250);
     //setValveClosed(LMV_ID);
-}*/
+}

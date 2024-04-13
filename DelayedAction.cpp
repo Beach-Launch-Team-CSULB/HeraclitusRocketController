@@ -9,10 +9,10 @@ DelayedAction::DelayedAction(int time, void* action, int data, DelayedAction* ne
 */
 
 void DelayedAction::performAction() {
-    action(); }
+    (myRocket->*action)(); }
 
 void DelayedDataAction::performAction() {
-    dataAction(data); }
+    (myRocket->*dataAction)(data); }
 
 void DelayedAction::performActions(int currentTime)
 {
@@ -61,42 +61,3 @@ void DelayedAction::addAction(int time, dataFunctionPtr action, int data)
     DelayedDataAction* newAction = new DelayedDataAction(time, action, data);
     addActionHelper(newAction);
 }
-
-/*
-void DelayedAction::addAction(int time, functionPtr action)
-{
-    DelayedAction* newAction = new DelayedAction(time, action);
-    if(firstAction == nullptr) //if there are no other actions, add this.
-    {
-        firstAction = newAction;
-        return;
-    }
-    DelayedAction* currentAction = firstAction;
-    while (currentAction->nextAction != nullptr || //go through list until nextTime >= newTime or next is null
-           currentAction->nextAction->timeToPerform < newAction->timeToPerform)
-    {
-        currentAction = currentAction->nextAction;
-    }
-    newAction->nextAction = currentAction->nextAction; //insert new between current and next
-    currentAction->nextAction = newAction;
-}
-
-
-void DelayedAction::addAction(int time, dataFunctionPtr action, int data)
-{
-    DelayedDataAction* newAction = new DelayedDataAction(time, action, data);
-    if(firstAction == nullptr) //if there are no other actions, add this.
-    {
-        firstAction = newAction;
-        return;
-    }
-    DelayedAction* currentAction = firstAction;
-    while (currentAction->nextAction != nullptr || //go through list until nextTime >= newTime or next is null
-           currentAction->nextAction->timeToPerform < newAction->timeToPerform)
-    {
-        currentAction = currentAction->nextAction;
-    }
-    newAction->nextAction = currentAction->nextAction; //insert new between current and next
-    currentAction->nextAction = newAction;
-}
-*/

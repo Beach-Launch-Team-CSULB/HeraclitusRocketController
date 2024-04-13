@@ -15,9 +15,10 @@
  * Data is an optional input that will add the integer, often a valveID, as
  * a parameter for its function.
  */
+#include "Rocket.h"
 
-typedef void(*functionPtr)();
-typedef void(*dataFunctionPtr)(int);
+typedef void (Rocket::*functionPtr)();
+typedef void (Rocket::*dataFunctionPtr)(int);
 
 class DelayedAction
 {
@@ -25,6 +26,7 @@ class DelayedAction
     
     protected:
     static DelayedAction* firstAction;
+    static Rocket* myRocket;
 
     int timeToPerform;
     functionPtr action;
@@ -35,6 +37,7 @@ class DelayedAction
     static void addActionHelper(DelayedAction*);
 
     public:
+    static void init(Rocket* rocket);
     static void performActions(int);
     static void addAction(int, functionPtr);
     static void addAction(int, dataFunctionPtr, int);
