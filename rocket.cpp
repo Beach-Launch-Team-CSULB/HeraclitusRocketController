@@ -8,7 +8,7 @@
 #include "Sensor.h"
 #include "PressureTransducer.h"
 #include "Config.h"
-#include "LEDController.h"
+//#include "LEDController.h"
 
 // Constructor definition
 // 4/11: You can't declare a variable with the same name as a macro.
@@ -49,8 +49,8 @@ Rocket::Rocket(int alara) {
     stateMap.emplace(FDV_ID,  std::vector<int>{0, 1, 0, 0, 0, 0, 0, 0});
     stateMap.emplace(IGN1_ID, std::vector<int>{0, 0, 1, 0, 0, 0, 1, 0});
     stateMap.emplace(IGN2_ID, std::vector<int>{0, 0, 1, 0, 0, 0, 1, 0});
-    stateMap.emplace(LED0, std::vector<Color>{GREEN, PURPLE, RED, ORANGE, ORANGE, WHITE, ORANGE, GREEN});
-    stateMap.emplace(LED1, std::vector<Color>{PURPLE, PURPLE, RED, GREEN, BLUE, WHITE, ORANGE, GREEN});
+    //stateMap.emplace(LED0, std::vector<Color>{GREEN, PURPLE, RED, ORANGE, ORANGE, WHITE, ORANGE, GREEN});
+    //stateMap.emplace(LED1, std::vector<Color>{PURPLE, PURPLE, RED, GREEN, BLUE, WHITE, ORANGE, GREEN});
     
 
     //Test //Passive //Standby //High-Press //Tank-Press //Fire //Vent //Abort
@@ -73,7 +73,7 @@ Rocket::Rocket(int alara) {
 
 
 
-    changeState(TEST);
+    changeState(TEST);  // <--------   ?
 }
 
 float Rocket::sensorRead(int sensorId) {
@@ -197,26 +197,26 @@ void Rocket::calibrateSensors(int node)
     if(node == 1)
     {
         // Propulsion Node
-        sensorMap[PT_LOX_HIGH_ID].setCalibrationParameters(1.0,sensorMap[PT_LOX_HIGH_ID].getCurrentValue());
-        sensorMap[PT_FUEL_HIGH_ID].setCalibrationParameters(1.0,sensorMap[PT_FUEL_HIGH_ID].getCurrentValue());
-        sensorMap[PT_LOX_DOME_ID].setCalibrationParameters(1.0,sensorMap[PT_LOX_DOME_ID].getCurrentValue());
-        sensorMap[PT_FUEL_DOME_ID].setCalibrationParameters(1.0,sensorMap[PT_FUEL_DOME_ID].getCurrentValue());
+        sensorMap[PT_LOX_HIGH_ID].setCalibrationParameters(1.0, sensorMap[PT_LOX_HIGH_ID].getCurrentValue());
+        sensorMap[PT_FUEL_HIGH_ID].setCalibrationParameters(1.0, sensorMap[PT_FUEL_HIGH_ID].getCurrentValue());
+        sensorMap[PT_LOX_DOME_ID].setCalibrationParameters(1.0, sensorMap[PT_LOX_DOME_ID].getCurrentValue());
+        sensorMap[PT_FUEL_DOME_ID].setCalibrationParameters(1.0, sensorMap[PT_FUEL_DOME_ID].getCurrentValue());
 
-        sensorMap[PT_LOX_TANK_1_ID].setCalibrationParameters(1.0,sensorMap[PT_LOX_TANK_1_ID].getCurrentValue());
-        sensorMap[PT_LOX_TANK_2_ID].setCalibrationParameters(1.0,sensorMap[PT_LOX_TANK_2_ID].getCurrentValue());
-        sensorMap[PT_FUEL_TANK_1_ID].setCalibrationParameters(1.0,sensorMap[PT_FUEL_TANK_1_ID].getCurrentValue());
-        sensorMap[PT_FUEL_TANK_2_ID].setCalibrationParameters(1.0,sensorMap[PT_FUEL_TANK_2_ID].getCurrentValue());
+        sensorMap[PT_LOX_TANK_1_ID].setCalibrationParameters(1.0, sensorMap[PT_LOX_TANK_1_ID].getCurrentValue());
+        sensorMap[PT_LOX_TANK_2_ID].setCalibrationParameters(1.0, sensorMap[PT_LOX_TANK_2_ID].getCurrentValue());
+        sensorMap[PT_FUEL_TANK_1_ID].setCalibrationParameters(1.0, sensorMap[PT_FUEL_TANK_1_ID].getCurrentValue());
+        sensorMap[PT_FUEL_TANK_2_ID].setCalibrationParameters(1.0, sensorMap[PT_FUEL_TANK_2_ID].getCurrentValue());
     }
     else
     {
         // Engine Node
-        sensorMap[PT_PNUEMATICS_ID].setCalibrationParameters(1.0,sensorMap[PT_PNUEMATICS_ID].getCurrentValue()); // Fix spelling error later
-        sensorMap[PT_LOX_INLET_ID].setCalibrationParameters(1.0,sensorMap[PT_LOX_INLET_ID].getCurrentValue());
-        sensorMap[PT_FUEL_INLET_ID].setCalibrationParameters(1.0,sensorMap[PT_FUEL_INLET_ID].getCurrentValue());
-        sensorMap[PT_FUEL_INJECTOR_ID].setCalibrationParameters(1.0,sensorMap[PT_FUEL_INJECTOR_ID].getCurrentValue());
+        sensorMap[PT_PNUEMATICS_ID].setCalibrationParameters(1.0, sensorMap[PT_PNUEMATICS_ID].getCurrentValue()); // Fix spelling error later
+        sensorMap[PT_LOX_INLET_ID].setCalibrationParameters(1.0, sensorMap[PT_LOX_INLET_ID].getCurrentValue());
+        sensorMap[PT_FUEL_INLET_ID].setCalibrationParameters(1.0, sensorMap[PT_FUEL_INLET_ID].getCurrentValue());
+        sensorMap[PT_FUEL_INJECTOR_ID].setCalibrationParameters(1.0, sensorMap[PT_FUEL_INJECTOR_ID].getCurrentValue());
 
-        sensorMap[PT_CHAMBER_1_ID].setCalibrationParameters(1.0,sensorMap[PT_CHAMBER_1_ID].getCurrentValue());
-        sensorMap[PT_CHAMBER_2_ID].setCalibrationParameters(1.0,sensorMap[PT_CHAMBER_2_ID].getCurrentValue());
+        sensorMap[PT_CHAMBER_1_ID].setCalibrationParameters(1.0, sensorMap[PT_CHAMBER_1_ID].getCurrentValue());
+        sensorMap[PT_CHAMBER_2_ID].setCalibrationParameters(1.0, sensorMap[PT_CHAMBER_2_ID].getCurrentValue());
     }
 }
 

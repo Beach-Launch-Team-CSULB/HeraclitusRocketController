@@ -260,6 +260,7 @@ void loop() {
     // See if this works - 
     /*static uint32_t nextCANTime;
 
+    
     // Static Methods?
     uint32_t verifier = test.readMessage();
     if (verifier != 255)
@@ -267,7 +268,12 @@ void loop() {
         Serial.println("Main: ");
         Serial.println(verifier);
     }
-*/
+
+    delay(500);                                    // Added 
+    myRocket.setValveOn(FDV_ID, false);
+    */
+
+
 
     executeCommand(canBus.readMessage());
     CANRoutine(millis());
