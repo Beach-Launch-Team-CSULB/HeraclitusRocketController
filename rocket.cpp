@@ -10,14 +10,13 @@
 #include "Config.h"
 
 // Constructor definition
-// 4/11: You can't declare a variable with the same name as a macro.
-Rocket::Rocket(int alara) {
-    if (alara == 0){                             // Lower ALARA Setup 
+Rocket::Rocket(int ALARA) {
+    if (ALARA == 0){                             // Lower ALARA Setup 
         initializeIgniters();
         initializeLowerValves();
         initializeLowerSensors();
     }
-    if (alara == 1){                             // Upper ALARA Setup
+    if (ALARA == 1){                             // Upper ALARA Setup
         initializeUpperValves();
         initializeUpperSensors();
     }
@@ -185,10 +184,5 @@ bool Rocket::initializeLowerSensors()
     
 
     return true;
-}
-
-void Rocket::calibrateSensors()
-{
-    // 4/11/2024
 }
 

@@ -19,39 +19,15 @@
 // Initialize in setup()
 
 /*
- *
- *   Analicia_4/11/24_Midnight
- *   NOTE: Do these need to be declared here? They're already declared in config
- *
- */
+*
+*   Analicia_4/11/24_Midnight
+*   NOTE: Do these need to be declared here? They're already declared in config
+*
+*/
 uint32_t LMVOpenTime;
 uint32_t FMVOpenTime;
 uint32_t LMVCloseTime;
 uint32_t FMVCloseTime;
-
-/* 
- * If you put this in config it will throw an error for every additional place that you have #include "Config.h"
- * (CANDriver, LED Controller, main, and Rocket). I experienced a similar issue when trying to implement the times.
- * Ultimately, you end up using an extern declaration in config, and then a global declaration in the actual file where
- * the variable will be used (in our case main). This allows for them to be modified within the CANDriver class.
- * 
- * Since the state_transitions are not modified by another part of the program we do not need an extern definition within Config.h.
- * However, we would need to have this in here regardless.
- * 
- */
-int state_transitions[9][9] = {
-    //                                          TO
-    //                  ABORT, VENT, IGNITE   FIRE, TANK_PRESS, HIGH_PRESS, STANDBY, TEST, MANUAL_VENT
-    /*      ABORT */     {0,    1,     0,       0,    0,         0,          1,       0,    0},
-    /*      VENT */      {1,    0,     0,       0,    0,         0,          1,       0,    0},
-    /* F    IGNITE*/     {1,    1,     0,       1,    0,         0,          0,       0,    1},
-    /* R    FIRE */      {1,    1,     0,       0,    0,         0,          1,       0,    0},
-    /* O    TANK_PRESS */{1,    1,     0,       0,    0,         1,          0,       0,    1},
-    /* M    HIGH_PRESS */{1,    1,     1,       0,    0,         0,          0,       0,    1},
-    /*      STANDBY */   {1,    1,     0,       0,    0,         0,          0,       0,    1},
-    /*      TEST */      {1,    1,     0,       0,    1,         0,          0,       0,    0},
-    /*      MANUAL_VENT*/{1,    1,     0,       0,    0,         0,          0,       0,    0}
-};
 
 
 /*
@@ -63,8 +39,7 @@ int state_transitions[9][9] = {
 char* fileLogName = "SoftwareTest-03-15-2024.txt";
 File onBoardLog;
 bool sd_write = true;
-int alara = ALARA_ID;              // 4/11: Attempting to resolve build issue
-Rocket myRocket = Rocket(alara);
+Rocket myRocket = Rocket(ALARA);
 CANDriver canBus = CANDriver();
 int lastPing;
 int lastCANReport;
@@ -92,7 +67,6 @@ int lastCANReport;
 
 uint32_t verifier;
 
-CANDriver test = CANDriver();
 
 /*
 *
@@ -127,8 +101,8 @@ void fireRoutineSetup() {
     return fireRoutine(time);
 }
 
-void executeCommand(uint32_t commandID) {
-    if (commandID <= TEST && state_transitions[myRocket.getState()][commandID]) myRocket.changeState(commandID);
+void executeCommand(int commandID) {
+    if (commandID <= TEST && STATE_TRANSITIONS[myRocket.getState()][commandID]) myRocket.changeState(commandID);
     if (commandID == FIRE) fireRoutineSetup();
     else if (myRocket.getState() == TEST) {
         if (commandID <= IGN2_OFF) myRocket.setIgnitionOn(commandID / 2, commandID % 2);
@@ -138,24 +112,10 @@ void executeCommand(uint32_t commandID) {
         lastPing = millis() - lastPing;
     }
     else if (commandID == 44) myRocket.calibrateSensors();
-    else if (commandID == GET_LMV_OPEN)
-        test.sendTiming(SEND_LMV_OPEN);
-    else if (commandID == GET_FMV_OPEN)
-        test.sendTiming(SEND_FMV_OPEN);
-    else if (commandID == GET_LMV_CLOSE)
-        test.sendTiming(SEND_LMV_CLOSE);
-    else if (commandID == GET_FMV_CLOSE)
-        test.sendTiming(SEND_FMV_CLOSE);
-    else if (commandID == PING_PI_ROCKET)
-        test.ping();
     }
 
-// void writeSDReport(file) {
-
-
-void writeSDReport(char* fileLogName) {
-    if (sd_write) {   
-        File onBoardLog = SD.open(fileLogName, FILE_WRITE);   
+void writeSDReport(file) {
+    if (sd_write) {      
         std::string entry = std::to_string(millis());
         entry = entry + " | State: " + std::to_string(myRocket.getState());
 
@@ -168,17 +128,14 @@ void writeSDReport(char* fileLogName) {
         for (std::map<int,Igniter>::iterator igniter = myRocket.igniterMap.begin(); igniter != myRocket.igniterMap.end(); ++igniter) {
             entry = entry + " | " + std::to_string(igniter->first) + ":" + std::to_string(myRocket.ignitionRead(igniter->first));
         }
-        onBoardLog.printf("Time (ms) : %s", entry + "\n");
+        file.printf("Time (ms) : %s", entry + "\n");
     }
 }
 
 void CANRoutine(int time) {
-
-    uint32_t msgID = 255;
-
     if (time - lastCANReport > CAN_INTERVAL) {
         msgID = SENS_1_4_PROP;
-        if (alara == 0) msgID = SENS_9_12_ENGINE;
+        if (ALARA == 0) msgID = SENS_9_12_ENGINE;
         int sensorReads[8] = {0};
         int i = 0;
 
@@ -188,7 +145,7 @@ void CANRoutine(int time) {
 
         test.sendSensorData(msgID,sensorReads[0], sensorReads[1], sensorReads[2], sensorReads[3]);
         test.sendSensorData(msgID+1,sensorReads[4], sensorReads[5], sensorReads[6], sensorReads[7]);
-        test.sendStateReport(millis(), myRocket.getState(), myRocket, alara);
+        test.sendStateReport(millis(), myRocket.getState(), myRocket, ALARA);
 
         lastCANReport = time;
     }
@@ -228,11 +185,17 @@ void setup() {
         sd_write = false;
     }
     onBoardLog = SD.open(fileLogName, FILE_WRITE);
-    myRocket = Rocket(alara);
+    myRocket = Rocket(ALARA);
 
-
-    Can0.begin(CAN_BAUD_RATE);                      // See if this can go in CANDriver()
-    Can0.setTxBufferSize(CAN_TX_BUFFER);            // See if this can go in CANDriver()
+    /*
+    *
+    *   Analicia_4/11/24_Midnight
+    *   NOTE:: 99% sure these 2 lines can go in CANDriver(). Added them there, test to confirm
+    *           if removable, cut these lines
+    * 
+    */ 
+    Can0.begin(CAN_BAUD_RATE);
+    Can0.setTxBufferSize(CAN_TX_BUFFER);
 
     LMVOpenTime = LMV_OPEN_TIME_DEFAULT;
     FMVOpenTime = FMV_OPEN_TIME_DEFAULT;
@@ -240,7 +203,6 @@ void setup() {
     FMVCloseTime = FMV_CLOSE_TIME_DEFAULT;
 
 }
-
 
 void loop() {
 
@@ -258,7 +220,7 @@ void loop() {
 
     executeCommand(canBus.readMessage());
     CANRoutine(millis());
-    writeSDReport(fileLogName);
+    writeSDReport(onBoardLog);
 
 // Note: 4/10/2024
 // - Test the ability to receive a CAN state report (cast output as an int)
