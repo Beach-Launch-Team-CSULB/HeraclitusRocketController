@@ -4,13 +4,13 @@
 #include <unordered_map>
 #include "Rocket.h"
 #include "Igniter.h"
-#include <unistd.h> // NOTE:: Analicia_4/11/24_Midnight:: Do we still need this? If not let's remove it
+#include <unistd.h> // NOTE:: Do we still need this? If not let's remove it
 #include <SD.h>
 #include <SPI.h>
 #include "ExtendedIO.h"
 #include <Wire.h>
 
-#include <FlexCAN.h> // NOTE:: *   Analicia_4/11/24_Midnight:: Let's get to the point where we only need to include CANDriver
+#include <FlexCAN.h> // NOTE:: Let's get to the point where we only need to include CANDriver
 #include "CANDriver.h"
 #include <cstdint>
 #include "Config.h"
@@ -20,7 +20,6 @@
 
 /*
 *
-*   Analicia_4/11/24_Midnight
 *   NOTE: Do these need to be declared here? They're already declared in config
 *
 */
@@ -29,15 +28,13 @@ uint32_t FMVOpenTime;
 uint32_t LMVCloseTime;
 uint32_t FMVCloseTime;
 
-
+File onBoardLog;
 /*
 *
-*   Analicia_4/11/24_Midnight
 *   TODO:: Modify this so it grabs the current date for the file name
 *
 */
 char* fileLogName = "SoftwareTest-03-15-2024.txt";
-File onBoardLog;
 bool sd_write = true;
 Rocket myRocket = Rocket(ALARA);
 CANDriver canBus = CANDriver();
@@ -68,31 +65,22 @@ int lastCANReport;
 uint32_t verifier;
 
 
-/*
-*
-*   Analicia_4/11/24_Midnight
-*   TODO:: What happens if we don't care whether we close the valves and don't set close times
-*
-*/
 void fireRoutine(int zeroTime) {
-    int curMillis = zeroTime;
-    while(curMillis < 100'000) {
-        curMillis = (millis() - zeroTime);
-        if (curMillis > LMVCloseTime) {
-            myRocket.setValveOn(LMV_ID, false);
-        }
-        else if (curMillis > LMVOpenTime) {
-            myRocket.setValveOn(LMV_ID, true);
-        }
-        if (curMillis > FMVCloseTime) {
-            myRocket.setValveOn(FMV_ID, false);
-        }
-        else if (curMillis > FMVOpenTime) {
-            myRocket.setValveOn(FMV_ID, true);
-        }
-        if (curMillis > FMVCloseTime && curMillis > FMVCloseTime) {
-            return;
-        }
+    int curMillis = (millis() - zeroTime);
+    if (curMillis > LMVCloseTime) {
+        myRocket.setValveOn(LMV_ID, false);
+    }
+    else if (curMillis > LMVOpenTime) {
+        myRocket.setValveOn(LMV_ID, true);
+    }
+    if (curMillis > FMVCloseTime) {
+        myRocket.setValveOn(FMV_ID, false);
+    }
+    else if (curMillis > FMVOpenTime) {
+        myRocket.setValveOn(FMV_ID, true);
+    }
+    if (curMillis > FMVCloseTime && curMillis > FMVCloseTime) {
+        return;
     }
 }
 
@@ -110,26 +98,27 @@ void executeCommand(int commandID) {
     }
     else if (commandID == 42) {
         lastPing = millis() - lastPing;
+        canBus.ping()
     }
     else if (commandID == 44) myRocket.calibrateSensors();
+    return;
+}
+
+std::string generateSDReport() {
+    std::string entry = std::to_string(millis());
+    entry = entry + " | State: " + std::to_string(myRocket.getState());
+
+    for (std::map<int,Sensor>::iterator sensor = myRocket.sensorMap.begin(); sensor != myRocket.sensorMap.end(); ++sensor) {
+        entry = entry + " | " + std::to_string(sensor->first) + ":" + std::to_string(myRocket.sensorRead(sensor->first));
+    }
+    for (std::map<int,Valve>::iterator valve = myRocket.valveMap.begin(); valve != myRocket.valveMap.end(); ++valve) {
+        entry = entry + " | " + std::to_string(valve->first) + ":" + std::to_string(myRocket.valveRead(valve->first));
+    }
+    for (std::map<int,Igniter>::iterator igniter = myRocket.igniterMap.begin(); igniter != myRocket.igniterMap.end(); ++igniter) {
+        entry = entry + " | " + std::to_string(igniter->first) + ":" + std::to_string(myRocket.ignitionRead(igniter->first));
     }
 
-void writeSDReport(file) {
-    if (sd_write) {      
-        std::string entry = std::to_string(millis());
-        entry = entry + " | State: " + std::to_string(myRocket.getState());
-
-        for (std::map<int,Sensor>::iterator sensor = myRocket.sensorMap.begin(); sensor != myRocket.sensorMap.end(); ++sensor) {
-            entry = entry + " | " + std::to_string(sensor->first) + ":" + std::to_string(myRocket.sensorRead(sensor->first));
-        }
-        for (std::map<int,Valve>::iterator valve = myRocket.valveMap.begin(); valve != myRocket.valveMap.end(); ++valve) {
-            entry = entry + " | " + std::to_string(valve->first) + ":" + std::to_string(myRocket.valveRead(valve->first));
-        }
-        for (std::map<int,Igniter>::iterator igniter = myRocket.igniterMap.begin(); igniter != myRocket.igniterMap.end(); ++igniter) {
-            entry = entry + " | " + std::to_string(igniter->first) + ":" + std::to_string(myRocket.ignitionRead(igniter->first));
-        }
-        file.printf("Time (ms) : %s", entry + "\n");
-    }
+    return entry + '\n';
 }
 
 void CANRoutine(int time) {
@@ -154,7 +143,6 @@ void CANRoutine(int time) {
 
 /*
 *
-*   Analicia_4/11/24_Midnight
 *   TODO:: Add lox voltage for override
 *
 */
@@ -184,13 +172,11 @@ void setup() {
     if (!SD.begin(BUILTIN_SDCARD)) {
         sd_write = false;
     }
-    onBoardLog = SD.open(fileLogName, FILE_WRITE);
     myRocket = Rocket(ALARA);
 
     /*
     *
-    *   Analicia_4/11/24_Midnight
-    *   NOTE:: 99% sure these 2 lines can go in CANDriver(). Added them there, test to confirm
+    *   NOTE:: 99% sure these can go in CANDriver(). Added them there, test to confirm
     *           if removable, cut these lines
     * 
     */ 
@@ -220,7 +206,7 @@ void loop() {
 
     executeCommand(canBus.readMessage());
     CANRoutine(millis());
-    writeSDReport(onBoardLog);
+    generateSDReport();
 
 // Note: 4/10/2024
 // - Test the ability to receive a CAN state report (cast output as an int)
