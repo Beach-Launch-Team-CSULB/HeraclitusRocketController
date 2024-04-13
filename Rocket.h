@@ -38,6 +38,7 @@ class Rocket{
 
         // 4/9/2024
         uint8_t getState();
+        void calibrateSensors(int node); // 4/11/2024
         
         // Commands 
         bool setIgnitionOn(int,bool);

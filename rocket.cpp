@@ -21,6 +21,8 @@ Rocket::Rocket(int ALARA){
         initializeUpperSensors();
     }
 
+    /*
+
     // TODO: Old One.
                                             //  TE  P  S  H  TA  F  V  A
     stateMap.emplace(HP_ID,   std::vector<int>{0, 0, 0, 1, 1, 1, 0, 0});
@@ -35,6 +37,8 @@ Rocket::Rocket(int ALARA){
     stateMap.emplace(FDV_ID,  std::vector<int>{0, 0, 0, 0, 0, 0, 1, 0});
     stateMap.emplace(IGN1_ID, std::vector<int>{0, 0, 0, 0, 0, 0, 0, 0});
     stateMap.emplace(IGN2_ID, std::vector<int>{0, 0, 0, 0, 0, 0, 0, 0});
+
+    */
 
     //Test //Passive //Standby //High-Press //Tank-Press //Fire //Vent //Abort
     // New One.
@@ -53,6 +57,24 @@ Rocket::Rocket(int ALARA){
     //stateMap.emplace(IGN1_ID, std::vector<int>{0, 0, 0, 0, 0, 0, 0, 0});
     //stateMap.emplace(IGN2_ID, std::vector<int>{0, 0, 0, 0, 0, 0, 0, 0}); 
 
+                                                // Abort, Vent, Fire, Tank Press, High Press, Standby, Ignite, Test 
+                                            //  A  V  F  T  H  S  I  T 
+                                            //TJ 4/12 changed state map WIP*****
+    stateMap.emplace(HP_ID,   std::vector<int>{0, 0, 1, 1, 1, 0, 1, 0});
+    stateMap.emplace(HV_ID,   std::vector<int>{0, 1, 0, 0, 0, 0, 0, 0});
+    stateMap.emplace(LV_ID,   std::vector<int>{0, 1, 0, 0, 0, 0, 0, 0});
+    stateMap.emplace(LMV_ID,  std::vector<int>{0, 0, 0, 0, 0, 0, 0, 0});
+    stateMap.emplace(LDR_ID,  std::vector<int>{0, 0, 1, 1, 0, 0, 1, 0});
+    stateMap.emplace(LDV_ID,  std::vector<int>{0, 1, 0, 0, 0, 0, 0, 0});
+    stateMap.emplace(FV_ID,   std::vector<int>{0, 1, 0, 0, 0, 0, 0, 0});
+    stateMap.emplace(FMV_ID,  std::vector<int>{0, 0, 0, 0, 0, 0, 0, 0});
+    stateMap.emplace(FDR_ID,  std::vector<int>{0, 0, 1, 1, 0, 0, 1, 0});
+    stateMap.emplace(FDV_ID,  std::vector<int>{0, 1, 0, 0, 0, 0, 0, 0});
+    stateMap.emplace(IGN1_ID, std::vector<int>{0, 0, 1, 0, 0, 0, 1, 0});
+    stateMap.emplace(IGN2_ID, std::vector<int>{0, 0, 1, 0, 0, 0, 1, 0});
+    //stateMap.emplace(LED0, std::vector<Color>{GREEN, PURPLE, RED, ORANGE, ORANGE, WHITE, ORANGE, GREEN});
+    //stateMap.emplace(LED1, std::vector<Color>{PURPLE, PURPLE, RED, GREEN, BLUE, WHITE, ORANGE, GREEN});
+
 
 
 
@@ -64,7 +86,7 @@ Rocket::Rocket(int ALARA){
 }*/
 
 float Rocket::sensorRead(int sensorId) {
-    return sensorMap[sensorId].getCurrentValue();
+    return sensorMap[sensorId].getCurrentValue() - sensorMap[sensorId].getCalibrationIntercept();
 }
 
 bool Rocket::ignitionRead(int igniterID) {
@@ -159,7 +181,7 @@ bool Rocket::initializeUpperSensors()
     sensorMap.insert({PT_FUEL_DOME_ID, Sensor(PT_FUEL_DOME_ID, PT_FUEL_DOME_PIN, PT_FUEL_DOME_CAL_M, PT_FUEL_DOME_CAL_B)});
     sensorMap.insert({PT_LOX_TANK_1_ID, Sensor(PT_LOX_TANK_1_ID, PT_LOX_TANK_1_PIN, PT_LOX_TANK_1_CAL_M, PT_LOX_TANK_1_CAL_B)});
     sensorMap.insert({PT_LOX_TANK_2_ID, Sensor(PT_LOX_TANK_2_ID, PT_LOX_TANK_2_PIN, PT_LOX_TANK_2_CAL_M, PT_LOX_TANK_2_CAL_B),});
-    sensorMap.insert({PT_FUEL_TANK_1_ID, Sensor(PT_FUEL_TANK_1_ID, PT_FUEL_TANK_1_PIN, PT_FUEL_TANK_1_CAL_M, PT_FUEL_TANK_1_CAL_M)});
+    sensorMap.insert({PT_FUEL_TANK_1_ID, Sensor(PT_FUEL_TANK_1_ID, PT_FUEL_TANK_1_PIN, PT_FUEL_TANK_1_CAL_M, PT_FUEL_TANK_1_CAL_B)});
     sensorMap.insert({PT_FUEL_TANK_2_ID, Sensor(PT_FUEL_TANK_2_ID, PT_FUEL_TANK_2_PIN, PT_FUEL_TANK_2_CAL_M, PT_FUEL_TANK_2_CAL_B)});
     
 
@@ -179,4 +201,31 @@ bool Rocket::initializeLowerSensors()
     return true;
 }
 
+void Rocket::calibrateSensors(int node)
+{
+    if(node == 1)
+    {
+        // Propulsion Node
+        sensorMap[PT_LOX_HIGH_ID].setCalibrationParameters(1.0,sensorMap[PT_LOX_HIGH_ID].getCurrentValue());
+        sensorMap[PT_FUEL_HIGH_ID].setCalibrationParameters(1.0,sensorMap[PT_FUEL_HIGH_ID].getCurrentValue());
+        sensorMap[PT_LOX_DOME_ID].setCalibrationParameters(1.0,sensorMap[PT_LOX_DOME_ID].getCurrentValue());
+        sensorMap[PT_FUEL_DOME_ID].setCalibrationParameters(1.0,sensorMap[PT_FUEL_DOME_ID].getCurrentValue());
+
+        sensorMap[PT_LOX_TANK_1_ID].setCalibrationParameters(1.0,sensorMap[PT_LOX_TANK_1_ID].getCurrentValue());
+        sensorMap[PT_LOX_TANK_2_ID].setCalibrationParameters(1.0,sensorMap[PT_LOX_TANK_2_ID].getCurrentValue());
+        sensorMap[PT_FUEL_TANK_1_ID].setCalibrationParameters(1.0,sensorMap[PT_FUEL_TANK_1_ID].getCurrentValue());
+        sensorMap[PT_FUEL_TANK_2_ID].setCalibrationParameters(1.0,sensorMap[PT_FUEL_TANK_2_ID].getCurrentValue());
+    }
+    else
+    {
+        // Engine Node
+        sensorMap[PT_PNUEMATICS_ID].setCalibrationParameters(1.0,sensorMap[PT_PNUEMATICS_ID].getCurrentValue()); // Fix spelling error later
+        sensorMap[PT_LOX_INLET_ID].setCalibrationParameters(1.0,sensorMap[PT_LOX_INLET_ID].getCurrentValue());
+        sensorMap[PT_FUEL_INLET_ID].setCalibrationParameters(1.0,sensorMap[PT_FUEL_INLET_ID].getCurrentValue());
+        sensorMap[PT_FUEL_INJECTOR_ID].setCalibrationParameters(1.0,sensorMap[PT_FUEL_INJECTOR_ID].getCurrentValue());
+
+        sensorMap[PT_CHAMBER_1_ID].setCalibrationParameters(1.0,sensorMap[PT_CHAMBER_1_ID].getCurrentValue());
+        sensorMap[PT_CHAMBER_2_ID].setCalibrationParameters(1.0,sensorMap[PT_CHAMBER_2_ID].getCurrentValue());
+    }
+}
 

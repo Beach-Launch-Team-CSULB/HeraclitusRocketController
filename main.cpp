@@ -23,17 +23,21 @@ uint32_t FMVOpenTime;
 uint32_t LMVCloseTime;
 uint32_t FMVCloseTime;
 
-int alara = 1;
+int alara = ALARA_ID;
 File onBoardLog;
 char* fileLogName = "SoftwareTest-03-15-2024.txt";
 bool sd_write = true;
 Rocket myRocket = Rocket(alara);
 
-// TO BE REMOVED AT THE END OF CAN TEST
+bool calibratedPTs; // Global variable initialized as zero.
 
 const int CAN2busSpeed = 500000;
 CANDriver test = CANDriver();
 
+int lastPing;
+int lastCANReport;
+
+// TO BE REMOVED AT THE END OF CAN TEST
 // Simulating PT readings
 #define FAKEDATA1     ((float) 0.00)
 #define FAKEDATA2     ((float) 27.00)
@@ -54,29 +58,23 @@ CANDriver test = CANDriver();
 uint32_t verifier;
 
 
-//TODO reverse, double check transitions are good
-int stateTransitions[8][8] = {
+// Unable to go to standy from Vent and Abort.
+// Can only go to passive from vent
+int state_transitions[9][9] = {
     //                                          TO
-    //                  ABORT, VENT, IGNITE   FIRE, TANK_PRESS, HIGH_PRESS, STANDBY, PASSIVE, TEST
-    /*      ABORT */     {0,    1,     /*0,*/       0,    0,         0,          1,       0,       0},
-    /*      VENT */      {1,    0,     /*0,*/       0,    0,         0,          1,       0,       0},
-    /* F    IGNITE*/     {1,    1,     /*0,*/       1,    0,         0,          0,       0,       0},
-    /* R    FIRE */      /*{1,    1,     0,       0,    0,         0,          1,       0,       0},*/
-    /* O    TANK_PRESS */{1,    1,     /*0,*/       0,    0,         1,          0,       0,       0},
-    /* M    HIGH_PRESS */{1,    1,     /*1,*/       0,    0,         0,          0,       0,       0},
-    /*      STANDBY */   {1,    1,     /*0,*/       0,    0,         0,          0,       1,       0},
-    /*      PASSIVE */   {1,    1,     /*0,*/       0,    0,         0,          0,       0,       1},
-    /*      TEST */      {1,    1,     /*0,*/       0,    1,         0,          0,       0,       0}
+    //                  ABORT, VENT, IGNITE   FIRE, TANK_PRESS, HIGH_PRESS, STANDBY, TEST, MANUAL_VENT
+    /*      ABORT */     {0,    1,     0,       0,    0,         0,          1,       0,    0},
+    /*      VENT */      {1,    0,     0,       0,    0,         0,          1,       0,    0},
+    /* F    IGNITE*/     {1,    1,     0,       1,    0,         0,          0,       0,    1},
+    /* R    FIRE */      {1,    1,     0,       0,    0,         0,          1,       0,    0},
+    /* O    TANK_PRESS */{1,    1,     0,       0,    0,         1,          0,       0,    1},
+    /* M    HIGH_PRESS */{1,    1,     1,       0,    0,         0,          0,       0,    1},
+    /*      STANDBY */   {1,    1,     0,       0,    0,         0,          0,       0,    1},
+    /*      TEST */      {1,    1,     0,       0,    1,         0,          0,       0,    0},
+    /*      MANUAL_VENT*/{1,    1,     0,       0,    0,         0,          0,       0,    0}
 };
 
-void executeCommand(int commandID) {
-    if (commandID <= TEST && stateTransitions[myRocket.getState()][commandID]) myRocket.changeState(commandID);
-    else if (myRocket.getState() == TEST) {
-        if (commandID <= IGN2_OFF) myRocket.setIgnitionOn(commandID / 2, commandID % 2);
-        else if (commandID <= FMV_OPEN) myRocket.setValveOn(commandID / 2, commandID % 2);
-    }
-    // else handle the remaining CAN commands
-}
+
 
 std::string generateSDReport() {
     std::string entry = std::to_string(millis());
@@ -95,50 +93,128 @@ std::string generateSDReport() {
     return entry + '\n';
 }
 
-void CANRoutine() {
-    uint32_t msgID = 255; // Initialize as unused.
+void CANRoutine(int time) {
+    uint32_t msgID = 255;
+    if (time - lastCANReport > CAN_INTERVAL) {
+        msgID = SENS_1_4_PROP;
+        if (alara == 0) msgID = SENS_9_12_ENGINE;
+        int sensorReads[8] = {0};
+        int i = 0;
+        for (std::map<int,Sensor>::iterator sensor = myRocket.sensorMap.begin(); sensor != myRocket.sensorMap.end(); ++sensor) {
+            sensorReads[i++] = myRocket.sensorRead(sensor->first);
+        }
 
-    if (alara == 1) msgID = SENS_1_4_PROP;
-    else msgID = SENS_9_12_ENGINE;
-    int sensorReads[8] = {0};
-    int i = 0;
 
-    for (std::map<int,Sensor>::iterator sensor = myRocket.sensorMap.begin(); sensor != myRocket.sensorMap.end(); ++sensor) {
-        sensorReads[i++] = myRocket.sensorRead(sensor->first);
+        test.sendSensorData(msgID,sensorReads[0], sensorReads[1], sensorReads[2], sensorReads[3]);
+        test.sendSensorData(msgID+1,sensorReads[4], sensorReads[5], sensorReads[6], sensorReads[7]);
+        test.sendStateReport(millis(), myRocket.getState(), myRocket, alara);
+        lastCANReport = time;
     }
 
-    test.sendSensorData(msgID,sensorReads[0], sensorReads[1], sensorReads[2], sensorReads[3]);
-    test.sendSensorData(msgID+1,sensorReads[4], sensorReads[5], sensorReads[6], sensorReads[7]);
-    test.sendStateReport(millis(), myRocket.getState(), myRocket, alara);
+    return;
 }
 
 // TODO:: helper function for safety features
 //      Ping loss
 //      Lox pressure
 
-// TODO:: fire sequence function
 void fireRoutine(int zeroTime) {
-    int curMillis = (millis() - zeroTime);
-    if (curMillis > LMVCloseTime) {
-        myRocket.setValveOn(LMV_ID, false);
-    }
-    else if (curMillis > LMVOpenTime) {
-        myRocket.setValveOn(LMV_ID, true);
-    }
-    if (curMillis > FMVCloseTime) {
-        myRocket.setValveOn(FMV_ID, false);
-    }
-    else if (curMillis > FMVOpenTime) {
-        myRocket.setValveOn(FMV_ID, true);
-    }
-    if (curMillis > FMVCloseTime && curMillis > FMVCloseTime) {
-        return;
+    int curMillis = zeroTime;
+    while(curMillis < 100'000) {
+        curMillis = (millis() - zeroTime);
+        if (curMillis > LMVCloseTime) {
+            myRocket.setValveOn(LMV_ID, false);
+        }
+        else if (curMillis > LMVOpenTime) {
+            myRocket.setValveOn(LMV_ID, true);
+        }
+        if (curMillis > FMVCloseTime) {
+            myRocket.setValveOn(FMV_ID, false);
+        }
+        else if (curMillis > FMVOpenTime) {
+            myRocket.setValveOn(FMV_ID, true);
+        }
+        if (curMillis > FMVCloseTime && curMillis > FMVCloseTime) {
+            return;
+        }
     }
 }
 
 void fireRoutineSetup() {
     int time = millis();
     return fireRoutine(time);
+}
+
+void writeSDReport(char* fileLogName) {
+    if (sd_write) {   
+        File onBoardLog = SD.open(fileLogName, FILE_WRITE);   
+        std::string entry = std::to_string(millis());
+        entry = entry + " | State: " + std::to_string(myRocket.getState());
+        for (std::map<int,Sensor>::iterator sensor = myRocket.sensorMap.begin(); sensor != myRocket.sensorMap.end(); ++sensor) {
+            entry = entry + " | " + std::to_string(sensor->first) + ":" + std::to_string(myRocket.sensorRead(sensor->first));
+        }
+        for (std::map<int,Valve>::iterator valve = myRocket.valveMap.begin(); valve != myRocket.valveMap.end(); ++valve) {
+            entry = entry + " | " + std::to_string(valve->first) + ":" + std::to_string(myRocket.valveRead(valve->first));
+        }
+        for (std::map<int,Igniter>::iterator igniter = myRocket.igniterMap.begin(); igniter != myRocket.igniterMap.end(); ++igniter) {
+            entry = entry + " | " + std::to_string(igniter->first) + ":" + std::to_string(myRocket.ignitionRead(igniter->first));
+        }
+        onBoardLog.printf("Time (ms) : %s", entry + "\n");
+    }
+}
+
+// The Zero PTs function currently does not work. You also can't use it from test mode. 
+
+void executeCommand(uint32_t commandID) {
+
+    //*************************
+    if(commandID != 255 && commandID != 131 && commandID != 132 && commandID != 128)
+        Serial.println(commandID);
+    //*************************
+    
+    // && state_transitions[myRocket.getState()][commandID]
+    if (commandID <= TEST && state_transitions[myRocket.getState()][commandID]) 
+        myRocket.changeState(commandID);
+    else if (commandID == FIRE) 
+        fireRoutineSetup();
+    else if (myRocket.getState() == TEST) 
+    {
+        if (commandID <= IGN2_OFF) 
+            myRocket.setIgnitionOn(commandID / 2, commandID % 2);
+        else if (commandID <= FMV_OPEN) 
+            myRocket.setValveOn(commandID / 2, commandID % 2);
+    }
+    else if (commandID == 42) {
+        lastPing = millis() - lastPing;
+        test.ping();
+    }
+    else if (commandID == ZERO_PTS)
+    {
+        if(calibratedPTs == true)
+        {
+            myRocket.calibrateSensors(alara);
+        }
+        else
+        {
+            // Go fish.
+        }
+        
+        Serial.println("HEY!");
+    }
+    else if (commandID == GET_LMV_OPEN)
+        test.sendTiming(SEND_LMV_OPEN);
+    else if (commandID == GET_FMV_OPEN)
+        test.sendTiming(SEND_FMV_OPEN);
+    else if (commandID == GET_LMV_CLOSE)
+        test.sendTiming(SEND_LMV_CLOSE);
+    else if (commandID == GET_FMV_CLOSE)
+        test.sendTiming(SEND_FMV_CLOSE);
+    else if (commandID == PING_PI_ROCKET)
+        test.ping();
+}
+
+void safetyChecks() {
+    //if(lastPing > 5000 /*lox_pressure > xxx*/) myRocket.changeState(VENT);
 }
 
 
@@ -159,9 +235,12 @@ void setup() {
     Serial.println("Serial Test");
     Wire.begin();
     SPI.begin();
+
+    /*
     if (!SD.begin(BUILTIN_SDCARD)) {
         sd_write = false;
     }
+    */
     myRocket = Rocket(alara);
     //ExtendedIO::extendedIOsetup();
 
@@ -186,18 +265,21 @@ void loop() {
     static uint32_t nextCANTime;
 
     // Static Methods?
+    
+    /*
     uint32_t verifier = test.readMessage();
     if (verifier != 255)
     {
         Serial.println("Main: ");
         Serial.println(verifier);
     }
+    */
 
-
-    executeCommand(verifier);
-    //myRocket.setValveOn(verifier / 2, verifier % 2);
-    CANRoutine();
-    delay(500);
+    executeCommand(test.readMessage());
+    CANRoutine(millis());
+    writeSDReport(fileLogName);
+    //delay(5000);
+    
 
 // Note: 4/10/2024
 // - Test the ability to receive a CAN state report (cast output as an int)

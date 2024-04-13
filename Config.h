@@ -20,6 +20,11 @@ extern uint32_t FMVCloseTime;
 #define NUM_VALVES 10
 #define NUM_IGNITERS 2
 
+// Propulsion is 1.
+// Engine is 0.
+
+#define ALARA_ID 1
+
 // Constant define for specifying the number of times per second sensor data & state reports are to be transmitted over CAN (ms).
 #define CAN_INTERVAL ((uint32_t) 333)
 
@@ -30,7 +35,7 @@ extern uint32_t FMVCloseTime;
 #define TANK_PRESS ((uint32_t) 3)
 #define HIGH_PRESS ((uint32_t) 4)
 #define STANDBY    ((uint32_t) 5)
-#define PASSIVE    ((uint32_t) 6)
+#define IGNITE     ((uint32_t) 6)
 #define TEST       ((uint32_t) 7)
 
 // Valve & Igniter (HPO Commands)
@@ -252,128 +257,23 @@ extern uint32_t FMVCloseTime;
 #define PT_CHAMBER_2_CAL_M      1.0f
 #define PT_CHAMBER_2_CAL_B      0.0f
 
+struct Color{int r, g, b;}; //Custom color structure where each value is an int 0-4096
 
+#define BLACK Color{4096, 4096, 4096} //turns LED off
+#define GRAY Color{3072, 3072, 3072} // Startup LED Color
+#define WHITE Color{0, 0, 0} // Led1 for Standby
 
+#define RED Color{0, 4096, 4096} // Led2 for Fire                           Used for Fire
+#define ORANGE Color{0, 3584, 4096} // Led1 for Launch Sequence States      Led1 for Launch Sequence
+#define YELLOW Color{256, 3072, 4096} // Led1 for Launch Sequence Arm       Abort
+#define LIME Color{512, 128, 4096} //                                       Tank Press Arm
+#define GREEN Color{4096, 256, 4096} // Led2 for Tank Press                 Tank Press
+#define CYAN Color{4096, 256, 3072}
+#define TEAL Color{4096, 3072, 2048} //                                     High Press Arm
+#define BLUE Color{4096, 4096, 256} // Led2 for High Press                  High Press
+#define PURPLE Color{3072, 4096, 2048} //Led2 for Vent
+#define MAGENTA Color{1024, 4096, 1024} //                                  Vent
+#define PINK Color{64, 3584, 256} //Led 2 for Abort
 
-//Prop Node Initialization Information
-//#define UPPER_SENSOR_ARRAY_DECL  {PT_LOX_HIGH_ID, 
-
-
-//Engine Node Initialization Information
-
-
-/*****************************************CAN DBC (Database File)****************************************
- *
- *       *Note: Out of 2048 unique CAN ids only 25 have been used so far (~1%).
- *       **Note: If we need unique ids for the Engine node this number will increase.
- *
- *
- *       Vehicle Commands:
- *
- *
- *       id      meaning
- *
- *       0       Abort
- *       1       Vent
- *       2       Fire
- *       3       Tank Press 
- *       4       High Press
- *       5       Standby
- *       6       Passive
- *       7       Test
- * 
- *
- *       Igniter/Valve (High Power Object) Commands:
- *
- *
- *       id      meaning
- *
- *        8      IGN1_OFF   (Igniter1)
- *        9      IGN1_ON    (Igniter1)
- * 
- *       10      IGN2_OFF   (Igniter2)
- *       11      IGN2_ON    (Igniter2)
- *       
- *       12      HV_CLOSE   (High Vent Valve)
- *       13      HV_OPEN    (High Vent Valve)
- * 
- *       14      HP_CLOSE   (High Press Valve)
- *       15      HP_OPEN    (High Press Valve)
- * 
- *       16      LDV_CLOSE  (Lox Dome Vent Valve)
- *       17      LDV_OPEN   (Lox Dome Vent Valve)      
- * 
- *       18      FDV_CLOSE  (Fuel Dome Vent Valve)
- *       19      FDV_OPEN   (Fuel Dome Vent Valve)
- * 
- *       20      LDR_CLOSE  (Lox Dome Reg Valve)
- *       21      LDR_OPEN   (Lox Dome Reg Valve)
- * 
- *       22      FDR_CLOSE  (Fuel Dome Reg Valve)
- *       23      FDR_OPEN   (Fuel Dome Reg Valve)
- * 
- *       24      LV_CLOSE   (Lox Vent Valve)
- *       25      LV_OPEN    (Lox Vent Valve)
- * 
- *       26      FV_CLOSE   (Fuel Vent Valve)
- *       27      FV_OPEN    (Fuel Vent Valve)
- * 
- *       28      LMV_CLOSE  (Lox Main Valve)
- *       29      LMV_OPEN   (Lox Main Valve)
- * 
- *       30      FMV_CLOSE  (Fuel Main Valve)
- *       31      FMV_OPEN   (Fuel Main Valve)
- * 
- * 
- *
- *       List of Sensors:
- *
- *       *Note: Order subject to change.
- *
- *       #1      PT High Lox Side
- *       #2      PT High Fuel Side
- *       #3      PT Lox Dome
- *       #4      PT Fuel Dome
- * 
- *       #5      PT Lox Tank 1
- *       #6      PT Lox Tank 2
- *       #7      PT Fuel Tank 1
- *       #8      PT Fuel Tank 2
- * 
- *       #9      PT Pneumatics
- *       #10     PT Lox Inlet
- *       #11     PT Fuel Inlet
- *       #12     PT Fuel Injector
- * 
- *       #13     PT Chamber 1
- *       #14     PT Chamber 2
- *       #15     _________________
- *       #16     _________________
- *
- *       *Note: The timestamp in frame 127 could be used to monitor the speed of the CAN bus during operation 
- *              (by adding a received timestamp from the CAN clock - they should be synched). If the group decides 
- *              that we do not need this data - then it could be filled with data for two of the sensors.
- * 
- *       **Note: After CAN FD has been implemented we could do something like: 127, 129, and 130 = propReport
- *                                                                             128, 131, and 132 = engineReport  
- *
- *
- *       id      meaning
- *
- *       127     State Report: Timestamp, Vehicle State, Valve State, and Pyro States from Propulsion Node.
- *       128     State Report: Timestamp, Vehicle State, Valve State, and Pyro States from Engine Node.
- *
- *       129     Sensors   1,  2,  3, and 4 from Propulsion Node.
- *       130     Sensors   5,  6,  7, and 8 from Propulsion Node.
- *       131     Sensors   9, 10, 11, and 12 from Propulsion Node.
- *       132     Sensors  13, 14, 15, and 16 from Propulsion Node.
- *
- *       *Check with someone to see if these are even necessary 
- *        (I think they're the same sensors for each node - the only thing that varies is the high power output channels):
- *       133     Sensors  1,  2,  3, and 4 from Engine Node.
- *       134     Sensors  5,  6,  7, and 8 from Engine Node.
- *       135     Sensors  9, 10, 11, and 12 from Engine Node.
- *       136     Sensors 13, 14, 15, and 16 from Engine Node.
- */
 
 #endif

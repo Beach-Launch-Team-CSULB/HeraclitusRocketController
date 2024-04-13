@@ -204,3 +204,9 @@ void CANDriver::sendTiming(uint32_t getTimeID)
 
   Can0.write(msg);
 }
+
+void CANDriver::ping() {
+  static CAN_message_t msg;
+  msg.id = PING_ROCKET_PI;
+  Can0.write(msg);
+}
