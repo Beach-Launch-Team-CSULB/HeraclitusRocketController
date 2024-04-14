@@ -31,11 +31,8 @@ void Sensor::updateValue()
 //Updated the sensor's value and returns the new value
 float Sensor::getCurrentValue()
 {
-    // ***** Instead of trying return sensorMap[sensorId].getCurrentValue() - sensorMap[sensorId].getCalibrationIntercept() in Rocket.
-    // Try this here.
-    // 4/13: Added this
     updateValue();
-    return value - linCoefB;
+    return value;
 }
 
 

@@ -15,8 +15,7 @@
 #include <cstdint>
 #include "Config.h"
 
-// These need to not have a value or the value will be set to that throughout the duration of the program.
-// Initialize in setup()
+// These need to not have a value or the value will be set to that throughout the duration of the program. Initialize in setup().
 uint32_t ignitionTime;
 uint32_t LMVOpenTime;
 uint32_t FMVOpenTime;
@@ -32,20 +31,15 @@ Rocket myRocket = Rocket(alara);
 bool calibratedPTs; // Global variable initialized as zero.
 
 const int CAN2busSpeed = 500000;
-
-// "test" has been renamed theSchoolBus
 CANDriver theSchoolBus = CANDriver();
 
 int lastPing;
 int lastCANReport;
 
 
-//uint32_t verifier;
 
-
-// 4/12: I was unable to go to standy from Vent and Abort, and I was only able to go from Passive from Vent.
-
-// 4/13: 
+// 4/13:  Added standby to High Press. 
+// Note that ignite was previously passive. If testing on the GUI before the next update just pretend "passive" means ignite.
 int state_transitions[9][9] = {
     //                                          TO
     //                  ABORT, VENT, FIRE, TANK_PRESS, HIGH_PRESS, STANDBY,    IGNITE,   TEST, MANUAL_VENT
@@ -54,7 +48,7 @@ int state_transitions[9][9] = {
     /* F    FIRE */      {1,    1,     0,       0,         0,         1,          0,       0,       0}, 
     /* R    TANK_PRESS */{1,    1,     0,       0,         0,         0,          1,       0,       1}, 
     /* O    HIGH_PRESS */{1,    1,     0,       1,         0,         0,          0,       0,       1}, 
-    /* M    STANDBY */   {1,    1,     0,       0,         0,         0,          0,       1,       0}, 
+    /* M    STANDBY */   {1,    1,     0,       0,         1,         0,          0,       1,       0}, 
     /*      IGNITE*/     {1,    1,     1,       0,         0,         0,          0,       0,       1}, 
     /*      TEST */      {1,    1,     0,       0,         0,         1,          0,       0,       0},
     /*      MANUAL_VENT*/{1,    1,     1,       1,         1,         0,          1,       0,       0}
@@ -165,7 +159,8 @@ void executeCommand(uint32_t commandID) {
         fireRoutineSetup();
     else if (myRocket.getState() == TEST) 
     {
-        if (commandID <= IGN2_OFF) 
+        // 4/13: ***** I think that this may need to be <= IGN2_ON instead of IGN2_OFF. *****
+        if (commandID <= IGN2_ON) 
             myRocket.setIgnitionOn(commandID / 2, commandID % 2);
         else if (commandID <= FMV_OPEN) 
             myRocket.setValveOn(commandID / 2, commandID % 2);
@@ -185,7 +180,7 @@ void executeCommand(uint32_t commandID) {
             // Go fish.
         }
         
-        Serial.println("HEY!");
+        Serial.println("HEY!"); // ***** For testing
     }
     else if (commandID == GET_LMV_OPEN)
         theSchoolBus.sendTiming(SEND_LMV_OPEN);
@@ -230,9 +225,6 @@ void setup() {
     FMVOpenTime = 0;
     LMVCloseTime = 0;
     FMVCloseTime = 0;
-
-
-    //uint32_t verifier = 255;
 }
 
 void loop() {

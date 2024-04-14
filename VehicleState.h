@@ -1,3 +1,4 @@
+/*
 #ifndef VEHICLE_STATE
 #define VEHICLE_STATE
 
@@ -13,3 +14,4 @@ enum VehicleState{
 };
 
 #endif
+*/
