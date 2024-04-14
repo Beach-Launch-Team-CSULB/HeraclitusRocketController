@@ -23,7 +23,7 @@ extern uint32_t FMVCloseTime;
 // Propulsion is 1.
 // Engine is 0.
 
-#define ALARA_ID 1
+#define ALARA_ID 0
 
 // Constant define for specifying the number of times per second sensor data & state reports are to be transmitted over CAN (ms).
 #define CAN_INTERVAL ((uint32_t) 333)
@@ -37,6 +37,7 @@ extern uint32_t FMVCloseTime;
 #define STANDBY    ((uint32_t) 5)
 #define IGNITE     ((uint32_t) 6)
 #define TEST       ((uint32_t) 7)
+// Will we need to add a full manual CAN ID state?
 
 // Valve & Igniter (HPO Commands)
 #define IGN1_OFF   ((uint32_t) 8)   // Igniter One
