@@ -4,7 +4,6 @@
 #include <Arduino.h>
 #include <map>
 #include <utility>
-#include "VehicleState.h"
 #include "Igniter.h"
 #include "Valve.h"
 #include "Sensor.h"
