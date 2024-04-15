@@ -55,10 +55,10 @@ void CommandManager::checkCommand()
             rocket->setValve(HP_ID, true);
             return;
         case LDR_OPEN:
-            rocket->setValve(LV_ID, true);
+            rocket->setValve(LDR_ID, true);
             return;
         case FDR_OPEN:
-            rocket->setValve(LV_ID, true);
+            rocket->setValve(FDR_ID, true);
             return;
         case LMV_OPEN:
             rocket->setValve(LMV_ID, true);
@@ -73,7 +73,7 @@ void CommandManager::checkCommand()
             rocket->setValve(LDV_ID, false);
             return;
         case HV_CLOSE:
-            rocket->setValve(HP_ID, false);
+            rocket->setValve(HV_ID, false);
             return;
         case FV_CLOSE:
             rocket->setValve(FV_ID, false);
@@ -85,10 +85,10 @@ void CommandManager::checkCommand()
             rocket->setValve(HP_ID, false);
             return;
         case LDR_CLOSE:
-            rocket->setValve(LV_ID, false);
+            rocket->setValve(LDR_ID, false);
             return;
         case FDR_CLOSE:
-            rocket->setValve(LV_ID, false);
+            rocket->setValve(FDR_ID, false);
             return;
         case LMV_CLOSE:
             rocket->setValve(LMV_ID, false);
