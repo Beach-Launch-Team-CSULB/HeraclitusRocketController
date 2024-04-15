@@ -55,15 +55,27 @@ bool Rocket::ignitionRead(int igniterID) {
 bool Rocket::valveRead(int valveID) {
     return valveMap[valveID].getValveOpen(); }
 
-bool Rocket::setIgnitionOn(int igniterID, bool ignitionOn) {
-    return igniterMap[igniterID].setIgniterOn(ignitionOn); }
+bool Rocket::setIgnitionOn(int igniterID, bool ignitionOn)
+{
+        std::map<int,Igniter>::iterator it = igniterMap.find(igniterID);
+        if(it != igniterMap.end())
+        {
+            it->second.setIgniterOn(ignitionOn);
+            return true;
+        }
+    return false; 
+}
 
-bool Rocket::setValve(int valveID,bool valveOpen) {
+bool Rocket::setValve(int valveID,bool valveOpen)
+{
         std::map<int,Valve>::iterator it = valveMap.find(valveID);
         if(it != valveMap.end())
+        {
             it->second.setValveOpen(valveOpen);
-
-    return valveMap[valveID].setValveOpen(valveOpen); }
+            return true;
+        }
+    return false; 
+}
 
 void Rocket::setValveOpen(int valveID) {
     setValve(valveID, true); }

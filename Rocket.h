@@ -4,7 +4,6 @@
 #include <Arduino.h>
 #include <map>
 #include <utility>
-#include "VehicleState.h"
 #include "Igniter.h"
 #include "Valve.h"
 #include "Sensor.h"
@@ -63,7 +62,7 @@ class Rocket{
         bool canActuateValve();
     
    private: 
-        VehicleState state;
+        //VehicleState state;
         bool executingCommand;
         //int ALARA; // 0 = Lower , 1 = Upper  
        
