@@ -8,6 +8,7 @@
 #include "Valve.h"
 #include "Sensor.h"
 #include <vector>
+#include "LEDController.h"
 
 
 class Rocket{ 
@@ -19,6 +20,8 @@ class Rocket{
         //std::map<int, int[8]> stateMap;
         // 4/9/2024
         std::map<int, std::vector<int> > stateMap;
+        std::map<int, std::vector<Color>> LEDstateMap;
+        LEDController allOfTheLights;
 
 
 
@@ -42,6 +45,7 @@ class Rocket{
         // Commands 
         bool setIgnitionOn(int,bool);
         bool setValveOn(int,bool);
+        void setLED(int, Color);
         bool changeState(int);
 
         // Execution Check

@@ -1,5 +1,6 @@
 #include "PCA9685.h" // Standard PlatformIO file
 
+#pragma once
 //#define RED {1, 0, 0} //Testing
 struct Color{int r, g, b;}; //Custom color structure where each value is an int 0-4096
 

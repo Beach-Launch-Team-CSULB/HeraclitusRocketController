@@ -9,11 +9,11 @@
 // Constant defined for packing sensor data
 #define NO_DECIMAL ((uint8_t) 100)
 
-/*
+
 // LEDs
 #define LED0 0
 #define LED1 1
-*/
+
 
 // Extern definitions for timing.
 extern uint32_t ignitionTime;
@@ -41,7 +41,7 @@ extern uint32_t zeroPTEight;
 // Propulsion is 1.
 // Engine is 0.
 
-#define ALARA_ID 1
+#define ALARA_ID 0
 
 // Constant define for specifying the number of times per second sensor data & state reports are to be transmitted over CAN (ms).
 #define CAN_INTERVAL ((uint32_t) 333)

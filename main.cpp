@@ -15,12 +15,15 @@
 #include "CANDriver.h"
 #include <cstdint>
 #include "Config.h"
+#include "LEDController.h"
+
 
 int alara = ALARA_ID;
 File onBoardLog;
 char* fileLogName = "SoftwareTest-04-15-2024.txt";
 bool sd_write = true;
 Rocket myRocket = Rocket(alara);
+LEDController allOfTheLights;
 
 const int CAN2busSpeed = 500000;
 CANDriver theSchoolBus = CANDriver();
@@ -49,6 +52,8 @@ uint32_t zeroPTSeven;
 uint32_t zeroPTEight;
 std::vector <uint32_t> PTZeros{zeroPTOne, zeroPTTwo, zeroPTThree, zeroPTFour, zeroPTFive, zeroPTSix, zeroPTSeven, zeroPTEight};
 
+std::vector<Color> firstLED{GREEN,  PURPLE, RED, ORANGE, ORANGE, WHITE, ORANGE, GREEN};
+std::vector<Color> secondLED{PURPLE, PURPLE, RED, GREEN,  BLUE,   WHITE, ORANGE, GREEN};
 
 // 4/13:  Added standby to High Press. 
 // Note that ignite was previously passive. If testing on the GUI before the next update just pretend "passive" means ignite.
@@ -176,8 +181,11 @@ void executeCommand(uint32_t commandID) {
     //*************************
     
 
-    if (commandID <= TEST && state_transitions[myRocket.getState()][commandID]) 
+    if (commandID <= TEST && state_transitions[myRocket.getState()][commandID]) {
         myRocket.changeState(commandID);
+        allOfTheLights.setLed(LED0, firstLED[commandID]);
+        allOfTheLights.setLed(LED1, secondLED[commandID]);
+    }
     else if (commandID == FIRE) 
         fireRoutineSetup();
     else if (myRocket.getState() == TEST && commandID <= FMV_OPEN) 
@@ -229,13 +237,13 @@ void setup() {
     Serial.println("Serial Test");
     Wire.begin();
     SPI.begin();
-
     /*
     if (!SD.begin(BUILTIN_SDCARD)) {
         sd_write = false;
     }
     */
     myRocket = Rocket(alara);
+    allOfTheLights.init();
 
     Can0.begin(CAN2busSpeed);
     Can0.setTxBufferSize(64);

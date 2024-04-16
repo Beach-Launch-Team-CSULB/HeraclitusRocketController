@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <map>
 #include <utility>
@@ -9,13 +8,16 @@
 #include "PressureTransducer.h"
 #include "Config.h"
 
-#include "LEDController.h"
+
 // 4/14:*************************
-LEDController allOfTheLights;
-std::vector<Color> firstLED{GREEN,  PURPLE, RED, ORANGE, ORANGE, WHITE, ORANGE, GREEN};
-std::vector<Color> secondLED{PURPLE, PURPLE, RED, GREEN,  BLUE,   WHITE, ORANGE, GREEN};
+
+
 //*******************************
 
+
+void Rocket::setLED(int ledID, Color newColor){
+    allOfTheLights.setLed(ledID, newColor);
+}
 
 // Constructor definition
 Rocket::Rocket(int ALARA){
@@ -28,7 +30,7 @@ Rocket::Rocket(int ALARA){
         initializeUpperValves();
         initializeUpperSensors();
     }
-
+    //allOfTheLights.init();
     //TJ 4/12 changed state map WIP*****
     // 4/13:
                                           // Abort, Vent, Fire, Tank Press, High Press, Standby, Ignite, Test 
@@ -45,8 +47,9 @@ Rocket::Rocket(int ALARA){
     stateMap.emplace(FDV_ID,  std::vector<int>{0,   1,   0,   0,    0,   0,   0,   0});
     stateMap.emplace(IGN1_ID, std::vector<int>{0,   0,   1,   0,    0,   0,   1,   0});
     stateMap.emplace(IGN2_ID, std::vector<int>{0,   0,   1,   0,    0,   0,   1,   0});
-    //stateMap.emplace(LED0,    std::vector<Color>{GREEN, PURPLE, RED, ORANGE, ORANGE, WHITE, ORANGE, GREEN});
-    //stateMap.emplace(LED1,    std::vector<Color>{PURPLE, PURPLE, RED, GREEN, BLUE, WHITE, ORANGE, GREEN});
+
+    LEDstateMap.emplace(LED0,    std::vector<Color>{GREEN, PURPLE, RED, ORANGE, ORANGE, WHITE, ORANGE, GREEN});
+    LEDstateMap.emplace(LED1,    std::vector<Color>{PURPLE, PURPLE, RED, GREEN, BLUE, WHITE, ORANGE, GREEN});
 
     // Begins in the Test state
     changeState(TEST);
@@ -88,8 +91,8 @@ bool Rocket::changeState(int state) {
 
 
     // 4/14:*************************************
-    //allOfTheLights.setLed(LED0, firstLED[state]);
-    //allOfTheLights.setLed(LED1, secondLED[state]);
+    //setLED(LED0, LEDstateMap[LED0][state]);
+    //allOfTheLights.setLed(LED1, LEDstateMap[LED1][state]);
     //*******************************************
 
     this->state = state;
