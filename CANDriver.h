@@ -29,9 +29,9 @@ class CANDriver
         void sendSensorData(int sensorID, float sensorData1, float sensorData2, float SensorData3, float SensorData4);
         void sendTiming(uint32_t getTimeID);
 
-        void ping();
+        void ping(bool prop);
 
-        //void sendOperatorMessage(char zero, char one, char two, char three, char four, char five, char six, char seven);
+        void sendOperatorMessage(char zero, char one, bool prop);
 };
 
 #endif

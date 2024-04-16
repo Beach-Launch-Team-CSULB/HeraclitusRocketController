@@ -55,8 +55,6 @@ std::vector <uint32_t> PTZeros{zeroPTOne, zeroPTTwo, zeroPTThree, zeroPTFour, ze
 std::vector<Color> firstLED{GREEN,  PURPLE, RED, ORANGE, ORANGE, WHITE, ORANGE, GREEN};
 std::vector<Color> secondLED{PURPLE, PURPLE, RED, GREEN,  BLUE,   WHITE, ORANGE, GREEN};
 
-// 4/13:  Added standby to High Press. 
-// Note that ignite was previously passive. If testing on the GUI before the next update just pretend "passive" means ignite.
 int state_transitions[9][9] = {
     //                                          TO
     //                  ABORT, VENT, FIRE, TANK_PRESS, HIGH_PRESS, STANDBY,    IGNITE,   TEST, MANUAL_VENT
@@ -171,8 +169,6 @@ void writeSDReport(char* fileLogName)
     }
 }
 
-// The Zero PTs function currently does not work. You also can't use it from test mode. 
-
 void executeCommand(uint32_t commandID) {
 
     //*************************
@@ -195,9 +191,9 @@ void executeCommand(uint32_t commandID) {
         else if (commandID <= FMV_OPEN) 
             myRocket.setValveOn(commandID / 2, commandID % 2);
     }
-    else if (commandID == 42) {
+    else if (commandID == PING_PI_ROCKET) {
         lastPingRecieved = millis();
-        theSchoolBus.ping();
+        theSchoolBus.ping(alara);
     }
     else if (commandID == ZERO_PTS)
     {
@@ -219,8 +215,6 @@ void executeCommand(uint32_t commandID) {
         theSchoolBus.sendTiming(SEND_LMV_CLOSE);
     else if (commandID == GET_FMV_CLOSE)
         theSchoolBus.sendTiming(SEND_FMV_CLOSE);
-    else if (commandID == PING_PI_ROCKET)
-        theSchoolBus.ping();
 }
 
 

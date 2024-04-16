@@ -1,4 +1,4 @@
-// 4/14/2024
+// 4/16/2024
 #ifndef CONFIG_H
 #define CONFIG_H
 
@@ -55,7 +55,6 @@ extern uint32_t zeroPTEight;
 #define STANDBY    ((uint32_t) 5)
 #define IGNITE     ((uint32_t) 6)
 #define TEST       ((uint32_t) 7)
-// Will we need to add a full manual CAN ID state?
 
 // Valve & Igniter (HPO Commands)
 #define IGN1_OFF   ((uint32_t) 8)   // Igniter One
@@ -111,10 +110,51 @@ extern uint32_t zeroPTEight;
 #define PING_PI_ROCKET   ((uint32_t) 42)  // *Important*: Pi Box sends a ping to the rocket. 
 
 // Reserved
-#define RESERVED         ((uint32_t) 43)  // Reserved - Does nothing.
+#define MANUAL_OVERRIDE  ((uint32_t) 43)
 
 // PT Configuration
-#define ZERO_PTS         ((uint32_t) 44)  // Zero the pressure transducers.
+#define ZERO_PTS                      ((uint32_t) 44)  // Zero the pressure transducers.
+
+#define SET_CALIB_LOX_HIGH            ((uint32_t) 45)  // Adjust "m value" of linear approximation for PTs.
+#define SET_CALIB_FUEL_HIGH           ((uint32_t) 46)
+#define SET_CALIB_LOX_DOME            ((uint32_t) 47)
+#define SET_CALIB_FUEL_DOME           ((uint32_t) 48)
+
+#define SET_CALIB_LOX_TANK_ONE        ((uint32_t) 49)
+#define SET_CALIB_LOX_TANK_TWO        ((uint32_t) 50)
+#define SET_CALIB_FUEL_TANK_ONE       ((uint32_t) 51)
+#define SET_CALIB_FUEL_TANK_TWO       ((uint32_t) 52)
+
+#define SET_CALIB_PNEUMATICS          ((uint32_t) 53)
+#define SET_CALIB_LOX_INLET           ((uint32_t) 54)
+#define SET_CALIB_FUEL_INLET          ((uint32_t) 55)
+#define SET_CALIB_FUEL_INJECTOR       ((uint32_t) 56)
+
+#define SET_CALIB_CHAMBER_ONE         ((uint32_t) 57)
+#define SET_CALIB_CHAMBER_TWO         ((uint32_t) 58)
+#define SET_CALIB_RESERVED            ((uint32_t) 59)
+#define SET_CALIB_RESERVED            ((uint32_t) 60)
+
+#define GET_CALIB_LOX_HIGH            ((uint32_t) 61)
+#define GET_CALIB_FUEL_HIGH           ((uint32_t) 62)
+#define GET_CALIB_LOX_DOME            ((uint32_t) 63)
+#define GET_CALIB_FUEL_DOME           ((uint32_t) 64)
+
+#define GET_CALIB_LOX_TANK_ONE        ((uint32_t) 65)
+#define GET_CALIB_LOX_TANK_TWO        ((uint32_t) 66)
+#define GET_CALIB_FUEL_TANK_ONE       ((uint32_t) 67)
+#define GET_CALIB_FUEL_TANK_TWO       ((uint32_t) 68)
+
+#define GET_CALIB_PNEUMATICS          ((uint32_t) 69)
+#define GET_CALIB_LOX_INLET           ((uint32_t) 70)
+#define GET_CALIB_FUEL_INLET          ((uint32_t) 71)
+#define GET_CALIB_FUEL_INJECTOR       ((uint32_t) 72)
+
+#define GET_CALIB_CHAMBER_ONE         ((uint32_t) 73)
+#define GET_CALIB_CHAMBER_TWO         ((uint32_t) 74)
+#define GET_CALIB_RESERVED            ((uint32_t) 75)
+#define GET_CALIB_RESERVED            ((uint32_t) 76)
+
 
 // State Reports
 #define SR_PROP   ((uint32_t) 127)
@@ -134,7 +174,32 @@ extern uint32_t zeroPTEight;
 #define SEND_FMV_CLOSE    ((uint32_t) 137)  // ALARA response to 41. Sends FMV close time for confirmation.
 
 // Ping Response
-#define PING_ROCKET_PI    ((uint32_t) 138)  // Rocket sends a ping to the Pi Box.
+#define PING_PROP_PI      ((uint32_t) 138)
+#define PING_ENGINE_PI    ((uint32_t) 139)
+#define OP_MSG_PROP       ((uint32_t) 140)
+#define OP_MSG_ENGINE     ((uint32_t) 141)
+
+// PT Calib. Response to "Get" request from GUI
+#define SEND_CALIB_LOX_HIGH            ((uint32_t) 142)     // ALARA response to 61.
+#define SEND_CALIB_FUEL_HIGH           ((uint32_t) 143)     // ALARA response to 62.
+#define SEND_CALIB_LOX_DOME            ((uint32_t) 144)     // ALARA response to 63.
+#define SEND_CALIB_FUEL_DOME           ((uint32_t) 145)     // ALARA response to 64.
+
+#define SEND_CALIB_LOX_TANK_ONE        ((uint32_t) 146)     // ALARA response to 65.
+#define SEND_CALIB_LOX_TANK_TWO        ((uint32_t) 147)     // ALARA response to 66.
+#define SEND_CALIB_FUEL_TANK_ONE       ((uint32_t) 148)     // ALARA response to 67.
+#define SEND_CALIB_FUEL_TANK_TWO       ((uint32_t) 149)     // ALARA response to 68.
+
+#define SEND_CALIB_PNEUMATICS          ((uint32_t) 150)     // ALARA response to 69.
+#define SEND_CALIB_LOX_INLET           ((uint32_t) 151)     // ALARA response to 70.
+#define SEND_CALIB_FUEL_INLET          ((uint32_t) 152)     // ALARA response to 71.
+#define SEND_CALIB_FUEL_INJECTOR       ((uint32_t) 153)     // ALARA response to 72.
+
+#define SEND_CALIB_CHAMBER_ONE         ((uint32_t) 154)     // ALARA response to 73.
+#define SEND_CALIB_CHAMBER_TWO         ((uint32_t) 155)     // ALARA response to 74.
+#define SEND_CALIB_RESERVED            ((uint32_t) 156)     // ALARA response to 75.
+#define SEND_CALIB_RESERVED            ((uint32_t) 157)     // ALARA response to 76.
+
 
 
 // Data Direction Inputs 
