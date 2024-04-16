@@ -31,7 +31,7 @@ class CANDriver
 
         void ping();
 
-        //void sendOperatorMessage(int messageID);
+        //void sendOperatorMessage(char zero, char one, char two, char three, char four, char five, char six, char seven);
 };
 
 #endif

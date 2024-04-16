@@ -9,6 +9,14 @@
 #include "PressureTransducer.h"
 #include "Config.h"
 
+#include "LEDController.h"
+// 4/14:*************************
+LEDController allOfTheLights;
+std::vector<Color> firstLED{GREEN,  PURPLE, RED, ORANGE, ORANGE, WHITE, ORANGE, GREEN};
+std::vector<Color> secondLED{PURPLE, PURPLE, RED, GREEN,  BLUE,   WHITE, ORANGE, GREEN};
+//*******************************
+
+
 // Constructor definition
 Rocket::Rocket(int ALARA){
     if (ALARA == 0){                             // Lower ALARA Setup 
@@ -37,10 +45,8 @@ Rocket::Rocket(int ALARA){
     stateMap.emplace(FDV_ID,  std::vector<int>{0,   1,   0,   0,    0,   0,   0,   0});
     stateMap.emplace(IGN1_ID, std::vector<int>{0,   0,   1,   0,    0,   0,   1,   0});
     stateMap.emplace(IGN2_ID, std::vector<int>{0,   0,   1,   0,    0,   0,   1,   0});
-    //stateMap.emplace(LED0, std::vector<Color>{GREEN, PURPLE, RED, ORANGE, ORANGE, WHITE, ORANGE, GREEN});
-    //stateMap.emplace(LED1, std::vector<Color>{PURPLE, PURPLE, RED, GREEN, BLUE, WHITE, ORANGE, GREEN});
-
-
+    //stateMap.emplace(LED0,    std::vector<Color>{GREEN, PURPLE, RED, ORANGE, ORANGE, WHITE, ORANGE, GREEN});
+    //stateMap.emplace(LED1,    std::vector<Color>{PURPLE, PURPLE, RED, GREEN, BLUE, WHITE, ORANGE, GREEN});
 
     // Begins in the Test state
     changeState(TEST);
@@ -79,6 +85,13 @@ bool Rocket::changeState(int state) {
     for (std::map<int,Igniter>::iterator Igniter = igniterMap.begin(); Igniter != igniterMap.end(); ++Igniter) {
         setValveOn(Igniter->first, stateMap[Igniter->first][state]);
     }
+
+
+    // 4/14:*************************************
+    //allOfTheLights.setLed(LED0, firstLED[state]);
+    //allOfTheLights.setLed(LED1, secondLED[state]);
+    //*******************************************
+
     this->state = state;
     Serial.println(state);
     return true;
@@ -168,34 +181,34 @@ bool Rocket::initializeLowerSensors()
     return true;
 }
 
-// 4/13: The section of executeCommand responsible for producing the correct response is receiving the command.
-// I should first put a print statement in here to make sure that this is working.
-// If that works - then put one in the sensor to print out what it's linCoefB is.
+// 4/14: New attempt
 void Rocket::calibrateSensors(int node)
 {
     if(node == 1)
     {
+        // ******* 4/15: Put this back to how it was before. Right now - this works - but I was initially using the sensor class
+        // and not global variables. I messed something up in the main logic and the function was not getting called correctly.
         // Propulsion Node
-        sensorMap[PT_LOX_HIGH_ID].setCalibrationParameters(1.0, sensorMap[PT_LOX_HIGH_ID].getCurrentValue());
-        sensorMap[PT_FUEL_HIGH_ID].setCalibrationParameters(1.0, sensorMap[PT_FUEL_HIGH_ID].getCurrentValue());
-        sensorMap[PT_LOX_DOME_ID].setCalibrationParameters(1.0, sensorMap[PT_LOX_DOME_ID].getCurrentValue());
-        sensorMap[PT_FUEL_DOME_ID].setCalibrationParameters(1.0, sensorMap[PT_FUEL_DOME_ID].getCurrentValue());
+        zeroPTOne   = sensorRead(PT_LOX_HIGH_ID);
+        zeroPTTwo   = sensorRead(PT_FUEL_HIGH_ID);
+        zeroPTThree = sensorRead(PT_LOX_DOME_ID);
+        zeroPTFour  = sensorRead(PT_FUEL_DOME_ID);
 
-        sensorMap[PT_LOX_TANK_1_ID].setCalibrationParameters(1.0, sensorMap[PT_LOX_TANK_1_ID].getCurrentValue());
-        sensorMap[PT_LOX_TANK_2_ID].setCalibrationParameters(1.0, sensorMap[PT_LOX_TANK_2_ID].getCurrentValue());
-        sensorMap[PT_FUEL_TANK_1_ID].setCalibrationParameters(1.0, sensorMap[PT_FUEL_TANK_1_ID].getCurrentValue());
-        sensorMap[PT_FUEL_TANK_2_ID].setCalibrationParameters(1.0, sensorMap[PT_FUEL_TANK_2_ID].getCurrentValue());
+        zeroPTFive  = sensorRead(PT_LOX_TANK_1_ID);
+        zeroPTSix   = sensorRead(PT_LOX_TANK_2_ID);
+        zeroPTSeven = sensorRead(PT_FUEL_TANK_1_ID);
+        zeroPTEight = sensorRead(PT_FUEL_TANK_2_ID);
     }
     else
     {
         // Engine Node
-        sensorMap[PT_PNUEMATICS_ID].setCalibrationParameters(1.0, sensorMap[PT_PNUEMATICS_ID].getCurrentValue()); // Fix spelling error later
-        sensorMap[PT_LOX_INLET_ID].setCalibrationParameters(1.0, sensorMap[PT_LOX_INLET_ID].getCurrentValue());
-        sensorMap[PT_FUEL_INLET_ID].setCalibrationParameters(1.0, sensorMap[PT_FUEL_INLET_ID].getCurrentValue());
-        sensorMap[PT_FUEL_INJECTOR_ID].setCalibrationParameters(1.0, sensorMap[PT_FUEL_INJECTOR_ID].getCurrentValue());
+        zeroPTOne   = sensorRead(PT_PNUEMATICS_ID);
+        zeroPTTwo   = sensorRead(PT_LOX_INLET_ID);
+        zeroPTThree = sensorRead(PT_FUEL_INLET_ID);
+        zeroPTFour  = sensorRead(PT_FUEL_INJECTOR_ID);
 
-        sensorMap[PT_CHAMBER_1_ID].setCalibrationParameters(1.0, sensorMap[PT_CHAMBER_1_ID].getCurrentValue());
-        sensorMap[PT_CHAMBER_2_ID].setCalibrationParameters(1.0, sensorMap[PT_CHAMBER_2_ID].getCurrentValue());
+        zeroPTFive  = sensorRead(PT_CHAMBER_1_ID);
+        zeroPTSix   = sensorRead(PT_CHAMBER_2_ID);
     }
 }
 

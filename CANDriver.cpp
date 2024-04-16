@@ -1,4 +1,4 @@
-// 4/9/2024 - Added safety feature to sensor reports and sendTiming();
+// 4/14/2024 - Added safety feature to sensor reports and sendTiming();
 #include "CANDriver.h"
 #include "Config.h"
 
@@ -205,8 +205,31 @@ void CANDriver::sendTiming(uint32_t getTimeID)
   Can0.write(msg);
 }
 
-void CANDriver::ping() {
+void CANDriver::ping() 
+{
   static CAN_message_t msg;
   msg.id = PING_ROCKET_PI;
   Can0.write(msg);
 }
+
+/*
+void CANDriver::sendOperatorMessage(char zero, char one, char two, char three, char four, char five, char six, char seven) 
+{
+  static CAN_message_t msg;
+  msg.id = RESERVED;
+  msg.flags.extended = 0;
+  msg.flags.remote = 0;
+  msg.len = 8;
+
+  msg.buf[0] = zero;
+  msg.buf[1] = one;
+  msg.buf[2] = two;
+  msg.buf[3] = three;
+  msg.buf[4] = four;
+  msg.buf[5] = five;
+  msg.buf[6] = six;
+  msg.buf[7] = seven;
+
+  Can0.write(msg);
+}
+*/

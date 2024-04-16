@@ -4,7 +4,8 @@
 #include <unordered_map>
 #include "Rocket.h"
 #include "Igniter.h"
-#include <unistd.h> // For sleep function
+#include <unistd.h> 
+//^ For sleep function
 #include <SD.h>
 #include <SPI.h>
 #include "ExtendedIO.h"
@@ -15,6 +16,21 @@
 #include <cstdint>
 #include "Config.h"
 
+int alara = ALARA_ID;
+File onBoardLog;
+char* fileLogName = "SoftwareTest-04-15-2024.txt";
+bool sd_write = true;
+Rocket myRocket = Rocket(alara);
+
+const int CAN2busSpeed = 500000;
+CANDriver theSchoolBus = CANDriver();
+
+uint32_t lastPing; 
+uint32_t lastPingRecieved;         
+uint32_t lastCANReport;     
+bool calibratedPTs; 
+// Global variable initialize
+
 // These need to not have a value or the value will be set to that throughout the duration of the program. Initialize in setup().
 uint32_t ignitionTime;
 uint32_t LMVOpenTime;
@@ -22,20 +38,16 @@ uint32_t FMVOpenTime;
 uint32_t LMVCloseTime;
 uint32_t FMVCloseTime;
 
-int alara = ALARA_ID;
-File onBoardLog;
-char* fileLogName = "SoftwareTest-03-15-2024.txt";
-bool sd_write = true;
-Rocket myRocket = Rocket(alara);
-
-bool calibratedPTs; // Global variable initialized as zero.
-
-const int CAN2busSpeed = 500000;
-CANDriver theSchoolBus = CANDriver();
-
-int lastPing;
-int lastCANReport;
-
+// 4/14 Ensure that these are initialized as 0.
+uint32_t zeroPTOne;
+uint32_t zeroPTTwo;
+uint32_t zeroPTThree;
+uint32_t zeroPTFour;
+uint32_t zeroPTFive;
+uint32_t zeroPTSix;
+uint32_t zeroPTSeven;
+uint32_t zeroPTEight;
+std::vector <uint32_t> PTZeros{zeroPTOne, zeroPTTwo, zeroPTThree, zeroPTFour, zeroPTFive, zeroPTSix, zeroPTSeven, zeroPTEight};
 
 
 // 4/13:  Added standby to High Press. 
@@ -54,8 +66,6 @@ int state_transitions[9][9] = {
     /*      MANUAL_VENT*/{1,    1,     1,       1,         1,         0,          1,       0,       0}
 };
 
-
-
 std::string generateSDReport() {
     std::string entry = std::to_string(millis());
     entry = entry + " | State: " + std::to_string(myRocket.getState());
@@ -73,7 +83,8 @@ std::string generateSDReport() {
     return entry + '\n';
 }
 
-void CANRoutine(int time) {
+void CANRoutine(uint32_t time) {                
+     // 4/14: Changed to uint32_t
     uint32_t msgID = 255;
     if (time - lastCANReport > CAN_INTERVAL) {
         msgID = SENS_1_4_PROP;
@@ -85,8 +96,10 @@ void CANRoutine(int time) {
         }
 
 
-        theSchoolBus.sendSensorData(msgID,sensorReads[0], sensorReads[1], sensorReads[2], sensorReads[3]);
-        theSchoolBus.sendSensorData(msgID+1,sensorReads[4], sensorReads[5], sensorReads[6], sensorReads[7]);
+        theSchoolBus.sendSensorData(msgID,sensorReads[0]-zeroPTOne, sensorReads[1]-zeroPTTwo, 
+                                    sensorReads[2]-zeroPTThree, sensorReads[3]-zeroPTFour);
+        theSchoolBus.sendSensorData(msgID+1,sensorReads[4]-zeroPTFive, sensorReads[5]-zeroPTSix, 
+                                    sensorReads[6]-zeroPTSeven, sensorReads[7]-zeroPTEight);
         theSchoolBus.sendStateReport(millis(), myRocket.getState(), myRocket, alara);
         lastCANReport = time;
     }
@@ -94,12 +107,8 @@ void CANRoutine(int time) {
     return;
 }
 
-// TODO:: helper function for safety features
-//      Ping loss
-//      Lox pressure
-
-void fireRoutine(int zeroTime) {
-    int curMillis = zeroTime;
+void fireRoutine(uint32_t zeroTime) {        //  4/14: Changed to uint32_t from int.
+    uint32_t curMillis = zeroTime;           //  4/14: Changed to uint32_t from int.
     while(curMillis < 100'000) {
         curMillis = (millis() - zeroTime);
         if (curMillis > LMVCloseTime) {
@@ -118,25 +127,39 @@ void fireRoutine(int zeroTime) {
             return;
         }
     }
+    // 4/14: Do we need these things here? ********************
+    //executeCommand(theSchoolBus.readMessage());
+    //CANRoutine(millis());
+    //writeSDReport(fileLogName);
 }
 
-void fireRoutineSetup() {
-    int time = millis();
+
+void fireRoutineSetup() 
+{
+    uint32_t time = millis();       
+    // 4/14: Changed to uint32_t from int.
     return fireRoutine(time);
 }
 
-void writeSDReport(char* fileLogName) {
-    if (sd_write) {   
+void writeSDReport(char* fileLogName)
+ {
+    if (sd_write)
+     {   
         File onBoardLog = SD.open(fileLogName, FILE_WRITE);   
         std::string entry = std::to_string(millis());
         entry = entry + " | State: " + std::to_string(myRocket.getState());
-        for (std::map<int,Sensor>::iterator sensor = myRocket.sensorMap.begin(); sensor != myRocket.sensorMap.end(); ++sensor) {
-            entry = entry + " | " + std::to_string(sensor->first) + ":" + std::to_string(myRocket.sensorRead(sensor->first));
+        int i = 0;
+        for (std::map<int,Sensor>::iterator sensor = myRocket.sensorMap.begin(); sensor != myRocket.sensorMap.end(); ++sensor) 
+        {
+            // 4/14: Added to this. Had to create a vector of initial PT Values.
+            entry = entry + " | " + std::to_string(sensor->first) + ":" + std::to_string(myRocket.sensorRead(sensor->first) - PTZeros[i]);
         }
-        for (std::map<int,Valve>::iterator valve = myRocket.valveMap.begin(); valve != myRocket.valveMap.end(); ++valve) {
+        for (std::map<int,Valve>::iterator valve = myRocket.valveMap.begin(); valve != myRocket.valveMap.end(); ++valve) 
+        {
             entry = entry + " | " + std::to_string(valve->first) + ":" + std::to_string(myRocket.valveRead(valve->first));
         }
-        for (std::map<int,Igniter>::iterator igniter = myRocket.igniterMap.begin(); igniter != myRocket.igniterMap.end(); ++igniter) {
+        for (std::map<int,Igniter>::iterator igniter = myRocket.igniterMap.begin(); igniter != myRocket.igniterMap.end(); ++igniter) 
+        {
             entry = entry + " | " + std::to_string(igniter->first) + ":" + std::to_string(myRocket.ignitionRead(igniter->first));
         }
         onBoardLog.printf("Time (ms) : %s", entry + "\n");
@@ -157,16 +180,15 @@ void executeCommand(uint32_t commandID) {
         myRocket.changeState(commandID);
     else if (commandID == FIRE) 
         fireRoutineSetup();
-    else if (myRocket.getState() == TEST) 
+    else if (myRocket.getState() == TEST && commandID <= FMV_OPEN) 
     {
-        // 4/13: ***** I think that this may need to be <= IGN2_ON instead of IGN2_OFF. *****
         if (commandID <= IGN2_ON) 
             myRocket.setIgnitionOn(commandID / 2, commandID % 2);
         else if (commandID <= FMV_OPEN) 
             myRocket.setValveOn(commandID / 2, commandID % 2);
     }
     else if (commandID == 42) {
-        lastPing = millis() - lastPing;
+        lastPingRecieved = millis();
         theSchoolBus.ping();
     }
     else if (commandID == ZERO_PTS)
@@ -174,13 +196,12 @@ void executeCommand(uint32_t commandID) {
         if(calibratedPTs == true)
         {
             myRocket.calibrateSensors(alara);
+            calibratedPTs = false; 
         }
         else
         {
             // Go fish.
         }
-        
-        Serial.println("HEY!"); // ***** For testing
     }
     else if (commandID == GET_LMV_OPEN)
         theSchoolBus.sendTiming(SEND_LMV_OPEN);
@@ -194,12 +215,13 @@ void executeCommand(uint32_t commandID) {
         theSchoolBus.ping();
 }
 
-void safetyChecks() {
-    //if(lastPing > 5000 /*lox_pressure > xxx*/) myRocket.changeState(VENT);
+
+void safetyChecks() 
+{   // Lox pressure reading (?)
+    // This will be longer than two minutes.
+    if(lastPing > 120000) 
+        myRocket.changeState(VENT);
 }
-
-
-// TODO:: add LEDs
 
 void setup() {
     
@@ -218,6 +240,8 @@ void setup() {
     Can0.begin(CAN2busSpeed);
     Can0.setTxBufferSize(64);
 
+    lastPing = 0;
+
 
     // Do we want default values?
     ignitionTime = 0;
@@ -225,10 +249,14 @@ void setup() {
     FMVOpenTime = 0;
     LMVCloseTime = 0;
     FMVCloseTime = 0;
+
+    calibratedPTs = true;
 }
 
 void loop() {
+    lastPing = millis() - lastPingRecieved;
     executeCommand(theSchoolBus.readMessage());
     CANRoutine(millis());
     writeSDReport(fileLogName);
+    safetyChecks();
 }

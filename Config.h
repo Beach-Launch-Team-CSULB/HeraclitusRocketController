@@ -1,4 +1,4 @@
-// 4/8/2024
+// 4/14/2024
 #ifndef CONFIG_H
 #define CONFIG_H
 
@@ -9,12 +9,30 @@
 // Constant defined for packing sensor data
 #define NO_DECIMAL ((uint8_t) 100)
 
+/*
+// LEDs
+#define LED0 0
+#define LED1 1
+*/
+
 // Extern definitions for timing.
 extern uint32_t ignitionTime;
 extern uint32_t LMVOpenTime;
 extern uint32_t FMVOpenTime;
 extern uint32_t LMVCloseTime;
 extern uint32_t FMVCloseTime;
+
+
+// Extern definitions for zeroing.
+extern uint32_t zeroPTOne;
+extern uint32_t zeroPTTwo;
+extern uint32_t zeroPTThree;
+extern uint32_t zeroPTFour;
+extern uint32_t zeroPTFive;
+extern uint32_t zeroPTSix;
+extern uint32_t zeroPTSeven;
+extern uint32_t zeroPTEight;
+
 
 // Valves & Igniters
 #define NUM_VALVES 10
@@ -23,7 +41,7 @@ extern uint32_t FMVCloseTime;
 // Propulsion is 1.
 // Engine is 0.
 
-#define ALARA_ID 0
+#define ALARA_ID 1
 
 // Constant define for specifying the number of times per second sensor data & state reports are to be transmitted over CAN (ms).
 #define CAN_INTERVAL ((uint32_t) 333)
@@ -122,6 +140,7 @@ extern uint32_t FMVCloseTime;
 // Data Direction Inputs 
 #define INPUT  (uint32_t)0
 #define OUTPUT (uint32_t)1
+//4/14: See if everything still works after removing this^.
 
 
 
@@ -257,24 +276,5 @@ extern uint32_t FMVCloseTime;
 #define PT_CHAMBER_2_PIN        A11
 #define PT_CHAMBER_2_CAL_M      1.0f
 #define PT_CHAMBER_2_CAL_B      0.0f
-
-struct Color{int r, g, b;}; //Custom color structure where each value is an int 0-4096
-
-#define BLACK Color{4096, 4096, 4096} //turns LED off
-#define GRAY Color{3072, 3072, 3072} // Startup LED Color
-#define WHITE Color{0, 0, 0} // Led1 for Standby
-
-#define RED Color{0, 4096, 4096} // Led2 for Fire                           Used for Fire
-#define ORANGE Color{0, 3584, 4096} // Led1 for Launch Sequence States      Led1 for Launch Sequence
-#define YELLOW Color{256, 3072, 4096} // Led1 for Launch Sequence Arm       Abort
-#define LIME Color{512, 128, 4096} //                                       Tank Press Arm
-#define GREEN Color{4096, 256, 4096} // Led2 for Tank Press                 Tank Press
-#define CYAN Color{4096, 256, 3072}
-#define TEAL Color{4096, 3072, 2048} //                                     High Press Arm
-#define BLUE Color{4096, 4096, 256} // Led2 for High Press                  High Press
-#define PURPLE Color{3072, 4096, 2048} //Led2 for Vent
-#define MAGENTA Color{1024, 4096, 1024} //                                  Vent
-#define PINK Color{64, 3584, 256} //Led 2 for Abort
-
 
 #endif

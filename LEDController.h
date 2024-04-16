@@ -19,6 +19,7 @@ struct Color{int r, g, b;}; //Custom color structure where each value is an int 
 #define MAGENTA Color{1024, 4096, 1024} //                                  Vent
 #define PINK Color{64, 3584, 256} //Led 2 for Abort
 
+
 class LEDController
 {
     private: 
