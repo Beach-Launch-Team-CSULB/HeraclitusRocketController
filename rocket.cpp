@@ -9,12 +9,6 @@
 #include "Config.h"
 
 
-// 4/14:*************************
-
-
-//*******************************
-
-
 void Rocket::setLED(int ledID, Color newColor){
     allOfTheLights.setLed(ledID, newColor);
 }
@@ -52,7 +46,7 @@ Rocket::Rocket(int ALARA){
     LEDstateMap.emplace(LED1,    std::vector<Color>{PURPLE, PURPLE, RED, GREEN, BLUE, WHITE, ORANGE, GREEN});
 
     // Begins in the Test state
-    changeState(TEST);
+    changeState(STANDBY);
 }
 
 /*float Rocket::sensorRead(Sensor sensor) {
@@ -60,9 +54,10 @@ Rocket::Rocket(int ALARA){
 }*/
 
 float Rocket::sensorRead(int sensorId) {
-    // 4/13: **** Instead of doing this here - I am trying to do something similar within the sensor class.
-    //return sensorMap[sensorId].getCurrentValue() - sensorMap[sensorId].getCalibrationIntercept();
-    return sensorMap[sensorId].getCurrentValue();
+    // 4/15: After we get this working - check how many times it is logging.
+    // It may be worth creating a vector that contains global variables and is updated by the CANDriver.
+    return sensorMap[sensorId].getCurrentValue() * sensorMap[sensorId].getCalibrationSlope() - sensorMap[sensorId].getCalibrationIntercept();
+    //return sensorMap[sensorId].getCurrentValue();
 }
 
 bool Rocket::ignitionRead(int igniterID) {

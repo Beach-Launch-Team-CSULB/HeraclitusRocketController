@@ -41,6 +41,8 @@ uint32_t FMVOpenTime;
 uint32_t LMVCloseTime;
 uint32_t FMVCloseTime;
 
+
+//4/16: Trying this again.
 // 4/14 Ensure that these are initialized as 0.
 uint32_t zeroPTOne;
 uint32_t zeroPTTwo;
@@ -51,6 +53,7 @@ uint32_t zeroPTSix;
 uint32_t zeroPTSeven;
 uint32_t zeroPTEight;
 std::vector <uint32_t> PTZeros{zeroPTOne, zeroPTTwo, zeroPTThree, zeroPTFour, zeroPTFive, zeroPTSix, zeroPTSeven, zeroPTEight};
+
 
 std::vector<Color> firstLED{GREEN,  PURPLE, RED, ORANGE, ORANGE, WHITE, ORANGE, GREEN};
 std::vector<Color> secondLED{PURPLE, PURPLE, RED, GREEN,  BLUE,   WHITE, ORANGE, GREEN};
@@ -99,6 +102,7 @@ void CANRoutine(uint32_t time) {
         }
 
 
+        // Don't forget to include this in the PT zeroing section as well.VVV
         theSchoolBus.sendSensorData(msgID,sensorReads[0]-zeroPTOne, sensorReads[1]-zeroPTTwo, 
                                     sensorReads[2]-zeroPTThree, sensorReads[3]-zeroPTFour);
         theSchoolBus.sendSensorData(msgID+1,sensorReads[4]-zeroPTFive, sensorReads[5]-zeroPTSix, 
@@ -155,7 +159,8 @@ void writeSDReport(char* fileLogName)
         for (std::map<int,Sensor>::iterator sensor = myRocket.sensorMap.begin(); sensor != myRocket.sensorMap.end(); ++sensor) 
         {
             // 4/14: Added to this. Had to create a vector of initial PT Values.
-            entry = entry + " | " + std::to_string(sensor->first) + ":" + std::to_string(myRocket.sensorRead(sensor->first) - PTZeros[i]);
+            //entry = entry + " | " + std::to_string(sensor->first) + ":" + std::to_string(myRocket.sensorRead(sensor->first) - PTZeros[i]);
+            entry = entry + " | " + std::to_string(sensor->first) + ":" + std::to_string(myRocket.sensorRead(sensor->first));
         }
         for (std::map<int,Valve>::iterator valve = myRocket.valveMap.begin(); valve != myRocket.valveMap.end(); ++valve) 
         {
@@ -221,7 +226,7 @@ void executeCommand(uint32_t commandID) {
 void safetyChecks() 
 {   // Lox pressure reading (?)
     // This will be longer than two minutes.
-    if(lastPing > 120000) 
+    if(lastPing > 600000) 
         myRocket.changeState(VENT);
 }
 
@@ -231,11 +236,11 @@ void setup() {
     Serial.println("Serial Test");
     Wire.begin();
     SPI.begin();
-    /*
+    
     if (!SD.begin(BUILTIN_SDCARD)) {
         sd_write = false;
     }
-    */
+    
     myRocket = Rocket(alara);
     allOfTheLights.init();
 
@@ -254,6 +259,8 @@ void setup() {
 
     calibratedPTs = true;
 }
+
+
 
 void loop() {
     lastPing = millis() - lastPingRecieved;

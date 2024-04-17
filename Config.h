@@ -41,7 +41,7 @@ extern uint32_t zeroPTEight;
 // Propulsion is 1.
 // Engine is 0.
 
-#define ALARA_ID 0
+#define ALARA_ID 1
 
 // Constant define for specifying the number of times per second sensor data & state reports are to be transmitted over CAN (ms).
 #define CAN_INTERVAL ((uint32_t) 333)

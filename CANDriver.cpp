@@ -138,6 +138,19 @@ void CANDriver::sendSensorData(int sensorID, float sensorData1, float sensorData
   int sensorData3Mod = sensorData3;
   sensorData4 *= NO_DECIMAL;
   int sensorData4Mod = sensorData4;
+
+
+  // Accounting for negative values.
+  // 4/17: Not working as intended.
+  if(sensorData1Mod < 0)
+    sensorData1Mod = 0;
+  if(sensorData2Mod < 0)
+    sensorData2Mod = 0;
+  if(sensorData3Mod < 0)
+    sensorData3Mod = 0;
+  if(sensorData4Mod < 0)
+    sensorData4Mod = 0;
+  
   
   char* littleElf;
   littleElf =  (char*)&sensorData1Mod;
