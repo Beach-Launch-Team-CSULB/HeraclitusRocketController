@@ -16,9 +16,9 @@ extern uint32_t FMVOpenTime;
 extern uint32_t LMVCloseTime;
 extern uint32_t FMVCloseTime;
 
-#define UPPER_ALARA true
+//#define UPPER_ALARA true //prop
 //#undef UPPER_ALARA
-//#define LOWER_ALARA true
+#define LOWER_ALARA true //engine
 //#undef LOWER_ALARA
 
 // Valves & Igniters

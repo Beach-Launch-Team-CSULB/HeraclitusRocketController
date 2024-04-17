@@ -22,7 +22,7 @@ typedef void (Rocket::*dataFunctionPtr)(int);
 
 class DelayedAction
 {
-    //friend class DelayedDataAction;
+    friend class DelayedDataAction;
     
     protected:
     static DelayedAction* firstAction;

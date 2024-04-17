@@ -18,7 +18,9 @@ void Rocket::setLED(int ledID, Color newColor)
 Rocket::Rocket()
 {
     currentState = Standby;
-    //ledArray.init();
+    ledArray.init();
+    ledArray.setLed(0, RED);
+
     if (ALARA == 0) // Lower ALARA Setup
     { 
         initializeIgniters();
@@ -335,6 +337,7 @@ void Rocket::testDelay()
     void (Rocket::*testfunc)(int);
     testfunc = &setValveOpen;
     DelayedAction::addAction(millis() + 5000, testfunc, LMV_ID); //test general function
+
     DelayedAction::addAction(millis() + 5500, &setValveClosed, LMV_ID); //test syntax
     //setValveOpen(LMV_ID);
     //delay(250);

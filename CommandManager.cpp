@@ -1,4 +1,9 @@
 #include "CommandManager.h"
+#include <iostream>
+
+
+Rocket* CommandManager::rocket = nullptr;
+CANDriver* CommandManager::comSystem = nullptr;
 
 void CommandManager::init(Rocket* myRocket, CANDriver* myComSystem)
 {
@@ -9,6 +14,9 @@ void CommandManager::init(Rocket* myRocket, CANDriver* myComSystem)
 void CommandManager::checkCommand()
 {
     uint32_t commandID = comSystem->readMessage();
+    if(commandID == 255)
+        return;
+    Serial.println("Got a command!");
     switch(commandID)
     {
         case ABORT:
@@ -112,6 +120,7 @@ void CommandManager::checkCommand()
 
         case PING_PI_ROCKET:
             // TODO ************************************ TODO
+            rocket->testDelay();
             return;
         case ZERO_PTS:
             // TODO ************************************ TODO

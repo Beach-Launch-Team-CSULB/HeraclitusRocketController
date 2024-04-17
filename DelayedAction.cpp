@@ -1,12 +1,20 @@
 #include "DelayedAction.h"
 
+DelayedAction* DelayedAction::firstAction = nullptr;
+Rocket* DelayedAction::myRocket = nullptr;
+
 DelayedAction::DelayedAction(int time, functionPtr action)
     : timeToPerform(time), action(action), nextAction(nullptr) {};
     
-/*
-DelayedAction::DelayedAction(int time, void* action, int data, DelayedAction* nextAction)
-    : timeToPerform(time), dataAction(action), data(data), nextAction(nextAction) {};
-*/
+
+DelayedDataAction::DelayedDataAction(int time, dataFunctionPtr action, int data)
+    : DelayedAction(time, nullptr), dataAction(action), data(data) {};
+
+
+void DelayedAction::init(Rocket* rocket)
+{
+    myRocket = rocket; 
+}
 
 void DelayedAction::performAction() {
     (myRocket->*action)(); }

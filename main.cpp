@@ -14,6 +14,8 @@
 #include "CANDriver.h"
 #include <cstdint>
 #include "Config.h"
+#include "CommandManager.h"
+#include "DelayedAction.h"
 
 // These need to not have a value or the value will be set to that throughout the duration of the program.
 // Defined globally, initialized in setup(), and modified by readMessage() in CANDriver.cpp
@@ -29,10 +31,15 @@ char* fileLogName = "SoftwareTest-03-15-2024.txt";
 bool sd_write = true;
 Rocket myRocket = Rocket();
 
+unsigned long currentTime;
+unsigned long prevGUIReportTime;
+unsigned long prevSDReportTime;
+
+
 // TO BE REMOVED AT THE END OF CAN TEST
 
 const int CAN2busSpeed = 500000;
-CANDriver test = CANDriver();
+CANDriver comSys = CANDriver();
 
 // Simulating PT readings
 #define FAKEDATA1     ((float) 0.00)
@@ -66,6 +73,11 @@ void setup() {
     //myRocket = Rocket(alara);
     //ExtendedIO::extendedIOsetup();
 
+    CommandManager::init(&myRocket, &comSys);
+    DelayedAction::init(&myRocket);
+    
+    Serial.println("opening program!");
+
     Can0.begin(CAN2busSpeed);
     Can0.setTxBufferSize(64);
     uint32_t verifier = 255;
@@ -76,308 +88,23 @@ void setup() {
     FMVOpenTime = 0;
     LMVCloseTime = 0;
     FMVCloseTime = 0;
-
 }
 
 
 void loop() {
-    //return;
-    /*Igniter();
-    for (const auto& pair : myRocket.igniterMap) {
-        myRocket.setIgnitionOn(pair.first, true);
- S       //sleep(1);
-        delay(1);
-        myRocket.setIgnitionOn(pair.first, false);
-        //sleep(1);
-        delay(1);
-    }*/
+    currentTime = millis();
 
+    CommandManager::checkCommand();
+    DelayedAction::performActions(currentTime);
+        
+    Serial.println("plz");
 
-
-
-    // ONLY COMMENTED OUT FOR CAN TEST. 
-
-
-    /*
-    // You need a delay here or the first print will not work. 
-    delay(1000);
-    int address = 0x400FF100;       //PDOR for LV valve 
-    int* pcontent = (int*)address;
-    int content = *pcontent;
-
-    int pcr_address = 0x4004C028;       //PCR for LV valve PTD10
-    int* pcr_pcontent = (int*)address;
-    int pcr_content = *pcontent;
-
-    int pddr_address = 0x400FF0D4;       //PDDR for LV valve
-    int* pddr_pcontent = (int*)address;
-    int pddr_content = *pcontent;
-    
-
-    Serial.println("PDOR BeforeVVV");
-    Serial.println(content);
-    Serial.println("PCR BeforeVVV");
-    Serial.println(pcr_content);
-    Serial.println("PDDR BeforeVVV");
-    Serial.println(pddr_content);
-   
-    //for (const auto& pair : myRocket.valveMap) {
-        myRocket.setValveOn(24, true);
-        //sleep(1);
-        delay(1000);
-        Serial.println("PDOR AfterVVV");
-        Serial.println(content);
-
-        Serial.println("PCR AfterVVV");
-        Serial.println(pcr_content);
-
-        Serial.println("PDDR AfterVVV");
-        Serial.println(pddr_content);
-
-        myRocket.setValveOn(20, false);
-        */
-
-    // TO BE REMOVED AT THE CONCLUSION OF THE CAN TEST
-
-
-    // Do static methods
-    uint32_t verifier = test.readMessage();
-    if (verifier != 255)
+    if(currentTime >= prevGUIReportTime + 250)
     {
-        Serial.println("Main: ");
-        Serial.println(verifier);
-    }
-    //Serial.println("Working");
-    //Serial.println(verifier);
-
-    
-
-
-  /*
- *   /// CAN 2.0 Propulsion Node ///
- *   1.)  Receives [1] from Pi Box
- *   2.)  Sends [2] to Pi Box
- *  
- *   3.)  Receives [5] from Pi Box
- *   4.)  Sends [6] to Engine Node
- * 
- *   6.)  Receives [9] from Engine Node
- *   5.)  Sends [10] to Pi Box
- */ 
-
-  // Changing this first id only.
-  if(verifier == CANID_1)
-  {
-    // Added in this
-    delay(500);
-    myRocket.setValve(LDV_ID, true);
-    delay(500);
-    // Try passing in the value of "alara" from setup as the boolean value.
-    test.sendStateReport(1, TEST, myRocket, true);
-    delay(500);
-    myRocket.setValve(LDV_ID, false);
-
-
-    test.sendSensorData(2,FAKEDATA1,FAKEDATA2,FAKEDATA3,FAKEDATA4);
-    verifier = 0;
-  }
-  if(verifier == CANID_5)
-  {
-    test.sendSensorData(6,FAKEDATA1,FAKEDATA2,FAKEDATA3,FAKEDATA4);
-    verifier = 0;
-  }
-  if(verifier == CANID_9)
-  {
-    test.sendSensorData(10,FAKEDATA1,FAKEDATA2,FAKEDATA3,FAKEDATA4);
-    verifier = 0;
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //(*(volatile uint32_t *)0x400FF0C0) = (0<<10); //PDOR
-        //sleep(1);
-        
-        /*
-
-        /// MILISECONDS
-        delay(1000);
- 
-
-        myRocket.setValveOn(21, true);
-        //sleep(1);
-        delay(1000);
-        myRocket.setValveOn(21, false);
-        //sleep(1);
-
-        
-
-        /// MILISECONDS
-        delay(1000);
-        myRocket.setValveOn(22, true);
-        //sleep(1);
-        delay(1000);
-        myRocket.setValveOn(22, false);
-        //sleep(1);
-
-        /// MILISECONDS
-        delay(1000);
-        myRocket.setValveOn(23, true);
-        //sleep(1);
-        delay(1000);
-        myRocket.setValveOn(23, false);
-        //sleep(1);
-
-        /// MILISECONDS
-        delay(1000);
-        myRocket.setValveOn(28, true);
-        //sleep(1);
-        delay(1000);
-        myRocket.setValveOn(28, false);
-        //sleep(1);
-
-        /// MILISECONDS
-        delay(1000);
-        myRocket.setValveOn(29, true);
-        //sleep(1);
-        delay(1000);
-        myRocket.setValveOn(29, false);
-        //sleep(1);
-
-        /// MILISECONDS
-        delay(1000);
-    //}
-
-    
-    int address = 0x40048038;
-    int* pcontent = (int*)address;
-    int content = *pcontent;
-    Serial.println(content);
-
-    if (sd_write) {
-        File onBoardLog = SD.open(fileLogName, FILE_WRITE);
-        for (const auto& sensor : myRocket.sensorMap) {
-            onBoardLog.println(myRocket.sensorRead(sensor.first));
-        }
-    }
-}
-
-/*class Main {
-    EventManager eventManager;
-    Rocket rocket; 
-
-    void processCommand() {
-        // If a command is valid and no other command is currently executing
-        if (commandIsValid() && !isExecuting()) {
-            // Execute the command
-            executeCommand();
-            // Confirm update status
-            confirmUpdateStatus();
-        }
+        comSys.sendStateReport(currentTime, myRocket.currentState, myRocket, ALARA);
+        //comSys.sendSensorData()
+        prevGUIReportTime = currentTime;
     }
 
-    void handleSensorData() {
-        // Check if flag for new sensor data is set
-        if (isNewSensorDataAvailable()) {
-            // Execute sensor data collection
-            Event sensorDataEvent = collectSensorData();
-            // Return sensor data
-            returnSensorData(sensorDataEvent);
-        }
-    }
 
-    void monitorPressure() {
-        // Poll the LOX pressure
-        int loxPressure = pollLoxPressure();
-        // If LOX pressure is too high
-        if (loxPressureTooHigh(loxPressure)) {
-            // Execute vent command
-            executeVentCommand();
-            // Confirm update status
-            confirmUpdateStatus();
-        }
-    }
-
-    // Helper methods
-    bool commandIsValid(int idx) {
-        if (validCommandTable[rocket.curState][idx] == 1)
-            return true;
-        else {
-            return false;
-        }
-    }
-
-    bool isExecuting() {
-        // Implementation depends on how execution status is tracked
-        if (rocket.flag == 0){
-            return true;
-        }
-        else { 
-            return false;
-        } 
-    }
-
-    Event collectSensorData() {
-        int sensorReading = rocket.sensorRead();
-        Event sensorDataEvent(sensorReading); 
-        return sensorDataEvent;
-    }
-
-    void returnSensorData(Event& event) {
-        // Implementation depends on how sensor data is returned
-    }
-
-    int pollLoxPressure() {
-        const int loxPressureSensorId = /* appropriate sensor ID ;
-        int loxPressure = rocket.sensorRead(loxPressureSensorId);
-        return loxPressure;
-    }
-
-    bool loxPressureTooHigh(int loxPressure) {
-        const int pressureThreshold = /* define your threshold ;
-        return pressure > pressureThreshold;
-    }
-
-    void executeVentCommand() {
-        // Implementation depends on how the vent command is executed
-        rocket.toggleValve(ventID, true);
-    }
-
-    void confirmUpdateStatus() {
-        // if message is received from rocket, then we give thumbs up
-    }
-
-};
-
-// Main program loop
-int main() {
-    Main mainSystem;
-
-    static std::unordered_map<std::string, std::array<int, 12>> validCommandTable;
-    validCommandTable["Passive"] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-    // Fill out Command Table for final implementation
-
-    while (true) {
-        // Process incoming commands
-        mainSystem.processCommand();
-
-        // Handle sensor data if available
-        mainSystem.handleSensorData();
-
-        // Monitor and control LOX pressure
-        mainSystem.monitorPressure();
-
-    }
-*/
 }
