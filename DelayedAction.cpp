@@ -22,6 +22,7 @@ void DelayedAction::performAction() {
 void DelayedDataAction::performAction() {
     (myRocket->*dataAction)(data); }
 
+
 void DelayedAction::performActions(int currentTime)
 {
     DelayedAction* currentAction = firstAction;

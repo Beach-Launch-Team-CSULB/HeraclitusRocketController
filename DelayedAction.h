@@ -33,7 +33,7 @@ class DelayedAction
     DelayedAction* nextAction;
 
     DelayedAction(int, functionPtr);
-    void performAction();
+    virtual void performAction();
     static void addActionHelper(DelayedAction*);
 
     public:
@@ -52,5 +52,5 @@ class DelayedDataAction : DelayedAction
     dataFunctionPtr dataAction;
 
     DelayedDataAction(int, dataFunctionPtr, int);
-    void performAction();
+    void performAction() override;
 };

@@ -75,11 +75,13 @@ void setup() {
 
     CommandManager::init(&myRocket, &comSys);
     DelayedAction::init(&myRocket);
+    myRocket.ledArray.init();
     
     Serial.println("opening program!");
 
     Can0.begin(CAN2busSpeed);
     Can0.setTxBufferSize(64);
+
     uint32_t verifier = 255;
 
     // Do we want default values?
@@ -90,21 +92,43 @@ void setup() {
     FMVCloseTime = 0;
 }
 
-
 void loop() {
     currentTime = millis();
 
     CommandManager::checkCommand();
     DelayedAction::performActions(currentTime);
         
-    Serial.println("plz");
+    //Serial.println("plz");
 
     if(currentTime >= prevGUIReportTime + 250)
     {
         comSys.sendStateReport(currentTime, myRocket.currentState, myRocket, ALARA);
         //comSys.sendSensorData()
         prevGUIReportTime = currentTime;
+
+    /*
+        /// MILISECONDS
+        delay(1000);
+        myRocket.setValveOn(myRocket.valveIDArray[4], true);
+        //sleep(1);
+        delay(1000);
+        myRocket.setValveOn(myRocket.valveIDArray[4], false);
+        //sleep(1);
+    */
+
+   /*
+    
+    int address = 0x40048038;
+    int* pcontent = (int*)address;
+    int content = *pcontent;
+    Serial.println(content);
+
+    if (sd_write) {
+        File onBoardLog = SD.open(fileLogName, FILE_WRITE);
+        for (const auto& sensor : myRocket.sensorMap) {
+            onBoardLog.println(myRocket.sensorRead(sensor.first));
+        }
     }
-
-
+    */
+}
 }

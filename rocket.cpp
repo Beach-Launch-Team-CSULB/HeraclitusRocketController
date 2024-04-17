@@ -18,8 +18,7 @@ void Rocket::setLED(int ledID, Color newColor)
 Rocket::Rocket()
 {
     currentState = Standby;
-    ledArray.init();
-    ledArray.setLed(0, RED);
+    //ledArray.init();
 
     if (ALARA == 0) // Lower ALARA Setup
     { 
@@ -331,14 +330,23 @@ void Rocket::setValvesOpen(bool valvesOpenInput, const std::vector<int> &valveID
     }
 }
 
+void Rocket::test2(int m)
+{
+    setLED(0, GREEN);
+}
+
+void Rocket::test1()
+{
+    setLED(0, GREEN);
+}
 
 void Rocket::testDelay()
 {
-    void (Rocket::*testfunc)(int);
-    testfunc = &setValveOpen;
-    DelayedAction::addAction(millis() + 5000, testfunc, LMV_ID); //test general function
+    //void (Rocket::*testfunc);
+    //testfunc = &test2;
+    //DelayedAction::addAction(millis() + 5000, testfunc); //test general function
 
-    DelayedAction::addAction(millis() + 5500, &setValveClosed, LMV_ID); //test syntax
+    DelayedAction::addAction(millis() + 2500, &test1); //test syntax
     //setValveOpen(LMV_ID);
     //delay(250);
     //setValveClosed(LMV_ID);

@@ -17,6 +17,7 @@ void CommandManager::checkCommand()
     if(commandID == 255)
         return;
     Serial.println("Got a command!");
+    Serial.println(commandID);
     switch(commandID)
     {
         case ABORT:
@@ -120,7 +121,7 @@ void CommandManager::checkCommand()
 
         case PING_PI_ROCKET:
             // TODO ************************************ TODO
-            rocket->testDelay();
+            //rocket->testDelay();
             return;
         case ZERO_PTS:
             // TODO ************************************ TODO

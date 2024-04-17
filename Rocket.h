@@ -12,8 +12,8 @@
 #include "Config.h"
 
 
-
-enum E_RocketState {Standby, HighPress, TankPress, Ignite, Fire,/* Vent, Abort,*/ Test};
+//Standby, HighPress, TankPress, Ignite, Fire,/* Vent, Abort,*/ Test
+enum E_RocketState {Abort, Vent, Fire, TankPress, HighPress, Standby, Ignite, Test};
 
 class Rocket{ 
     public:
@@ -56,6 +56,8 @@ class Rocket{
 
         // Execution Check
         bool getExecuting();
+        void test2(int);
+        void test1();
         void testDelay();
 
         bool canEnterState(E_RocketState stateToEnter); 
