@@ -123,7 +123,7 @@ void writeSDReport(char* fileLogName) {
 
 void CANRoutine(uint32_t time) {                
      // 4/14: Changed to uint32_t
-    uint32_t msgID = 255;
+    uint32_t msgID;
     if (time - lastCANReport > CAN_INTERVAL) {
         msgID = SENS_1_4_PROP;
         if (alara == 0) msgID = SENS_9_12_ENGINE;
@@ -162,7 +162,8 @@ void fireRoutine(uint32_t zeroTime) {        //  4/14: Changed to uint32_t from 
         else if (curMillis > FMVOpenTime) {
             myRocket.setValveOn(FMV_ID, true);
         }
-        if (curMillis > FMVCloseTime && curMillis > FMVCloseTime) {
+        if (curMillis > FMVCloseTime && curMillis > LMVCloseTime) {
+            Serial.println("exit");
             return;
         }
         //executeCommand(theSchoolBus.readMessage());
@@ -177,20 +178,15 @@ void fireRoutine(uint32_t zeroTime) {        //  4/14: Changed to uint32_t from 
 
 void fireRoutineSetup() 
 {
-    uint32_t time = millis();       
+    uint32_t time = millis(); 
+    Serial.printf("%d, %d, %d, %d", LMVOpenTime, LMVCloseTime, FMVOpenTime, FMVCloseTime);      
     // 4/14: Changed to uint32_t from int.
     return fireRoutine(time);
 }
 
 
 
-void executeCommand(uint32_t commandID) {
-
-    //*************************
-    if(commandID != 255 && commandID != 131 && commandID != 132 && commandID != 128)
-        Serial.println(commandID);
-    //*************************
-    
+void executeCommand(uint32_t commandID) {   
 
     if (commandID <= TEST && state_transitions[myRocket.getState()][commandID]) {
         myRocket.changeState(commandID);

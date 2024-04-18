@@ -5,49 +5,49 @@
 #include <FlexCAN.h>
 #include <string>
 
-CANDriver::CANDriver()
-{
-  // 
-};
+CANDriver::CANDriver() {};
 
 uint32_t CANDriver::readMessage()
 {
-  static CAN_message_t msg;
+  CAN_message_t msg;
   // Initialized as an unused id.
   msg.id = 255;
   Can0.read(msg);
 
   // Check for instances where we need to read the data field.
   uint32_t time = 0;
-  if(msg.len == 5)
+  if(msg.len == 4)
   {
-    std::string num1 = std::to_string(msg.buf[0]);
+    /*std::string num1 = std::to_string(msg.buf[0]);
     std::string num2 = std::to_string(msg.buf[1]);
     std::string num3 = std::to_string(msg.buf[2]);
-    std::string num4 = std::to_string(msg.buf[3]);
-    std::string num5 = std::to_string(msg.buf[4]);
-    time = stoi(num1+num2+num3+num4+num5);
+    std::string num4 = std::to_string(msg.buf[3]);*/
+    //std::string num5 = std::to_string(msg.buf[4]);
+    Serial.printf("%d, %d, %d, %d\n", msg.buf[0],msg.buf[1],msg.buf[2],msg.buf[3]); 
+    time = (((msg.buf[0])*256+msg.buf[1])*256+msg.buf[2])*256+msg.buf[3];
+    //time = stoi(num2+num1+num3+num4/*+num5*/);
 
     if(msg.id == SET_IGNITION)
     {
       ignitionTime = time;
     }
-    if(msg.id == SET_LMV_OPEN)
+    else if(msg.id == SET_LMV_OPEN)
     {
       LMVOpenTime = time;
     }
-    if(msg.id == SET_FMV_OPEN)
+    else if(msg.id == SET_FMV_OPEN)
     {
       FMVOpenTime = time;
     }
-    if(msg.id == SET_LMV_CLOSE)
+    else if(msg.id == SET_LMV_CLOSE)
     {
       LMVCloseTime = time;
     }
-    if(msg.id == SET_FMV_CLOSE)
+    else if(msg.id == SET_FMV_CLOSE)
     {
       FMVCloseTime = time;
     }
+    Serial.printf("%d, %d, %d, %d", LMVOpenTime, LMVCloseTime, FMVOpenTime, FMVCloseTime); 
   }
 
   return msg.id;
@@ -109,8 +109,6 @@ void CANDriver::sendStateReport(int time, uint8_t rocketState, Rocket node, bool
     // Cast as a single byte before packing into the frame.
     msg.buf[5] = uint8_t(stoi(ultraElf, nullptr, 2));
   }
-
-Serial.println((int)msg.buf[4]);
 
   Can0.write(msg);
 };
