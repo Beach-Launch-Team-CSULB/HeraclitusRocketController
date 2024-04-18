@@ -32,8 +32,11 @@ bool sd_write = true;
 Rocket myRocket = Rocket();
 
 unsigned long currentTime;
-unsigned long prevGUIReportTime;
-unsigned long prevSDReportTime;
+unsigned long nextGUIReportTime = 0;
+unsigned long nextSDReportTime = 0;
+
+#define TIME_BETWEEN_GUI_REPORTS_MILLIS 250; // max 4 per second
+#define TIME_BETWEEN_SD_REPORTS_MILLIS 100; // max 10 per second
 
 
 // TO BE REMOVED AT THE END OF CAN TEST
@@ -57,7 +60,6 @@ CANDriver comSys = CANDriver();
 #define CANID_8  ((uint32_t) 8)
 #define CANID_9  ((uint32_t) 9)
 #define CANID_10 ((uint32_t) 10)
-
 
 
 void setup() {
@@ -100,35 +102,20 @@ void loop() {
         
     //Serial.println("plz");
 
-    if(currentTime >= prevGUIReportTime + 250)
+    if(currentTime >= nextGUIReportTime)
     {
         comSys.sendStateReport(currentTime, myRocket.currentState, myRocket, ALARA);
-        //comSys.sendSensorData()
-        prevGUIReportTime = currentTime;
-
-    /*
-        /// MILISECONDS
-        delay(1000);
-        myRocket.setValveOn(myRocket.valveIDArray[4], true);
-        //sleep(1);
-        delay(1000);
-        myRocket.setValveOn(myRocket.valveIDArray[4], false);
-        //sleep(1);
-    */
-
-   /*
-    
-    int address = 0x40048038;
-    int* pcontent = (int*)address;
-    int content = *pcontent;
-    Serial.println(content);
-
-    if (sd_write) {
-        File onBoardLog = SD.open(fileLogName, FILE_WRITE);
-        for (const auto& sensor : myRocket.sensorMap) {
-            onBoardLog.println(myRocket.sensorRead(sensor.first));
+        if(ALARA == 0) //Engine Node
+        {
+            comSys.sendSensorData(SENS_9_12_ENGINE, myRocket.sensorRead(PT_LOX_HIGH_ID), myRocket.sensorRead(PT_FUEL_HIGH_ID), myRocket.sensorRead(PT_LOX_DOME_ID), myRocket.sensorRead(PT_FUEL_DOME_ID));
+            comSys.sendSensorData(SENS_13_16_ENGINE, myRocket.sensorRead(PT_LOX_TANK_1_ID), myRocket.sensorRead(PT_LOX_TANK_2_ID), myRocket.sensorRead(PT_FUEL_TANK_1_ID), myRocket.sensorRead(PT_FUEL_TANK_2_ID));
         }
+        else //prop node
+        {
+            comSys.sendSensorData(SENS_1_4_PROP, myRocket.sensorRead(PT_PNUEMATICS_ID), myRocket.sensorRead(PT_LOX_INLET_ID), myRocket.sensorRead(PT_FUEL_INLET_ID), myRocket.sensorRead(PT_FUEL_INJECTOR_ID));
+            comSys.sendSensorData(SENS_5_8_PROP, myRocket.sensorRead(PT_PNUEMATICS_ID), myRocket.sensorRead(PT_LOX_INLET_ID), myRocket.sensorRead(PT_FUEL_INLET_ID), myRocket.sensorRead(PT_FUEL_INJECTOR_ID));
+        }
+        //comSys.sendSensorData()
+        nextGUIReportTime = currentTime + TIME_BETWEEN_GUI_REPORTS_MILLIS;
     }
-    */
-}
 }

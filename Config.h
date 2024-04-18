@@ -20,6 +20,8 @@ extern uint32_t FMVCloseTime;
 //#undef UPPER_ALARA
 //#define LOWER_ALARA true //engine
 //#undef LOWER_ALARA
+#define ENGN_NODE_ID 0
+#define PROP_NODE_ID 1
 
 // Valves & Igniters
 #define NUM_VALVES 10
@@ -113,10 +115,10 @@ extern uint32_t FMVCloseTime;
 #define SEND_FMV_CLOSE    ((uint32_t) 137)  // ALARA response to 41. Sends FMV close time for confirmation.
 
 // Ping Response
-#define PING_ROCKET_PI    ((uint32_t) 138)  // Rocket sends a ping to the Pi Box.
-
-
-
+#define PING_PROP_PI      ((uint32_t) 138)
+#define PING_ENGINE_PI    ((uint32_t) 139)
+#define OP_MSG_PROP       ((uint32_t) 140)
+#define OP_MSG_ENGINE     ((uint32_t) 141)
 
 
 

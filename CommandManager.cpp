@@ -120,8 +120,15 @@ void CommandManager::checkCommand()
             return;
 
         case PING_PI_ROCKET:
-            // TODO ************************************ TODO
-            //rocket->testDelay();
+            // TODO ******************************* TODO
+            // Timeout autovent logic
+
+            static CAN_message_t msg;
+            if(ALARA == PROP_NODE_ID) // prop node
+                msg.id = PING_PROP_PI;
+            else
+                msg.id = PING_ENGINE_PI;
+            Can0.write(msg);
             return;
         case ZERO_PTS:
             // TODO ************************************ TODO
