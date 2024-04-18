@@ -44,14 +44,14 @@ uint32_t FMVCloseTime;
 
 //4/16: Trying this again.
 // 4/14 Ensure that these are initialized as 0.
-uint32_t zeroPTOne;
-uint32_t zeroPTTwo;
-uint32_t zeroPTThree;
-uint32_t zeroPTFour;
-uint32_t zeroPTFive;
-uint32_t zeroPTSix;
-uint32_t zeroPTSeven;
-uint32_t zeroPTEight;
+uint32_t zeroPTOne=0;
+uint32_t zeroPTTwo=0;
+uint32_t zeroPTThree=0;
+uint32_t zeroPTFour=0;
+uint32_t zeroPTFive=0;
+uint32_t zeroPTSix=0;
+uint32_t zeroPTSeven=0;
+uint32_t zeroPTEight=0;
 std::vector <uint32_t> PTZeros{zeroPTOne, zeroPTTwo, zeroPTThree, zeroPTFour, zeroPTFive, zeroPTSix, zeroPTSeven, zeroPTEight};
 
 
@@ -146,6 +146,8 @@ void CANRoutine(uint32_t time) {
     return;
 }
 
+void executeCommand(uint32_t commandID);
+
 void fireRoutine(uint32_t zeroTime) {        //  4/14: Changed to uint32_t from int.
     uint32_t curMillis = zeroTime;           //  4/14: Changed to uint32_t from int.
     while(curMillis < 100'000) {
@@ -166,13 +168,12 @@ void fireRoutine(uint32_t zeroTime) {        //  4/14: Changed to uint32_t from 
             Serial.println("exit");
             return;
         }
-        //executeCommand(theSchoolBus.readMessage());
+
+        // 4/17: Uncommenting the executeCommand();
+        executeCommand(theSchoolBus.readMessage());
         CANRoutine(millis());
         writeSDReport(fileLogName);
     }
-    // 4/14: Do we need these things here? ********************
-
-
 }
 
 
@@ -259,9 +260,10 @@ void setup() {
     // Do we want default values?
     ignitionTime = 0;
     LMVOpenTime = 1000;
-    FMVOpenTime = 2000;;
-    LMVCloseTime = 3000;;
+    FMVOpenTime = 2000;
+    LMVCloseTime = 3000;
     FMVCloseTime = 4000;
+
 
     calibratedPTs = true;
 }

@@ -56,7 +56,7 @@ Rocket::Rocket(int ALARA){
 float Rocket::sensorRead(int sensorId) {
     // 4/15: After we get this working - check how many times it is logging.
     // It may be worth creating a vector that contains global variables and is updated by the CANDriver.
-    return sensorMap[sensorId].getCurrentValue() * sensorMap[sensorId].getCalibrationSlope() - sensorMap[sensorId].getCalibrationIntercept();
+    return sensorMap[sensorId].getCurrentValue();
     //return sensorMap[sensorId].getCurrentValue();
 }
 
@@ -184,9 +184,7 @@ void Rocket::calibrateSensors(int node)
 {
     if(node == 1)
     {
-        // ******* 4/15: Put this back to how it was before. Right now - this works - but I was initially using the sensor class
-        // and not global variables. I messed something up in the main logic and the function was not getting called correctly.
-        // Propulsion Node
+        // 
         zeroPTOne   = sensorRead(PT_LOX_HIGH_ID);
         zeroPTTwo   = sensorRead(PT_FUEL_HIGH_ID);
         zeroPTThree = sensorRead(PT_LOX_DOME_ID);

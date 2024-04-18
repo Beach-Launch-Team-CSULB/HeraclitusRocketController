@@ -47,7 +47,7 @@ uint32_t CANDriver::readMessage()
     {
       FMVCloseTime = time;
     }
-    Serial.printf("%d, %d, %d, %d", LMVOpenTime, LMVCloseTime, FMVOpenTime, FMVCloseTime); 
+    //Serial.printf("%d, %d, %d, %d", LMVOpenTime, LMVCloseTime, FMVOpenTime, FMVCloseTime); 
   }
 
   return msg.id;
@@ -140,6 +140,7 @@ void CANDriver::sendSensorData(int sensorID, float sensorData1, float sensorData
 
   // Accounting for negative values.
   // 4/17: Not working as intended.
+  /*
   if(sensorData1Mod < 0)
     sensorData1Mod = 0;
   if(sensorData2Mod < 0)
@@ -148,6 +149,7 @@ void CANDriver::sendSensorData(int sensorID, float sensorData1, float sensorData
     sensorData3Mod = 0;
   if(sensorData4Mod < 0)
     sensorData4Mod = 0;
+    */
   
   
   char* littleElf;
