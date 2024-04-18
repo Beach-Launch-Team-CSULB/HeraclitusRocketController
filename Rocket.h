@@ -53,6 +53,8 @@ class Rocket{
         bool enterState(E_RocketState stateToEnter); 
         bool vent();
         bool abort();
+        void zeroPTs();
+
 
         // Execution Check
         bool getExecuting();

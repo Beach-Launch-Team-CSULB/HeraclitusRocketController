@@ -168,24 +168,24 @@ extern uint32_t FMVCloseTime;
 #define LV_PIN_PWM      (uint32_t)5
 
 #define LDV_ID          (uint32_t)25  // Lox Dome Vent valve / SV DREG L
-#define LDV_PIN_DIG     (uint32_t)85  // ALARA: DIG3 | Teensy 3.6 MCU Pin: PTC18
-#define LDV_PIN_PWM     (uint32_t)8
+#define LDV_PIN_DIG     (uint32_t)84  // ALARA: DIG3 | Teensy 3.6 MCU Pin: PTC18
+#define LDV_PIN_PWM     (uint32_t)7
 
 #define LDR_ID          (uint32_t)26  // Lox Dome Reg valve / SV DREG LV
-#define LDR_PIN_DIG     (uint32_t)84  // ALARA: DIG4 | Teensy 3.6 MCU Pin: PTC17
-#define LDR_PIN_PWM     (uint32_t)7
+#define LDR_PIN_DIG     (uint32_t)85  // ALARA: DIG4 | Teensy 3.6 MCU Pin: PTC17
+#define LDR_PIN_PWM     (uint32_t)8
 
 #define FV_ID           (uint32_t)27  // Fuel Vent valve / SV FUEL V 
 #define FV_PIN_DIG      (uint32_t)83  // ALARA: DIG5 | Teensy 3.6 MCU Pin: PTC16
 #define FV_PIN_PWM      (uint32_t)2
 
 #define FDV_ID          (uint32_t)28  // Fuel Dome Vent valve / SV DREG F V 
-#define FDV_PIN_DIG     (uint32_t)81  // ALARA: DIG7 | Teensy 3.6 MCU Pin: PTC14
-#define FDV_PIN_PWM     (uint32_t)10
+#define FDV_PIN_DIG     (uint32_t)80  // ALARA: DIG7 | Teensy 3.6 MCU Pin: PTC14
+#define FDV_PIN_PWM     (uint32_t)9
 
 #define FDR_ID          (uint32_t)29  // Fuel Dome Reg valve /  SV DREG F
-#define FDR_PIN_DIG     (uint32_t)80  // ALARA: DIG8 | Teensy 3.6 MCU Pin: PTC13
-#define FDR_PIN_PWM     (uint32_t)9
+#define FDR_PIN_DIG     (uint32_t)81  // ALARA: DIG8 | Teensy 3.6 MCU Pin: PTC13
+#define FDR_PIN_PWM     (uint32_t)10
 
 
 

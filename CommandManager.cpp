@@ -52,7 +52,7 @@ void CommandManager::checkCommand()
             rocket->setValve(LDV_ID, true);
             return;
         case HV_OPEN:
-            rocket->setValve(HP_ID, true);
+            rocket->setValve(HV_ID, true);
             return;
         case FV_OPEN:
             rocket->setValve(FV_ID, true);
@@ -131,7 +131,7 @@ void CommandManager::checkCommand()
             Can0.write(msg);
             return;
         case ZERO_PTS:
-            // TODO ************************************ TODO
+            rocket->zeroPTs();
             return;
     }
     return;

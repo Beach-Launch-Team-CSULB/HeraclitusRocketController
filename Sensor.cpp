@@ -44,6 +44,11 @@ void Sensor::setCalibrationParameters(float linCoM, float linCoB)
     linCoefB = linCoB;
 }
 
+void Sensor::zeroPT()
+{
+    linCoefB -= value;
+}
+
 //Getters for the linear coefficients
 float Sensor::getCalibrationSlope() {return linCoefM;}
 float Sensor::getCalibrationIntercept() {return linCoefB;}

@@ -33,6 +33,8 @@ public:
     float getCalibrationSlope(); 
     float getCalibrationIntercept();
 
+    void zeroPT();
+
     bool hasID(int id);
     //  Aurum's Notes:
     // Pressure Transducer and Load Cell: To calibrate, we need to take pressure/force readings

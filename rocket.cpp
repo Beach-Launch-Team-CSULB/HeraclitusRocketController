@@ -335,6 +335,14 @@ void Rocket::setValvesOpen(bool valvesOpenInput, const std::vector<int> &valveID
     }
 }
 
+void Rocket::zeroPTs()
+{
+    for(int sensorID : sensorIDArray)
+    {
+        sensorMap[sensorID].zeroPT();
+    }
+}
+
 void Rocket::test2(int m)
 {
     setLED(0, GREEN);
