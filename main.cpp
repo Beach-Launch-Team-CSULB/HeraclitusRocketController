@@ -107,13 +107,13 @@ void loop() {
         comSys.sendStateReport(currentTime, myRocket.currentState, myRocket, ALARA);
         if(ALARA == 0) //Engine Node
         {
-            comSys.sendSensorData(SENS_9_12_ENGINE, myRocket.sensorRead(PT_LOX_HIGH_ID), myRocket.sensorRead(PT_FUEL_HIGH_ID), myRocket.sensorRead(PT_LOX_DOME_ID), myRocket.sensorRead(PT_FUEL_DOME_ID));
-            comSys.sendSensorData(SENS_13_16_ENGINE, myRocket.sensorRead(PT_LOX_TANK_1_ID), myRocket.sensorRead(PT_LOX_TANK_2_ID), myRocket.sensorRead(PT_FUEL_TANK_1_ID), myRocket.sensorRead(PT_FUEL_TANK_2_ID));
+            comSys.sendSensorData(SENS_9_12_ENGINE, myRocket.sensorRead(PT_PNUEMATICS_ID), myRocket.sensorRead(PT_LOX_INLET_ID), myRocket.sensorRead(PT_FUEL_INLET_ID), myRocket.sensorRead(PT_FUEL_INJECTOR_ID));
+            comSys.sendSensorData(SENS_13_16_ENGINE, myRocket.sensorRead(PT_CHAMBER_1_ID), myRocket.sensorRead(PT_CHAMBER_2_ID), 0.0f, 0.0f);
         }
         else //prop node
         {
-            comSys.sendSensorData(SENS_1_4_PROP, myRocket.sensorRead(PT_PNUEMATICS_ID), myRocket.sensorRead(PT_LOX_INLET_ID), myRocket.sensorRead(PT_FUEL_INLET_ID), myRocket.sensorRead(PT_FUEL_INJECTOR_ID));
-            comSys.sendSensorData(SENS_5_8_PROP, myRocket.sensorRead(PT_PNUEMATICS_ID), myRocket.sensorRead(PT_LOX_INLET_ID), myRocket.sensorRead(PT_FUEL_INLET_ID), myRocket.sensorRead(PT_FUEL_INJECTOR_ID));
+            comSys.sendSensorData(SENS_1_4_PROP, myRocket.sensorRead(PT_LOX_HIGH_ID), myRocket.sensorRead(PT_FUEL_HIGH_ID), myRocket.sensorRead(PT_FUEL_DOME_ID), myRocket.sensorRead(PT_FUEL_DOME_ID));
+            comSys.sendSensorData(SENS_5_8_PROP, myRocket.sensorRead(PT_LOX_TANK_1_ID), myRocket.sensorRead(PT_LOX_TANK_2_ID), myRocket.sensorRead(PT_FUEL_TANK_1_ID), myRocket.sensorRead(PT_FUEL_TANK_2_ID));
         }
         //comSys.sendSensorData()
         nextGUIReportTime = currentTime + TIME_BETWEEN_GUI_REPORTS_MILLIS;
