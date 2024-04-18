@@ -25,14 +25,17 @@ uint32_t CANDriver::readMessage()
 
   // Check for instances where we need to read the data field.
   uint32_t time = 0;
-  if(msg.len == 5)
+  if(msg.len == 4)
   {
+    /*
     std::string num1 = std::to_string(msg.buf[0]);
     std::string num2 = std::to_string(msg.buf[1]);
     std::string num3 = std::to_string(msg.buf[2]);
     std::string num4 = std::to_string(msg.buf[3]);
     std::string num5 = std::to_string(msg.buf[4]);
-    time = stoi(num1+num2+num3+num4+num5);
+    time = stoi(num1<<8 + (num2<<8 +num3+num4+num5);
+    */
+   time = (((msg.buf[0])*256+msg.buf[1])*256+msg.buf[2])*256+msg.buf[3];
 
     if(msg.id == SET_IGNITION)
     {

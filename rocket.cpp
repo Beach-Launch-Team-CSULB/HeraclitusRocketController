@@ -266,7 +266,7 @@ bool Rocket::enterHighPress()
 bool Rocket::enterTankPress()
 {
     setValvesOpen(true, (std::vector<int>){LDR_ID, FDR_ID});
-    currentState = HighPress;
+    currentState = TankPress;
     setLED(0, ORANGE);
     setLED(1, GREEN);
     return true;
@@ -275,8 +275,11 @@ bool Rocket::enterTankPress()
 //TODO: Add igniter timings and countdown
 bool Rocket::enterIgnite()
 {
-    DelayedAction::addAction(millis() + 15000 - ignitionTime, &setValveOpenIfFire, IGN1_ID);
-    DelayedAction::addAction(millis() + 15000 - ignitionTime, &setValveOpenIfFire, IGN2_ID);
+    DelayedAction::addAction(millis() + 2500, &test1); //test syntax
+    DelayedAction::addAction(millis() + 5000, &setValveOpen, LDV_ID);
+
+    //DelayedAction::addAction(millis() + 15000 - 0, &setValveOpenIfFire, IGN1_ID);
+    //DelayedAction::addAction(millis() + 15000 - 0, &setValveOpenIfFire, IGN2_ID);
     currentState = Ignite;
     setLED(0, ORANGE);
     setLED(1, ORANGE);
@@ -286,10 +289,12 @@ bool Rocket::enterIgnite()
 //TODO: Add igniter timings and countdown
 bool Rocket::enterFire()
 {
-    DelayedAction::addAction(millis() + LMVOpenTime, &setValveOpenIfFire, LMV_ID);
-    DelayedAction::addAction(millis() + FMVOpenTime, &setValveOpenIfFire, FMV_ID);
-    DelayedAction::addAction(millis() + LMVCloseTime, &setValveClosed, LMV_ID);
-    DelayedAction::addAction(millis() + FMVCloseTime, &setValveClosed, FMV_ID);
+    DelayedAction::addAction(millis() + 2500, &test2, 5); //test syntax
+
+    //DelayedAction::addAction(millis() + 0, &setValveOpenIfFire, LMV_ID);
+    //DelayedAction::addAction(millis() + 0, &setValveOpenIfFire, FMV_ID);
+    //DelayedAction::addAction(millis() + 0, &setValveClosed, LMV_ID);
+    //DelayedAction::addAction(millis() + 0, &setValveClosed, FMV_ID);
 
     currentState = Fire;
     setLED(0, ORANGE);
