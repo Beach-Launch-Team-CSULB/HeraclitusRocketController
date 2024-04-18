@@ -18,7 +18,7 @@ CANDriver::CANDriver()
 
 uint32_t CANDriver::readMessage()
 {
-  CAN_message_t msg;
+  static CAN_message_t msg;
   // Initialized as an unused id.
   msg.id = 255;
   Can0.read(msg);
@@ -64,7 +64,7 @@ uint32_t CANDriver::readMessage()
 
 void CANDriver::sendStateReport(int time, uint8_t rocketState, Rocket node, bool Prop)
 {
-  CAN_message_t msg;
+  static CAN_message_t msg;
   msg.flags.extended = 0;
   msg.flags.remote = 0;
   msg.len = 6;
@@ -124,7 +124,7 @@ void CANDriver::sendStateReport(int time, uint8_t rocketState, Rocket node, bool
 
 void CANDriver::sendSensorData(int sensorID, float sensorData1, float sensorData2, float sensorData3, float sensorData4)
 {
-  CAN_message_t msg;
+  static CAN_message_t msg;
   msg.id = sensorID;  // Ensure CAN id corresponds to the correct sensor ids.
   msg.flags.extended = 0;
   msg.flags.remote = 0;
