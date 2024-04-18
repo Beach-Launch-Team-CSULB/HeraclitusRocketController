@@ -89,6 +89,38 @@ std::string generateSDReport() {
     return entry + '\n';
 }
 
+void writeSDReport(char* fileLogName) {
+    if (sd_write)
+    {   
+        File onBoardLog = SD.open(fileLogName, FILE_WRITE);   
+        char entry[300];
+        //entry = entry + " | State: %d" + std::to_string(myRocket.getState());
+        snprintf(entry, sizeof(entry), " | State %d", myRocket.getState());
+        
+        int i = 0;
+        for (std::map<int,Sensor>::iterator sensor = myRocket.sensorMap.begin(); sensor != myRocket.sensorMap.end(); ++sensor) 
+        {
+            // 4/14: Added to this. Had to create a vector of initial PT Values.
+            //entry = entry + " | " + std::to_string(sensor->first) + ":" + std::to_string(myRocket.sensorRead(sensor->first) - PTZeros[i]);
+            //entry = entry + " | " + std::to_string(sensor->first) + ":" + std::to_string(myRocket.sensorRead(sensor->first));
+            snprintf(entry + strlen(entry), sizeof(entry) - strlen(entry), " | S %d: %f", sensor->first, myRocket.sensorRead(sensor->first));
+        }
+        for (std::map<int,Valve>::iterator valve = myRocket.valveMap.begin(); valve != myRocket.valveMap.end(); ++valve) 
+        {
+            snprintf(entry + strlen(entry), sizeof(entry) - strlen(entry), " | V %d: %d", valve->first, myRocket.valveRead(valve->first));
+
+            //entry = entry + " | " + std::to_string(valve->first) + ":" + std::to_string(myRocket.valveRead(valve->first));
+        }
+        for (std::map<int,Igniter>::iterator igniter = myRocket.igniterMap.begin(); igniter != myRocket.igniterMap.end(); ++igniter) 
+        {
+            snprintf(entry + strlen(entry), sizeof(entry) - strlen(entry), " | I %d: %d", igniter->first, myRocket.ignitionRead(igniter->first));
+
+            //entry = entry + " | " + std::to_string(igniter->first) + ":" + std::to_string(myRocket.ignitionRead(igniter->first));
+        }
+        onBoardLog.printf("Time (ms) : %d %s \n", millis(), entry);
+    }
+}
+
 void CANRoutine(uint32_t time) {                
      // 4/14: Changed to uint32_t
     uint32_t msgID = 255;
@@ -133,11 +165,13 @@ void fireRoutine(uint32_t zeroTime) {        //  4/14: Changed to uint32_t from 
         if (curMillis > FMVCloseTime && curMillis > FMVCloseTime) {
             return;
         }
+        //executeCommand(theSchoolBus.readMessage());
+        CANRoutine(millis());
+        writeSDReport(fileLogName);
     }
     // 4/14: Do we need these things here? ********************
-    //executeCommand(theSchoolBus.readMessage());
-    //CANRoutine(millis());
-    //writeSDReport(fileLogName);
+
+
 }
 
 
@@ -148,31 +182,7 @@ void fireRoutineSetup()
     return fireRoutine(time);
 }
 
-void writeSDReport(char* fileLogName)
- {
-    if (sd_write)
-     {   
-        File onBoardLog = SD.open(fileLogName, FILE_WRITE);   
-        std::string entry = std::to_string(millis());
-        entry = entry + " | State: " + std::to_string(myRocket.getState());
-        int i = 0;
-        for (std::map<int,Sensor>::iterator sensor = myRocket.sensorMap.begin(); sensor != myRocket.sensorMap.end(); ++sensor) 
-        {
-            // 4/14: Added to this. Had to create a vector of initial PT Values.
-            //entry = entry + " | " + std::to_string(sensor->first) + ":" + std::to_string(myRocket.sensorRead(sensor->first) - PTZeros[i]);
-            entry = entry + " | " + std::to_string(sensor->first) + ":" + std::to_string(myRocket.sensorRead(sensor->first));
-        }
-        for (std::map<int,Valve>::iterator valve = myRocket.valveMap.begin(); valve != myRocket.valveMap.end(); ++valve) 
-        {
-            entry = entry + " | " + std::to_string(valve->first) + ":" + std::to_string(myRocket.valveRead(valve->first));
-        }
-        for (std::map<int,Igniter>::iterator igniter = myRocket.igniterMap.begin(); igniter != myRocket.igniterMap.end(); ++igniter) 
-        {
-            entry = entry + " | " + std::to_string(igniter->first) + ":" + std::to_string(myRocket.ignitionRead(igniter->first));
-        }
-        onBoardLog.printf("Time (ms) : %s", entry + "\n");
-    }
-}
+
 
 void executeCommand(uint32_t commandID) {
 
@@ -186,9 +196,9 @@ void executeCommand(uint32_t commandID) {
         myRocket.changeState(commandID);
         allOfTheLights.setLed(LED0, firstLED[commandID]);
         allOfTheLights.setLed(LED1, secondLED[commandID]);
+        if (commandID == FIRE) fireRoutineSetup();
     }
-    else if (commandID == FIRE) 
-        fireRoutineSetup();
+
     else if (myRocket.getState() == TEST && commandID <= FMV_OPEN) 
     {
         if (commandID <= IGN2_ON) 
@@ -252,10 +262,10 @@ void setup() {
 
     // Do we want default values?
     ignitionTime = 0;
-    LMVOpenTime = 0;
-    FMVOpenTime = 0;
-    LMVCloseTime = 0;
-    FMVCloseTime = 0;
+    LMVOpenTime = 1000;
+    FMVOpenTime = 2000;;
+    LMVCloseTime = 3000;;
+    FMVCloseTime = 4000;
 
     calibratedPTs = true;
 }

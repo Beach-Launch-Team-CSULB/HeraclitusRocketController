@@ -81,7 +81,7 @@ bool Rocket::changeState(int state) {
         setValveOn(valve->first, stateMap[valve->first][state]);
     }
     for (std::map<int,Igniter>::iterator Igniter = igniterMap.begin(); Igniter != igniterMap.end(); ++Igniter) {
-        setValveOn(Igniter->first, stateMap[Igniter->first][state]);
+        setIgnitionOn(Igniter->first, stateMap[Igniter->first][state]);
     }
 
 
