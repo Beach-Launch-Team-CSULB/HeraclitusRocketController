@@ -256,8 +256,8 @@ extern uint32_t FMVCloseTime;
 
 #define PT_CHAMBER_1_ID         (1<<12) //00010000 00000000  Lower A10
 #define PT_CHAMBER_1_PIN        A10
-#define PT_CHAMBER_1_CAL_M      1.0f
-#define PT_CHAMBER_1_CAL_B      0.0f
+#define PT_CHAMBER_1_CAL_M      3.39f
+#define PT_CHAMBER_1_CAL_B      -126.0f
 
 #define PT_CHAMBER_2_ID         (1<<13) //00100000 00000000  Lower A11
 #define PT_CHAMBER_2_PIN        A11

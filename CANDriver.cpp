@@ -18,7 +18,7 @@ CANDriver::CANDriver()
 
 uint32_t CANDriver::readMessage()
 {
-  static CAN_message_t msg;
+  CAN_message_t msg;
   // Initialized as an unused id.
   msg.id = 255;
   Can0.read(msg);
