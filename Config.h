@@ -118,6 +118,13 @@ extern uint32_t calibVal;
 // PT Configuration
 #define ZERO_PTS                      ((uint32_t) 44)  // Zero the pressure transducers.
 
+#define GET_M_VAL                     ((uint32_t) 45)
+#define SET_M_VAL                     ((uint32_t) 46)
+#define GET_B_VAL                     ((uint32_t) 47)
+#define GET_B_VAL                     ((uint32_t) 48)
+
+
+/*
 #define SET_CALIB_LOX_HIGH            ((uint32_t) 45)  // Adjust "m value" of linear approximation for PTs.
 #define SET_CALIB_FUEL_HIGH           ((uint32_t) 46)
 #define SET_CALIB_LOX_DOME            ((uint32_t) 47)
@@ -157,7 +164,7 @@ extern uint32_t calibVal;
 #define GET_CALIB_CHAMBER_TWO         ((uint32_t) 74)
 #define GET_CALIB_RESERVED            ((uint32_t) 75)
 #define GET_CALIB_RESERVED            ((uint32_t) 76)
-
+*/
 
 // State Reports
 #define SR_PROP   ((uint32_t) 127)
@@ -183,6 +190,12 @@ extern uint32_t calibVal;
 #define OP_MSG_ENGINE     ((uint32_t) 141)
 
 // PT Calib. Response to "Get" request from GUI
+#define SEND_M_VAL         ((uint32_t) 142)
+#define SEND_B_VAL         ((uint32_t) 143)
+
+
+/*
+// PT Calib. Response to "Get" request from GUI
 #define SEND_CALIB_LOX_HIGH            ((uint32_t) 142)     // ALARA response to 61.
 #define SEND_CALIB_FUEL_HIGH           ((uint32_t) 143)     // ALARA response to 62.
 #define SEND_CALIB_LOX_DOME            ((uint32_t) 144)     // ALARA response to 63.
@@ -202,7 +215,7 @@ extern uint32_t calibVal;
 #define SEND_CALIB_CHAMBER_TWO         ((uint32_t) 155)     // ALARA response to 74.
 #define SEND_CALIB_RESERVED            ((uint32_t) 156)     // ALARA response to 75.
 #define SEND_CALIB_RESERVED            ((uint32_t) 157)     // ALARA response to 76.
-
+*/
 
 
 // Data Direction Inputs 
@@ -273,73 +286,73 @@ extern uint32_t calibVal;
 // Pressure Transducer Sesnor Pin Designations, IDs, and Calibration Values
 
 //Upper Prop Node:
-#define PT_LOX_HIGH_ID          (1<<0) //00000000 00000001  Upper A22
+#define PT_LOX_HIGH_ID          ((uint8_t) 0)
 #define PT_LOX_HIGH_PIN         A21
 #define PT_LOX_HIGH_CAL_M       0.0956f
 #define PT_LOX_HIGH_CAL_B       -615.0f
 
-#define PT_FUEL_HIGH_ID         (1<<1) //00000000 00000010  Upper A21
+#define PT_FUEL_HIGH_ID         ((uint8_t) 1)
 #define PT_FUEL_HIGH_PIN        A22
 #define PT_FUEL_HIGH_CAL_M      0.0939f
 #define PT_FUEL_HIGH_CAL_B      -614.0f
 
-#define PT_LOX_DOME_ID          (1<<2) //00000000 00000100  Upper A3
+#define PT_LOX_DOME_ID          ((uint8_t) 2)
 #define PT_LOX_DOME_PIN         A3
 #define PT_LOX_DOME_CAL_M       0.0197f
 #define PT_LOX_DOME_CAL_B       -143.0f
 
-#define PT_FUEL_DOME_ID         (1<<3) //00000000 00001000  Upper A2
+#define PT_FUEL_DOME_ID         ((uint8_t) 3)
 #define PT_FUEL_DOME_PIN        A2
 #define PT_FUEL_DOME_CAL_M      0.0191f
 #define PT_FUEL_DOME_CAL_B      -123.0f
 
-#define PT_LOX_TANK_1_ID        (1<<4) //00000000 00010000  Upper A14
+#define PT_LOX_TANK_1_ID        ((uint8_t) 4)
 #define PT_LOX_TANK_1_PIN       A14
 #define PT_LOX_TANK_1_CAL_M     0.02f
 #define PT_LOX_TANK_1_CAL_B     -131.0f
 
-#define PT_LOX_TANK_2_ID        (1<<5) //00000000 00100000  Upper A11
+#define PT_LOX_TANK_2_ID        ((uint8_t) 5)
 #define PT_LOX_TANK_2_PIN       A11
 #define PT_LOX_TANK_2_CAL_M     0.02f
 #define PT_LOX_TANK_2_CAL_B     -134.0f
 
-#define PT_FUEL_TANK_1_ID       (1<<6) //00000000 01000000  Upper A15
+#define PT_FUEL_TANK_1_ID       ((uint8_t) 6)
 #define PT_FUEL_TANK_1_PIN      A15
 #define PT_FUEL_TANK_1_CAL_M    0.0191f
 #define PT_FUEL_TANK_1_CAL_B    -126.0f
 
-#define PT_FUEL_TANK_2_ID       (1<<7) //00000000 10000000  Upper A10
+#define PT_FUEL_TANK_2_ID       ((uint8_t) 7)
 #define PT_FUEL_TANK_2_PIN      A10
 #define PT_FUEL_TANK_2_CAL_M    0.0192f
 #define PT_FUEL_TANK_2_CAL_B    -125.0f
 
 //Lower Engine Node:
-#define PT_PNUEMATICS_ID        (1<<8) //00000001 00000000  Lower A15
+#define PT_PNUEMATICS_ID        ((uint8_t) 8)
 #define PT_PNUEMATICS_PIN       A15
 #define PT_PNUEMATICS_CAL_M     0.0195f
 #define PT_PNUEMATICS_CAL_B     -121.0f
 
-#define PT_LOX_INLET_ID         (1<<9) //00000010 00000000  Lower A21
+#define PT_LOX_INLET_ID         ((uint8_t) 9)
 #define PT_LOX_INLET_PIN        A21
 #define PT_LOX_INLET_CAL_M      0.0195f
 #define PT_LOX_INLET_CAL_B      -129.0f
 
-#define PT_FUEL_INLET_ID        (1<<10) //00000100 00000000  Lower A22
+#define PT_FUEL_INLET_ID        ((uint8_t) 10)
 #define PT_FUEL_INLET_PIN       A22
 #define PT_FUEL_INLET_CAL_M     0.019f
 #define PT_FUEL_INLET_CAL_B     -120.0f
 
-#define PT_FUEL_INJECTOR_ID     (1<<11) //00001000 00000000  Lower A14
+#define PT_FUEL_INJECTOR_ID     ((uint8_t) 11)
 #define PT_FUEL_INJECTOR_PIN    A14
 #define PT_FUEL_INJECTOR_CAL_M  0.0194f
 #define PT_FUEL_INJECTOR_CAL_B  -118.0f
 
-#define PT_CHAMBER_1_ID         (1<<12) //00010000 00000000  Lower A10
+#define PT_CHAMBER_1_ID         ((uint8_t) 12)
 #define PT_CHAMBER_1_PIN        A10
 #define PT_CHAMBER_1_CAL_M      0.0194f
 #define PT_CHAMBER_1_CAL_B      -126.0f
 
-#define PT_CHAMBER_2_ID         (1<<13) //00100000 00000000  Lower A11
+#define PT_CHAMBER_2_ID         ((uint8_t) 13)
 #define PT_CHAMBER_2_PIN        A11
 #define PT_CHAMBER_2_CAL_M      0.0195f
 #define PT_CHAMBER_2_CAL_B      -106.0f
