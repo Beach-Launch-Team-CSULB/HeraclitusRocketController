@@ -78,6 +78,7 @@ void setup() {
     CommandManager::init(&myRocket, &comSys);
     DelayedAction::init(&myRocket);
     myRocket.ledArray.init();
+    //Sensor::adc = new ADC();
     
     Serial.println("opening program!");
 
@@ -107,7 +108,7 @@ void loop() {
         comSys.sendStateReport(currentTime, myRocket.currentState, myRocket, ALARA);
         if(ALARA == 0) //Engine Node
         {
-            comSys.sendSensorData(SENS_9_12_ENGINE, max(0.05, myRocket.sensorRead(PT_PNUEMATICS_ID)), max(0.0f, myRocket.sensorRead(PT_LOX_INLET_ID)), max(0.0f, myRocket.sensorRead(PT_FUEL_INLET_ID)), max(0.0f, myRocket.sensorRead(PT_FUEL_INJECTOR_ID)));
+            comSys.sendSensorData(SENS_9_12_ENGINE, max(0.0f, myRocket.sensorRead(PT_PNUEMATICS_ID)), max(0.0f, myRocket.sensorRead(PT_LOX_INLET_ID)), max(0.0f, myRocket.sensorRead(PT_FUEL_INLET_ID)), max(0.0f, myRocket.sensorRead(PT_FUEL_INJECTOR_ID)));
             comSys.sendSensorData(SENS_13_16_ENGINE, max(0.0f, myRocket.sensorRead(PT_CHAMBER_1_ID)), max(0.0f, myRocket.sensorRead(PT_CHAMBER_2_ID)), 0.0f, 0.0f);
         }
         else //prop node

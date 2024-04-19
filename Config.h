@@ -7,7 +7,7 @@
 #include <cstdint>
 
 // Constant defined for packing sensor data
-#define NO_DECIMAL ((uint8_t) 100)
+#define NO_DECIMAL ((float) 100.0f)
 
 // Extern definitions for timing.
 extern uint32_t ignitionTime;
@@ -195,73 +195,73 @@ extern uint32_t FMVCloseTime;
 //Upper Prop Node:
 #define PT_LOX_HIGH_ID          (1<<0) //00000000 00000001  Upper A22
 #define PT_LOX_HIGH_PIN         A21
-#define PT_LOX_HIGH_CAL_M       13.3f
-#define PT_LOX_HIGH_CAL_B       -618.0f
+#define PT_LOX_HIGH_CAL_M       0.0956f
+#define PT_LOX_HIGH_CAL_B       -615.0f
 
 #define PT_FUEL_HIGH_ID         (1<<1) //00000000 00000010  Upper A21
 #define PT_FUEL_HIGH_PIN        A22
-#define PT_FUEL_HIGH_CAL_M      17.2f
-#define PT_FUEL_HIGH_CAL_B      -632.0f
+#define PT_FUEL_HIGH_CAL_M      0.0939f
+#define PT_FUEL_HIGH_CAL_B      -614.0f
 
 #define PT_LOX_DOME_ID          (1<<2) //00000000 00000100  Upper A3
 #define PT_LOX_DOME_PIN         A3
-#define PT_LOX_DOME_CAL_M       3.45f
+#define PT_LOX_DOME_CAL_M       0.0197f
 #define PT_LOX_DOME_CAL_B       -143.0f
 
 #define PT_FUEL_DOME_ID         (1<<3) //00000000 00001000  Upper A2
 #define PT_FUEL_DOME_PIN        A2
-#define PT_FUEL_DOME_CAL_M      3.33f
+#define PT_FUEL_DOME_CAL_M      0.0191f
 #define PT_FUEL_DOME_CAL_B      -123.0f
 
 #define PT_LOX_TANK_1_ID        (1<<4) //00000000 00010000  Upper A14
 #define PT_LOX_TANK_1_PIN       A14
-#define PT_LOX_TANK_1_CAL_M     3.5f
+#define PT_LOX_TANK_1_CAL_M     0.02f
 #define PT_LOX_TANK_1_CAL_B     -131.0f
 
 #define PT_LOX_TANK_2_ID        (1<<5) //00000000 00100000  Upper A11
 #define PT_LOX_TANK_2_PIN       A11
-#define PT_LOX_TANK_2_CAL_M     3.5f
+#define PT_LOX_TANK_2_CAL_M     0.02f
 #define PT_LOX_TANK_2_CAL_B     -134.0f
 
 #define PT_FUEL_TANK_1_ID       (1<<6) //00000000 01000000  Upper A15
 #define PT_FUEL_TANK_1_PIN      A15
-#define PT_FUEL_TANK_1_CAL_M    3.33f
+#define PT_FUEL_TANK_1_CAL_M    0.0191f
 #define PT_FUEL_TANK_1_CAL_B    -126.0f
 
 #define PT_FUEL_TANK_2_ID       (1<<7) //00000000 10000000  Upper A10
 #define PT_FUEL_TANK_2_PIN      A10
-#define PT_FUEL_TANK_2_CAL_M    3.36f
+#define PT_FUEL_TANK_2_CAL_M    0.0192f
 #define PT_FUEL_TANK_2_CAL_B    -125.0f
 
 //Lower Engine Node:
 #define PT_PNUEMATICS_ID        (1<<8) //00000001 00000000  Lower A15
 #define PT_PNUEMATICS_PIN       A15
-#define PT_PNUEMATICS_CAL_M     3.41f
+#define PT_PNUEMATICS_CAL_M     0.0195f
 #define PT_PNUEMATICS_CAL_B     -121.0f
 
 #define PT_LOX_INLET_ID         (1<<9) //00000010 00000000  Lower A21
 #define PT_LOX_INLET_PIN        A21
-#define PT_LOX_INLET_CAL_M      3.41f
+#define PT_LOX_INLET_CAL_M      0.0195f
 #define PT_LOX_INLET_CAL_B      -129.0f
 
 #define PT_FUEL_INLET_ID        (1<<10) //00000100 00000000  Lower A22
 #define PT_FUEL_INLET_PIN       A22
-#define PT_FUEL_INLET_CAL_M     3.32f
+#define PT_FUEL_INLET_CAL_M     0.019f
 #define PT_FUEL_INLET_CAL_B     -120.0f
 
 #define PT_FUEL_INJECTOR_ID     (1<<11) //00001000 00000000  Lower A14
 #define PT_FUEL_INJECTOR_PIN    A14
-#define PT_FUEL_INJECTOR_CAL_M  3.39f
+#define PT_FUEL_INJECTOR_CAL_M  0.0194f
 #define PT_FUEL_INJECTOR_CAL_B  -118.0f
 
 #define PT_CHAMBER_1_ID         (1<<12) //00010000 00000000  Lower A10
 #define PT_CHAMBER_1_PIN        A10
-#define PT_CHAMBER_1_CAL_M      3.39f
+#define PT_CHAMBER_1_CAL_M      0.0194f
 #define PT_CHAMBER_1_CAL_B      -126.0f
 
 #define PT_CHAMBER_2_ID         (1<<13) //00100000 00000000  Lower A11
 #define PT_CHAMBER_2_PIN        A11
-#define PT_CHAMBER_2_CAL_M      3.41f
+#define PT_CHAMBER_2_CAL_M      0.0195f
 #define PT_CHAMBER_2_CAL_B      -106.0f
 
 //Prop Node Initialization Information
