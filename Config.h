@@ -35,6 +35,7 @@ extern uint32_t zeroPTEight;
 
 extern bool calibIsM;
 extern uint32_t calibVal;
+extern uint8_t sensorCalibID;
 
 
 // Valves & Igniters

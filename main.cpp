@@ -60,6 +60,7 @@ uint32_t zeroPTSeven=0;
 uint32_t zeroPTEight=0;
 uint32_t calibVal;
 bool calibIsM;
+uint8_t sensorCalibID;
 std::vector <uint32_t> PTZeros{zeroPTOne, zeroPTTwo, zeroPTThree, zeroPTFour, zeroPTFive, zeroPTSix, zeroPTSeven, zeroPTEight};
 
 
@@ -196,13 +197,16 @@ void executeCommand(uint32_t commandID) {
     {
         if(calibratedPTs == true)
         {
-            myRocket.calibrateSensors(alara);
+            myRocket.zeroSensors(alara);
             calibratedPTs = false; 
         }
         else
         {
             // Go fish.
         }
+    }
+    else if (commandID == GET_B_VAL || commandID == GET_M_VAL) {
+        theSchoolBus.sendSensorCalib(calibIsM, myRocket.getSensorCalibration(sensorCalibID, calibIsM));
     }
     else if (commandID == GET_LMV_OPEN)
         theSchoolBus.sendTiming(SEND_LMV_OPEN);
