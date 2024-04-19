@@ -140,7 +140,7 @@ void CANDriver::sendSensorData(int sensorID, float sensorData1, float sensorData
   msg.len = 8;
   
   // Avoiding dealing with the binary representation of floats. Divide by ten on CANReceive.py end.
-  //sensorData1 *= NO_DECIMAL;
+  sensorData1 *= NO_DECIMAL;
   int sensorData1Mod = sensorData1;
   sensorData2 *= NO_DECIMAL;
   int sensorData2Mod = sensorData2;
@@ -187,32 +187,28 @@ void CANDriver::sendTiming(uint32_t getTimeID)
   static CAN_message_t msg;
   //msg.id = 255;            // New. Added for safety. Static makes id 0 which is implemented.
   uint32_t aTime = 0;
+  msg.id = getTimeID;
 
   // msg.id and aTime receive appropriate assignment based on input.
-  if (getTimeID == GET_IGNITION)
+  if (getTimeID == SEND_IGNITION)
   {
-    msg.id = SEND_IGNITION;
     // int aTime = time;
     aTime = ignitionTime;
   }
-  if (getTimeID == GET_LMV_OPEN)
+  if (getTimeID == SEND_LMV_OPEN)
   {
-    msg.id = SEND_LMV_OPEN;
     aTime = LMVOpenTime;
   }
-  if (getTimeID == GET_FMV_OPEN)
+  if (getTimeID == SEND_FMV_OPEN)
   {
-    msg.id = SEND_FMV_OPEN;
     aTime = FMVOpenTime;
   }
-  if (getTimeID == GET_LMV_CLOSE)
+  if (getTimeID == SEND_LMV_CLOSE)
   {
-    msg.id = SEND_LMV_CLOSE;
     aTime = LMVCloseTime;
   }
-  if (getTimeID == GET_FMV_CLOSE)
+  if (getTimeID == SEND_FMV_CLOSE)
   {
-    msg.id = SEND_FMV_CLOSE;
     aTime = FMVCloseTime;
   }
 

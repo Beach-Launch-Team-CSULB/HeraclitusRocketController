@@ -28,7 +28,7 @@ bool sd_write = true;
 Rocket myRocket = Rocket(alara);
 LEDController allOfTheLights;
 
-const int CAN2busSpeed = 500000;
+const int CAN2busSpeed = 125000;
 CANDriver theSchoolBus = CANDriver();
 
 uint32_t lastPing; 
@@ -165,7 +165,7 @@ void fireRoutine() {        //  4/14: Changed to uint32_t from int.
         }
 
         // 4/17: Uncommenting the executeCommand();
-        executeCommand(theSchoolBus.readMessage());
+        //executeCommand(theSchoolBus.readMessage());
         CANRoutine(millis());
         writeSDReport(fileLogName);
     }
@@ -177,10 +177,12 @@ void executeCommand(uint32_t commandID) {
         if (it != std::end(manualVentCommandIds)) myRocket.setValveOn(commandID / 2, commandID % 2);
         if (commandID == MANUAL_OVERRIDE) {
             myRocket.setManualVent(!myRocket.getManualVent());
+            Serial.printf("returning %d", myRocket.getManualVent());
             if (!myRocket.getManualVent()) myRocket.changeState(myRocket.getState());
         }
+        return;
     }
-    else if (commandID <= TEST && state_transitions[myRocket.getState()][commandID]) {
+    if (commandID <= TEST && state_transitions[myRocket.getState()][commandID]) {
         myRocket.changeState(commandID);
         allOfTheLights.setLed(LED0, firstLED[commandID]);
         allOfTheLights.setLed(LED1, secondLED[commandID]);
