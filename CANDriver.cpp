@@ -49,6 +49,20 @@ uint32_t CANDriver::readMessage()
     }
     //Serial.printf("%d, %d, %d, %d", LMVOpenTime, LMVCloseTime, FMVOpenTime, FMVCloseTime); 
   }
+  else if(msg.len == 5)
+  {
+    float data = 0;
+    data = (((msg.buf[1])*256+msg.buf[2])*256+msg.buf[3])*256+msg.buf[4];
+
+    if(msg.id == SET_M_VAL)
+    {
+      calibVal = data;
+    }
+    else if(msg.id == SET_B_VAL)
+    {
+      calibVal = data;
+    }
+  }
 
   return msg.id;
 }
