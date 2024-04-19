@@ -171,6 +171,10 @@ void executeCommand(uint32_t commandID) {
     if (myRocket.getManualVent()) {
         int* it = std::find(std::begin(manualVentCommandIds), std::end(manualVentCommandIds), commandID);
         if (it != std::end(manualVentCommandIds)) myRocket.setValveOn(commandID / 2, commandID % 2);
+        if (commandID == MANUAL_OVERRIDE) {
+            myRocket.setManualVent(!myRocket.getManualVent());
+            if (!myRocket.getManualVent()) myRocket.changeState(myRocket.getState());
+        }
     }
     else if (commandID <= TEST && state_transitions[myRocket.getState()][commandID]) {
         myRocket.changeState(commandID);
