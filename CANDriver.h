@@ -28,6 +28,7 @@ class CANDriver
         void sendStateReport(int time, uint8_t rocketState, Rocket node, bool Prop);
         void sendSensorData(int sensorID, float sensorData1, float sensorData2, float SensorData3, float SensorData4);
         void sendTiming(uint32_t getTimeID);
+        void sendSensorCalibration(bool isM, uint8_t sensorID, uint32_t sensorVal);
 
         void ping(bool prop);
 

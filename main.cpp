@@ -206,7 +206,10 @@ void executeCommand(uint32_t commandID) {
         }
     }
     else if (commandID == GET_B_VAL || commandID == GET_M_VAL) {
-        theSchoolBus.sendSensorCalib(calibIsM, myRocket.getSensorCalibration(sensorCalibID, calibIsM));
+        theSchoolBus.sendSensorCalib(calibIsM, sensorCalibID, myRocket.getSensorCalibration(sensorCalibID, calibIsM));
+    }
+    else if (commandID == SET_B_VAL || commandID == SET_M_VAL) {
+        myRocket.calibrateSensor(sensorCalibID, calibIsM, calibVal);
     }
     else if (commandID == GET_LMV_OPEN)
         theSchoolBus.sendTiming(SEND_LMV_OPEN);

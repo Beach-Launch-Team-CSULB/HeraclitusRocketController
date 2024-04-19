@@ -122,7 +122,7 @@ extern uint8_t sensorCalibID;
 #define GET_M_VAL                     ((uint32_t) 45)
 #define SET_M_VAL                     ((uint32_t) 46)
 #define GET_B_VAL                     ((uint32_t) 47)
-#define GET_B_VAL                     ((uint32_t) 48)
+#define SET_B_VAL                     ((uint32_t) 48)
 
 
 /*
