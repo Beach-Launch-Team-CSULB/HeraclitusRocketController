@@ -18,21 +18,21 @@ float Sensor::getLastValue() const { return value; }
 //Gets an integer between 0-1023 coresponding to the sensor's current analog volatage
 float Sensor::readDataRaw(ADC &adc)
 {
-    int rawValue = adc.analogRead(pinID); 
+    int rawValue = adc.analogRead(this->pinID); 
     return rawValue; 
 };
 
 //Rads the sensor's analog input, calibrates the data, and sets the sensor's value
-void Sensor::updateValue()
+void Sensor::updateValue(ADC &adc)
 {
-    //value = linCoefM * readDataRaw() + linCoefB; // Update the sensor value by reading new data
+    this->value = linCoefM * readDataRaw(adc) + linCoefB; // Update the sensor value by reading new data
 }
 
 //Updated the sensor's value and returns the new value
-float Sensor::getCurrentValue()
+float Sensor::getCurrentValue(ADC &adc)
 {
-    updateValue();
-    return value;
+    updateValue(adc);
+    return this->value;
 }
 
 

@@ -122,34 +122,34 @@ void CANDriver::sendSensorData(int sensorID, float sensorData1, float sensorData
   else
     msg.id = 255;       // Safety so that nobbody accidentally enters a command that they shouldn't.
   */
- msg.id = sensorID;
+  msg.id = sensorID;
   msg.flags.extended = 0;
   msg.flags.remote = 0;
   msg.len = 8;
   
   // Avoiding dealing with the binary representation of floats. Divide by ten on CANReceive.py end.
-  sensorData1 *= NO_DECIMAL;
+  //sensorData1 *= NO_DECIMAL;
   int sensorData1Mod = sensorData1;
-  sensorData2 *= NO_DECIMAL;
+  //sensorData2 *= NO_DECIMAL;
   int sensorData2Mod = sensorData2;
-  sensorData3 *= NO_DECIMAL;
+  //sensorData3 *= NO_DECIMAL;
   int sensorData3Mod = sensorData3;
-  sensorData4 *= NO_DECIMAL;
+  //sensorData4 *= NO_DECIMAL;
   int sensorData4Mod = sensorData4;
 
 
   // Accounting for negative values.
   // 4/17: Not working as intended.
-  /*
-  if(sensorData1Mod < 0)
+  
+  /*if(sensorData1Mod > 6000)
     sensorData1Mod = 0;
-  if(sensorData2Mod < 0)
+  if(sensorData2Mod > 6000)
     sensorData2Mod = 0;
-  if(sensorData3Mod < 0)
+  if(sensorData3Mod > 6000)
     sensorData3Mod = 0;
-  if(sensorData4Mod < 0)
-    sensorData4Mod = 0;
-    */
+  if(sensorData4Mod > 6000)
+    sensorData4Mod = 0;*/
+    
   
   
   char* littleElf;

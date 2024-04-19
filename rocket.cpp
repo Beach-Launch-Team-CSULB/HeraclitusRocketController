@@ -48,6 +48,7 @@ Rocket::Rocket(int ALARA){
 
     // Begins in the Test state
     changeState(STANDBY);
+    manualVent = false;
 }
 
 /*float Rocket::sensorRead(Sensor sensor) {
@@ -59,6 +60,7 @@ float Rocket::sensorRead(int sensorId, ADC &adc) {
     // It may be worth creating a vector that contains global variables and is updated by the CANDriver.
     //return sensorMap[sensorId].getCurrentValue() * sensorMap[sensorId].getCalibrationSlope() - sensorMap[sensorId].getCalibrationIntercept();
     return sensorMap[sensorId].readDataRaw(adc);
+    //return sensorMap[sensorId].getCurrentValue(adc);
 }
 
 bool Rocket::ignitionRead(int igniterID) {

@@ -24,8 +24,8 @@ public:
     Sensor(int label, int pin, float linCoM, float linCoB);
 
     float readDataRaw(ADC &adc);             // returns the analog voltage read from the pin
-    virtual void updateValue();      // makes this sensor do its job
-    virtual float getCurrentValue(); // updates the value and returns it
+    virtual void updateValue(ADC &adc);      // makes this sensor do its job
+    virtual float getCurrentValue(ADC &adc); // updates the value and returns it
     float getLastValue() const;      // gets the value
 
     //calibration methods from the gui should have a warning/confirmation message
