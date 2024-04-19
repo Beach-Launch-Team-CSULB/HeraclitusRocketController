@@ -77,50 +77,37 @@ int state_transitions[9][9] = {
     /*      MANUAL_VENT*/{1,    1,     1,       1,         1,         0,          1,       0,       0}
 };
 
-std::string generateSDReport() {
-    std::string entry = std::to_string(millis());
-    entry = entry + " | State: " + std::to_string(myRocket.getState());
+int manualVentCommandIds[] = {12, 13, 16, 17, 18, 19, 24, 25, 26, 27};
 
-    for (std::map<int,Sensor>::iterator sensor = myRocket.sensorMap.begin(); sensor != myRocket.sensorMap.end(); ++sensor) {
-        entry = entry + " | " + std::to_string(sensor->first) + ":" + std::to_string(myRocket.sensorRead(sensor->first, *adc));
-    }
-    for (std::map<int,Valve>::iterator valve = myRocket.valveMap.begin(); valve != myRocket.valveMap.end(); ++valve) {
-        entry = entry + " | " + std::to_string(valve->first) + ":" + std::to_string(myRocket.valveRead(valve->first));
-    }
-    for (std::map<int,Igniter>::iterator igniter = myRocket.igniterMap.begin(); igniter != myRocket.igniterMap.end(); ++igniter) {
-        entry = entry + " | " + std::to_string(igniter->first) + ":" + std::to_string(myRocket.ignitionRead(igniter->first));
-    }
 
-    return entry + '\n';
-}
+void executeCommand(uint32_t commandID);
+std::string generateSDReport();
+void CANroutine(char*);
+void fireRoutine();
+void executeCommand(uint32_t);
+void MCUADCSetup(ADC&, ADC_REFERENCE, ADC_REFERENCE, uint8_t, uint8_t);
+void safetyChecks();
+
 
 void writeSDReport(char* fileLogName) {
     if (sd_write)
     {   
         File onBoardLog = SD.open(fileLogName, FILE_WRITE);   
         char entry[300];
-        //entry = entry + " | State: %d" + std::to_string(myRocket.getState());
         snprintf(entry, sizeof(entry), " | State %d", myRocket.getState());
         
         int i = 0;
         for (std::map<int,Sensor>::iterator sensor = myRocket.sensorMap.begin(); sensor != myRocket.sensorMap.end(); ++sensor) 
         {
-            // 4/14: Added to this. Had to create a vector of initial PT Values.
-            //entry = entry + " | " + std::to_string(sensor->first) + ":" + std::to_string(myRocket.sensorRead(sensor->first) - PTZeros[i]);
-            //entry = entry + " | " + std::to_string(sensor->first) + ":" + std::to_string(myRocket.sensorRead(sensor->first));
             snprintf(entry + strlen(entry), sizeof(entry) - strlen(entry), " | S %d: %f", sensor->first, myRocket.sensorRead(sensor->first, *adc));
         }
         for (std::map<int,Valve>::iterator valve = myRocket.valveMap.begin(); valve != myRocket.valveMap.end(); ++valve) 
         {
             snprintf(entry + strlen(entry), sizeof(entry) - strlen(entry), " | V %d: %d", valve->first, myRocket.valveRead(valve->first));
-
-            //entry = entry + " | " + std::to_string(valve->first) + ":" + std::to_string(myRocket.valveRead(valve->first));
         }
         for (std::map<int,Igniter>::iterator igniter = myRocket.igniterMap.begin(); igniter != myRocket.igniterMap.end(); ++igniter) 
         {
             snprintf(entry + strlen(entry), sizeof(entry) - strlen(entry), " | I %d: %d", igniter->first, myRocket.ignitionRead(igniter->first));
-
-            //entry = entry + " | " + std::to_string(igniter->first) + ":" + std::to_string(myRocket.ignitionRead(igniter->first));
         }
         onBoardLog.printf("Time (ms) : %d %s \n", millis(), entry);
     }
@@ -151,10 +138,9 @@ void CANRoutine(uint32_t time) {
     return;
 }
 
-void executeCommand(uint32_t commandID);
-
-void fireRoutine(uint32_t zeroTime) {        //  4/14: Changed to uint32_t from int.
-    uint32_t curMillis = zeroTime;           //  4/14: Changed to uint32_t from int.
+void fireRoutine() {        //  4/14: Changed to uint32_t from int.
+    uint32_t curMillis = millis(); 
+    uint32_t zeroTime = millis();           //  4/14: Changed to uint32_t from int.
     while(curMillis < 100'000) {
         curMillis = (millis() - zeroTime);
         if (curMillis > LMVCloseTime) {
@@ -181,26 +167,16 @@ void fireRoutine(uint32_t zeroTime) {        //  4/14: Changed to uint32_t from 
     }
 }
 
-
-void fireRoutineSetup() 
-{
-    uint32_t time = millis(); 
-    Serial.printf("%d, %d, %d, %d", LMVOpenTime, LMVCloseTime, FMVOpenTime, FMVCloseTime);      
-    // 4/14: Changed to uint32_t from int.
-    return fireRoutine(time);
-}
-
-
-
 void executeCommand(uint32_t commandID) {   
     if (myRocket.getManualVent()) {
-        //if (commandID in [])
+        int* it = std::find(std::begin(manualVentCommandIds), std::end(manualVentCommandIds), commandID);
+        if (it != std::end(manualVentCommandIds)) myRocket.setValveOn(commandID / 2, commandID % 2);
     }
     else if (commandID <= TEST && state_transitions[myRocket.getState()][commandID]) {
         myRocket.changeState(commandID);
         allOfTheLights.setLed(LED0, firstLED[commandID]);
         allOfTheLights.setLed(LED1, secondLED[commandID]);
-        if (commandID == FIRE) fireRoutineSetup();
+        if (commandID == FIRE) fireRoutine();
     }
     /*
     enable and disable manual vent
@@ -211,10 +187,6 @@ void executeCommand(uint32_t commandID) {
             myRocket.setIgnitionOn(commandID / 2, commandID % 2);
         else if (commandID <= FMV_OPEN) 
             myRocket.setValveOn(commandID / 2, commandID % 2);
-    }
-    else if (commandID == PING_PI_ROCKET) {
-        lastPingRecieved = millis();
-        theSchoolBus.ping(alara);
     }
     else if (commandID == ZERO_PTS)
     {
@@ -236,6 +208,10 @@ void executeCommand(uint32_t commandID) {
         theSchoolBus.sendTiming(SEND_LMV_CLOSE);
     else if (commandID == GET_FMV_CLOSE)
         theSchoolBus.sendTiming(SEND_FMV_CLOSE);
+    if (commandID == PING_PI_ROCKET) {
+        lastPingRecieved = millis();
+        theSchoolBus.ping(alara);
+    }
 }
 
 void MCUADCSetup(ADC& adc, ADC_REFERENCE refIn0, ADC_REFERENCE refIn1, uint8_t averagesIn0, uint8_t averagesIn1)
@@ -262,7 +238,6 @@ void MCUADCSetup(ADC& adc, ADC_REFERENCE refIn0, ADC_REFERENCE refIn1, uint8_t a
   adc.adc1->recalibrate();
 
 }
-
 
 void safetyChecks() 
 {   // Lox pressure reading (?)
@@ -309,8 +284,6 @@ void setup() {
     uint8_t averages1 = 4;
     MCUADCSetup(*adc, ref0, ref1, averages0, averages1);
 }
-
-
 
 void loop() {
     lastPing = millis() - lastPingRecieved;

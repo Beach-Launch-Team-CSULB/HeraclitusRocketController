@@ -79,6 +79,10 @@ bool Rocket::setValveOn(int valveID,bool valveOpen) {
     return valveMap[valveID].setValveOpen(valveOpen);
 }
 
+void Rocket::calibrateSensor(int sensorId, float m, float b) {
+    sensorMap[sensorId].setCalibrationParameters(m, b);
+}
+
 bool Rocket::changeState(int state) {
     for (std::map<int,Valve>::iterator valve = valveMap.begin(); valve != valveMap.end(); ++valve) {
         setValveOn(valve->first, stateMap[valve->first][state]);
