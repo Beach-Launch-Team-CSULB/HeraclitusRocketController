@@ -263,3 +263,22 @@ void CANDriver::sendOperatorMessage(char zero, char one, bool prop)
 
   Can0.write(msg);
 }
+
+
+void CANDriver::sendSensorCalibration(bool isM, uint8_t sensorID, uint32_t sensorVal) 
+{
+  static CAN_message_t msg;
+  if (isM) msg.id = SEND_M_VAL;
+  else msg.id = SEND_B_VAL;
+
+  msg.buf[0] = sensorID;
+
+  char* littleElf;
+  littleElf =  (char*)&sensorVal;
+  msg.buf[1] = littleElf[4];
+  msg.buf[2] = littleElf[3];
+  msg.buf[3] = littleElf[2];
+  msg.buf[4] = littleElf[1];
+
+  Can0.write(msg);
+}
