@@ -55,13 +55,11 @@ uint32_t CANDriver::readMessage()
     data = (((msg.buf[1])*256+msg.buf[2])*256+msg.buf[3])*256+msg.buf[4];
 
     if(msg.id == SET_M_VAL)
-    {
-      calibVal = data;
-    }
-    else if(msg.id == SET_B_VAL)
-    {
-      calibVal = data;
-    }
+      calibIsM = true;
+    else
+      calibIsM = false;
+
+    calibVal = data;
   }
 
   return msg.id;
