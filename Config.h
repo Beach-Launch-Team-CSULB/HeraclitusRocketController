@@ -33,6 +33,9 @@ extern uint32_t zeroPTSix;
 extern uint32_t zeroPTSeven;
 extern uint32_t zeroPTEight;
 
+extern bool calibIsM;
+extern uint32_t calibVal;
+
 
 // Valves & Igniters
 #define NUM_VALVES 10
@@ -268,7 +271,6 @@ extern uint32_t zeroPTEight;
 
 
 // Pressure Transducer Sesnor Pin Designations, IDs, and Calibration Values
-// (sensors are currently uncalibrated)
 
 //Upper Prop Node:
 #define PT_LOX_HIGH_ID          (1<<0) //00000000 00000001  Upper A22

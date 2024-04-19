@@ -1,4 +1,5 @@
 #include "Arduino.h"
+#include <Algorithm>
 #include <iostream>
 #include <array>
 #include <unordered_map>
@@ -57,6 +58,8 @@ uint32_t zeroPTFive=0;
 uint32_t zeroPTSix=0;
 uint32_t zeroPTSeven=0;
 uint32_t zeroPTEight=0;
+uint32_t calibVal;
+bool calibIsM;
 std::vector <uint32_t> PTZeros{zeroPTOne, zeroPTTwo, zeroPTThree, zeroPTFour, zeroPTFive, zeroPTSix, zeroPTSeven, zeroPTEight};
 
 
@@ -168,7 +171,7 @@ void fireRoutine() {        //  4/14: Changed to uint32_t from int.
 }
 
 void executeCommand(uint32_t commandID) {   
-    if (myRocket.getManualVent()) {
+    if (myRocket.getManualVent() || commandID == MANUAL_OVERRIDE) {
         int* it = std::find(std::begin(manualVentCommandIds), std::end(manualVentCommandIds), commandID);
         if (it != std::end(manualVentCommandIds)) myRocket.setValveOn(commandID / 2, commandID % 2);
         if (commandID == MANUAL_OVERRIDE) {
@@ -182,9 +185,6 @@ void executeCommand(uint32_t commandID) {
         allOfTheLights.setLed(LED1, secondLED[commandID]);
         if (commandID == FIRE) fireRoutine();
     }
-    /*
-    enable and disable manual vent
-    */
     else if (myRocket.getState() == TEST && commandID <= FMV_OPEN) 
     {
         if (commandID <= IGN2_ON) 

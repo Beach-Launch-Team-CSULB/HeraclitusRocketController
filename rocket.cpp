@@ -59,8 +59,8 @@ float Rocket::sensorRead(int sensorId, ADC &adc) {
     // 4/15: After we get this working - check how many times it is logging.
     // It may be worth creating a vector that contains global variables and is updated by the CANDriver.
     //return sensorMap[sensorId].getCurrentValue() * sensorMap[sensorId].getCalibrationSlope() - sensorMap[sensorId].getCalibrationIntercept();
-    return sensorMap[sensorId].readDataRaw(adc);
-    //return sensorMap[sensorId].getCurrentValue(adc);
+    //return sensorMap[sensorId].readDataRaw(adc);
+    return sensorMap[sensorId].getCurrentValue(adc);
 }
 
 bool Rocket::ignitionRead(int igniterID) {
@@ -79,8 +79,14 @@ bool Rocket::setValveOn(int valveID,bool valveOpen) {
     return valveMap[valveID].setValveOpen(valveOpen);
 }
 
-void Rocket::calibrateSensor(int sensorId, float m, float b) {
-    sensorMap[sensorId].setCalibrationParameters(m, b);
+void Rocket::calibrateSensor(int sensorId, bool isM, float val) {
+    if (isM) sensorMap[sensorId].setCalibrationParametersM(val);
+    else sensorMap[sensorId].setCalibrationParametersB(val);
+}
+
+void Rocket::getSensorCalibration(int sensorId, bool isM) {
+    if (isM) sensorMap[sensorId].getCalibrationSlope();
+    else sensorMap[sensorId].getCalibrationIntercept(); 
 }
 
 bool Rocket::changeState(int state) {
@@ -195,7 +201,7 @@ bool Rocket::initializeLowerSensors()
 }
 
 // 4/14: New attempt
-void Rocket::calibrateSensors(int node)
+void Rocket::zeroSensors(int node)
 {
     if(node == 1)
     {

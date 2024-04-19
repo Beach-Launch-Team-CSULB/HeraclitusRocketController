@@ -30,7 +30,8 @@ public:
 
     //calibration methods from the gui should have a warning/confirmation message
     void resetCalibration();     // sets linear coeffecients to 1 and 0
-    void setCalibrationParameters(float linCoefM, float linCoefB); // sets linear coeffecients
+    void setCalibrationParametersM(float linCoefM); // sets linear coeffecients
+    void setCalibrationParametersB(float linCoefB);
     float getCalibrationSlope(); 
     float getCalibrationIntercept();
 

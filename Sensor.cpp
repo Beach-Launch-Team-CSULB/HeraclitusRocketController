@@ -44,10 +44,14 @@ void Sensor::resetCalibration()
 }
 
 //Sets the linear coefficients to new calibration values
-void Sensor::setCalibrationParameters(float linCoM, float linCoB)
+void Sensor::setCalibrationParametersM(float linCoefM)
 {
-    linCoefM = linCoM;
-    linCoefB = linCoB;
+    linCoefM = linCoefM;
+}
+
+void Sensor::setCalibrationParametersB(float linCoefB)
+{
+    linCoefB = linCoefB;
 }
 
 //Getters for the linear coefficients

@@ -130,11 +130,11 @@ void CANDriver::sendSensorData(int sensorID, float sensorData1, float sensorData
   // Avoiding dealing with the binary representation of floats. Divide by ten on CANReceive.py end.
   //sensorData1 *= NO_DECIMAL;
   int sensorData1Mod = sensorData1;
-  //sensorData2 *= NO_DECIMAL;
+  sensorData2 *= NO_DECIMAL;
   int sensorData2Mod = sensorData2;
-  //sensorData3 *= NO_DECIMAL;
+  sensorData3 *= NO_DECIMAL;
   int sensorData3Mod = sensorData3;
-  //sensorData4 *= NO_DECIMAL;
+  sensorData4 *= NO_DECIMAL;
   int sensorData4Mod = sensorData4;
 
 
