@@ -343,23 +343,42 @@ void Rocket::zeroPTs()
     }
 }
 
-void Rocket::test2(int m)
+void Rocket::test6(int m)
+{
+    setLED(0, PURPLE);
+}
+
+void Rocket::test5()
+{
+    setLED(0, BLUE);
+}
+void Rocket::test4(int m)
 {
     setLED(0, GREEN);
+}
+
+void Rocket::test3()
+{
+    setLED(0, YELLOW);
+}
+void Rocket::test2(int m)
+{
+    setLED(0, ORANGE);
 }
 
 void Rocket::test1()
 {
-    setLED(0, GREEN);
+    setLED(0, RED);
 }
 
 void Rocket::testDelay()
 {
-    //void (Rocket::*testfunc);
-    //testfunc = &test2;
-    //DelayedAction::addAction(millis() + 5000, testfunc); //test general function
-
-    DelayedAction::addAction(millis() + 2500, &test1); //test syntax
+    DelayedAction::addAction(millis() + 2500, &test1);
+    DelayedAction::addAction(millis() + 3000, &test2, 3);
+    DelayedAction::addAction(millis() + 5000, &test6, 0);
+    DelayedAction::addAction(millis() + 4000, &test4, 8);
+    DelayedAction::addAction(millis() + 3500, &test3);
+    DelayedAction::addAction(millis() + 4500, &test5);
     //setValveOpen(LMV_ID);
     //delay(250);
     //setValveClosed(LMV_ID);

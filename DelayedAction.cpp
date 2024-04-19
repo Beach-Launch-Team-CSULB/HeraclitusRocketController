@@ -49,14 +49,14 @@ void DelayedAction::addActionHelper(DelayedAction* newAction)
         firstAction = newAction;
         return;
     }
-    DelayedAction* currentAction = firstAction;
-    while (currentAction->nextAction != nullptr || //go through list until nextTime >= newTime or next is null
-           currentAction->nextAction->timeToPerform < newAction->timeToPerform)
+    DelayedAction* actionIterator = firstAction;
+    while (actionIterator->nextAction != nullptr && //go through list until nextTime >= newTime or next is null
+           actionIterator->nextAction->timeToPerform < newAction->timeToPerform)
     {
-        currentAction = currentAction->nextAction;
+        actionIterator = actionIterator->nextAction;
     }
-    newAction->nextAction = currentAction->nextAction; //insert new between current and next
-    currentAction->nextAction = newAction;
+    newAction->nextAction = actionIterator->nextAction; //insert new between iterator and next
+    actionIterator->nextAction = newAction;
 }
 
 void DelayedAction::addAction(int time, functionPtr action)

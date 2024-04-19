@@ -132,6 +132,7 @@ void CommandManager::checkCommand()
             return;
         case ZERO_PTS:
             rocket->zeroPTs();
+            rocket->testDelay();
             return;
     }
     return;

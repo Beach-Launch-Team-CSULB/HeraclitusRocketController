@@ -58,6 +58,10 @@ class Rocket{
 
         // Execution Check
         bool getExecuting();
+        void test6(int);
+        void test5();
+        void test4(int);
+        void test3();
         void test2(int);
         void test1();
         void testDelay();
