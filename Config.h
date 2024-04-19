@@ -34,7 +34,7 @@ extern uint32_t zeroPTSeven;
 extern uint32_t zeroPTEight;
 
 extern bool calibIsM;
-extern uint32_t calibVal;
+extern float calibVal;
 extern uint8_t sensorCalibID;
 
 

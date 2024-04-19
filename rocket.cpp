@@ -75,7 +75,7 @@ bool Rocket::setIgnitionOn(int igniterID, bool ignitionOn) {
     return igniterMap[igniterID].setIgniterOn(ignitionOn);
 }
 
-bool Rocket::setValveOn(int valveID,bool valveOpen) {
+bool Rocket::setValveOn(int valveID, bool valveOpen) {
     return valveMap[valveID].setValveOpen(valveOpen);
 }
 
@@ -84,7 +84,7 @@ void Rocket::calibrateSensor(int sensorId, bool isM, float val) {
     else sensorMap[sensorId].setCalibrationParametersB(val);
 }
 
-void Rocket::getSensorCalibration(int sensorId, bool isM) {
+float Rocket::getSensorCalibration(int sensorId, bool isM) {
     if (isM) sensorMap[sensorId].getCalibrationSlope();
     else sensorMap[sensorId].getCalibrationIntercept(); 
 }
