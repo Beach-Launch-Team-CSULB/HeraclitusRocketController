@@ -7,6 +7,7 @@
 #include "Sensor.h"
 #include "PressureTransducer.h"
 #include "Config.h"
+#include <ADC.h>
 
 
 void Rocket::setLED(int ledID, Color newColor){
@@ -53,11 +54,11 @@ Rocket::Rocket(int ALARA){
     return sensor.readDataRaw();
 }*/
 
-float Rocket::sensorRead(int sensorId) {
+float Rocket::sensorRead(int sensorId, ADC &adc) {
     // 4/15: After we get this working - check how many times it is logging.
     // It may be worth creating a vector that contains global variables and is updated by the CANDriver.
-    return sensorMap[sensorId].getCurrentValue() * sensorMap[sensorId].getCalibrationSlope() - sensorMap[sensorId].getCalibrationIntercept();
-    //return sensorMap[sensorId].getCurrentValue();
+    //return sensorMap[sensorId].getCurrentValue() * sensorMap[sensorId].getCalibrationSlope() - sensorMap[sensorId].getCalibrationIntercept();
+    return sensorMap[sensorId].readDataRaw(adc);
 }
 
 bool Rocket::ignitionRead(int igniterID) {
@@ -97,6 +98,14 @@ bool Rocket::changeState(int state) {
 
 bool Rocket::getExecuting(){
     return this->executingCommand;
+}
+
+bool Rocket::getManualVent() {
+    return this->manualVent;
+}
+
+void Rocket::setManualVent(bool isEnabled) {
+    this->manualVent = isEnabled;
 }
 
 // 4/8/'24
@@ -187,7 +196,7 @@ void Rocket::calibrateSensors(int node)
         // ******* 4/15: Put this back to how it was before. Right now - this works - but I was initially using the sensor class
         // and not global variables. I messed something up in the main logic and the function was not getting called correctly.
         // Propulsion Node
-        zeroPTOne   = sensorRead(PT_LOX_HIGH_ID);
+        /*zeroPTOne   = sensorRead(PT_LOX_HIGH_ID);
         zeroPTTwo   = sensorRead(PT_FUEL_HIGH_ID);
         zeroPTThree = sensorRead(PT_LOX_DOME_ID);
         zeroPTFour  = sensorRead(PT_FUEL_DOME_ID);
@@ -206,7 +215,7 @@ void Rocket::calibrateSensors(int node)
         zeroPTFour  = sensorRead(PT_FUEL_INJECTOR_ID);
 
         zeroPTFive  = sensorRead(PT_CHAMBER_1_ID);
-        zeroPTSix   = sensorRead(PT_CHAMBER_2_ID);
+        zeroPTSix   = sensorRead(PT_CHAMBER_2_ID);*/
     }
 }
 

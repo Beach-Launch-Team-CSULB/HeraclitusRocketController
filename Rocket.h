@@ -9,6 +9,7 @@
 #include "Sensor.h"
 #include <vector>
 #include "LEDController.h"
+#include <ADC.h>
 
 
 class Rocket{ 
@@ -33,7 +34,7 @@ class Rocket{
 
         // Output 
         //float sensorRead(Sensor);
-        float sensorRead(int);
+        float sensorRead(int, ADC &adc);
         bool ignitionRead(int);
         bool valveRead(int);
        // int getState();
@@ -51,12 +52,16 @@ class Rocket{
         // Execution Check
         bool getExecuting();
 
+        bool getManualVent();
+        void setManualVent(bool);
+
     
    private: 
         int state;
         bool executingCommand;
         int ALARA;                      // 0 = Lower , 1 = Upper  
-    
+        bool manualVent;
+
         //Sensor* sensorArray[8];
         bool initializeIgniters();
         bool initializeUpperValves();

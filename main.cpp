@@ -10,6 +10,8 @@
 #include <SPI.h>
 #include "ExtendedIO.h"
 #include <Wire.h>
+#include <ADC.h>
+#include <ADC_util.h>
 
 #include <FlexCAN.h>
 #include "CANDriver.h"
@@ -32,6 +34,9 @@ uint32_t lastPing;
 uint32_t lastPingRecieved;         
 uint32_t lastCANReport;     
 bool calibratedPTs; 
+ADC* adc = new ADC();
+ADC_REFERENCE ref0 = ADC_REFERENCE::REF_1V2;
+ADC_REFERENCE ref1 = ADC_REFERENCE::REF_1V2;
 // Global variable initialize
 
 // These need to not have a value or the value will be set to that throughout the duration of the program. Initialize in setup().
@@ -77,7 +82,7 @@ std::string generateSDReport() {
     entry = entry + " | State: " + std::to_string(myRocket.getState());
 
     for (std::map<int,Sensor>::iterator sensor = myRocket.sensorMap.begin(); sensor != myRocket.sensorMap.end(); ++sensor) {
-        entry = entry + " | " + std::to_string(sensor->first) + ":" + std::to_string(myRocket.sensorRead(sensor->first));
+        entry = entry + " | " + std::to_string(sensor->first) + ":" + std::to_string(myRocket.sensorRead(sensor->first, *adc));
     }
     for (std::map<int,Valve>::iterator valve = myRocket.valveMap.begin(); valve != myRocket.valveMap.end(); ++valve) {
         entry = entry + " | " + std::to_string(valve->first) + ":" + std::to_string(myRocket.valveRead(valve->first));
@@ -103,7 +108,7 @@ void writeSDReport(char* fileLogName) {
             // 4/14: Added to this. Had to create a vector of initial PT Values.
             //entry = entry + " | " + std::to_string(sensor->first) + ":" + std::to_string(myRocket.sensorRead(sensor->first) - PTZeros[i]);
             //entry = entry + " | " + std::to_string(sensor->first) + ":" + std::to_string(myRocket.sensorRead(sensor->first));
-            snprintf(entry + strlen(entry), sizeof(entry) - strlen(entry), " | S %d: %f", sensor->first, myRocket.sensorRead(sensor->first));
+            snprintf(entry + strlen(entry), sizeof(entry) - strlen(entry), " | S %d: %f", sensor->first, myRocket.sensorRead(sensor->first, *adc));
         }
         for (std::map<int,Valve>::iterator valve = myRocket.valveMap.begin(); valve != myRocket.valveMap.end(); ++valve) 
         {
@@ -130,7 +135,7 @@ void CANRoutine(uint32_t time) {
         int sensorReads[8] = {0};
         int i = 0;
         for (std::map<int,Sensor>::iterator sensor = myRocket.sensorMap.begin(); sensor != myRocket.sensorMap.end(); ++sensor) {
-            sensorReads[i++] = myRocket.sensorRead(sensor->first);
+            sensorReads[i++] = myRocket.sensorRead(sensor->first, *adc);
         }
 
 
@@ -187,14 +192,18 @@ void fireRoutineSetup()
 
 
 void executeCommand(uint32_t commandID) {   
-
-    if (commandID <= TEST && state_transitions[myRocket.getState()][commandID]) {
+    if (myRocket.getManualVent()) {
+        //if (commandID in [])
+    }
+    else if (commandID <= TEST && state_transitions[myRocket.getState()][commandID]) {
         myRocket.changeState(commandID);
         allOfTheLights.setLed(LED0, firstLED[commandID]);
         allOfTheLights.setLed(LED1, secondLED[commandID]);
         if (commandID == FIRE) fireRoutineSetup();
     }
-
+    /*
+    enable and disable manual vent
+    */
     else if (myRocket.getState() == TEST && commandID <= FMV_OPEN) 
     {
         if (commandID <= IGN2_ON) 
@@ -228,6 +237,31 @@ void executeCommand(uint32_t commandID) {
         theSchoolBus.sendTiming(SEND_FMV_CLOSE);
 }
 
+void MCUADCSetup(ADC& adc, ADC_REFERENCE refIn0, ADC_REFERENCE refIn1, uint8_t averagesIn0, uint8_t averagesIn1)
+{ 
+//Ideally get some conditionals here for which MCU it is so this is compatible at least also with Teensy LC
+
+///// ADC0 /////
+  // reference can be ADC_REFERENCE::REF_3V3, ADC_REFERENCE::REF_1V2 or ADC_REFERENCE::REF_EXT.
+  //adc->setReference(ADC_REFERENCE::REF_1V2, ADC_0); // change all 3.3 to 1.2 if you change the reference to 1V2
+
+  adc.adc0->setReference(refIn0);
+  adc.adc0->setAveraging(averagesIn0);                                    // set number of averages
+  adc.adc0->setResolution(16);                                   // set bits of resolution
+  adc.adc0->setConversionSpeed(ADC_CONVERSION_SPEED::HIGH_SPEED_16BITS); // change the conversion speed
+  adc.adc0->setSamplingSpeed(ADC_SAMPLING_SPEED::MED_SPEED);     // change the sampling speed
+  adc.adc0->recalibrate();
+
+///// ADC1 /////
+  adc.adc1->setReference(refIn1);
+  adc.adc1->setAveraging(averagesIn1);                                    // set number of averages
+  adc.adc1->setResolution(16);                                   // set bits of resolution
+  adc.adc1->setConversionSpeed(ADC_CONVERSION_SPEED::HIGH_SPEED_16BITS); // change the conversion speed
+  adc.adc1->setSamplingSpeed(ADC_SAMPLING_SPEED::MED_SPEED);     // change the sampling speed
+  adc.adc1->recalibrate();
+
+}
+
 
 void safetyChecks() 
 {   // Lox pressure reading (?)
@@ -249,6 +283,8 @@ void setup() {
     
     myRocket = Rocket(alara);
     allOfTheLights.init();
+    ADC* adc = new ADC();
+
 
     Can0.begin(CAN2busSpeed);
     Can0.setTxBufferSize(64);
@@ -264,6 +300,12 @@ void setup() {
     FMVCloseTime = 4000;
 
     calibratedPTs = true;
+
+    ADC_REFERENCE ref0 = ADC_REFERENCE::REF_1V2;
+    ADC_REFERENCE ref1 = ADC_REFERENCE::REF_1V2;
+    uint8_t averages0 = 4;
+    uint8_t averages1 = 4;
+    MCUADCSetup(*adc, ref0, ref1, averages0, averages1);
 }
 
 

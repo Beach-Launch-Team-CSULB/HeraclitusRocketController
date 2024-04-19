@@ -2,6 +2,7 @@
 #define SENSOR_H
 
 #include <Arduino.h>
+#include <ADC.h>
 
 class Sensor {
 private:
@@ -22,7 +23,7 @@ public:
     //Primary Constructor for sensors
     Sensor(int label, int pin, float linCoM, float linCoB);
 
-    float readDataRaw();             // returns the analog voltage read from the pin
+    float readDataRaw(ADC &adc);             // returns the analog voltage read from the pin
     virtual void updateValue();      // makes this sensor do its job
     virtual float getCurrentValue(); // updates the value and returns it
     float getLastValue() const;      // gets the value

@@ -23,7 +23,7 @@ uint32_t CANDriver::readMessage()
     std::string num3 = std::to_string(msg.buf[2]);
     std::string num4 = std::to_string(msg.buf[3]);*/
     //std::string num5 = std::to_string(msg.buf[4]);
-    Serial.printf("%d, %d, %d, %d\n", msg.buf[0],msg.buf[1],msg.buf[2],msg.buf[3]); 
+    //Serial.printf("%d, %d, %d, %d\n", msg.buf[0],msg.buf[1],msg.buf[2],msg.buf[3]); 
     time = (((msg.buf[0])*256+msg.buf[1])*256+msg.buf[2])*256+msg.buf[3];
     //time = stoi(num2+num1+num3+num4/*+num5*/);
 
@@ -47,7 +47,7 @@ uint32_t CANDriver::readMessage()
     {
       FMVCloseTime = time;
     }
-    Serial.printf("%d, %d, %d, %d", LMVOpenTime, LMVCloseTime, FMVOpenTime, FMVCloseTime); 
+    //Serial.printf("%d, %d, %d, %d", LMVOpenTime, LMVCloseTime, FMVOpenTime, FMVCloseTime); 
   }
 
   return msg.id;
