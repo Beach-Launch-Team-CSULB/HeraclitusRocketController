@@ -263,7 +263,7 @@ void CANDriver::sendOperatorMessage(char zero, char one, bool prop)
 }
 
 
-void CANDriver::sendSensorCalibration(bool isM, uint8_t sensorID, uint32_t sensorVal) 
+void CANDriver::sendSensorCalibration(bool isM, uint8_t sensorID, float sensorVal) 
 {
   static CAN_message_t msg;
   if (isM) msg.id = SEND_M_VAL;
