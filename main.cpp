@@ -170,7 +170,17 @@ void fireRoutine() {        //  4/14: Changed to uint32_t from int.
 }
 
 void executeCommand(uint32_t commandID) {   
-    if (myRocket.getManualVent() || commandID == MANUAL_OVERRIDE) {
+    if (commandID == PING_PI_ROCKET) {
+        lastPingRecieved = millis();
+        theSchoolBus.ping(alara);
+    }
+    else if (commandID <= TEST && state_transitions[myRocket.getState()][commandID] && !myRocket.getManualVent()) {
+        myRocket.changeState(commandID);
+        allOfTheLights.setLed(LED0, firstLED[commandID]);
+        allOfTheLights.setLed(LED1, secondLED[commandID]);
+        if (commandID == FIRE) fireRoutine();
+    }
+    else if (myRocket.getManualVent() || commandID == MANUAL_OVERRIDE) {
         int* it = std::find(std::begin(manualVentCommandIds), std::end(manualVentCommandIds), commandID);
         if (it != std::end(manualVentCommandIds)) myRocket.setValveOn(commandID / 2, commandID % 2);
         if (commandID == MANUAL_OVERRIDE) {
@@ -178,13 +188,6 @@ void executeCommand(uint32_t commandID) {
             Serial.printf("returning %d", myRocket.getManualVent());
             if (!myRocket.getManualVent()) myRocket.changeState(myRocket.getState());
         }
-        return;
-    }
-    if (commandID <= TEST && state_transitions[myRocket.getState()][commandID]) {
-        myRocket.changeState(commandID);
-        allOfTheLights.setLed(LED0, firstLED[commandID]);
-        allOfTheLights.setLed(LED1, secondLED[commandID]);
-        if (commandID == FIRE) fireRoutine();
     }
     else if (myRocket.getState() == TEST && commandID <= FMV_OPEN) 
     {
@@ -219,10 +222,6 @@ void executeCommand(uint32_t commandID) {
         theSchoolBus.sendTiming(SEND_LMV_CLOSE);
     else if (commandID == GET_FMV_CLOSE)
         theSchoolBus.sendTiming(SEND_FMV_CLOSE);
-    if (commandID == PING_PI_ROCKET) {
-        lastPingRecieved = millis();
-        theSchoolBus.ping(alara);
-    }
 }
 
 void MCUADCSetup(ADC& adc, ADC_REFERENCE refIn0, ADC_REFERENCE refIn1, uint8_t averagesIn0, uint8_t averagesIn1)
