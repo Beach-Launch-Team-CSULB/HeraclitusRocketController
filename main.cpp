@@ -128,8 +128,6 @@ void CANRoutine(uint32_t time) {
         for (std::map<int,Sensor>::iterator sensor = myRocket.sensorMap.begin(); sensor != myRocket.sensorMap.end(); ++sensor) {
             sensorReads[i++] = myRocket.sensorRead(sensor->first, *adc);
         }
-
-
         // Don't forget to include this in the PT zeroing section as well.VVV
         theSchoolBus.sendSensorData(msgID,sensorReads[0]-zeroPTOne, sensorReads[1]-zeroPTTwo, 
                                     sensorReads[2]-zeroPTThree, sensorReads[3]-zeroPTFour);
@@ -272,7 +270,6 @@ void setup() {
     
     myRocket = Rocket(alara);
     allOfTheLights.init();
-    ADC* adc = new ADC();
 
 
     Can0.begin(CAN2busSpeed);
@@ -287,6 +284,10 @@ void setup() {
     FMVOpenTime = 2000;
     LMVCloseTime = 3000;
     FMVCloseTime = 4000;
+
+    calibIsM = false;
+    calibVal = 0.0;
+    sensorCalibID = 0;
 
 
     calibratedPTs = true;

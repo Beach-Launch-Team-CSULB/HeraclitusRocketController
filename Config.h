@@ -7,7 +7,7 @@
 #include <cstdint>
 
 // Constant defined for packing sensor data
-#define NO_DECIMAL ((uint8_t) 10)
+#define NO_DECIMAL ((uint8_t) 1000)
 
 
 // LEDs
@@ -45,7 +45,7 @@ extern uint8_t sensorCalibID;
 // Propulsion is 1.
 // Engine is 0.
 
-#define ALARA_ID 0
+#define ALARA_ID 1
 
 // Constant define for specifying the number of times per second sensor data & state reports are to be transmitted over CAN (ms).
 #define CAN_INTERVAL ((uint32_t) 333)

@@ -16,7 +16,16 @@ uint32_t CANDriver::readMessage()
 
   // Check for instances where we need to read the data field.
   uint32_t time = 0;
-  if(msg.len == 4)
+  if (msg.len == 1) 
+  {
+    if(msg.id == GET_M_VAL)
+      calibIsM = true;
+    else
+      calibIsM = false;
+
+    sensorCalibID = msg.buf[0];
+  }
+  else if(msg.len == 4)
   {
     /*std::string num1 = std::to_string(msg.buf[0]);
     std::string num2 = std::to_string(msg.buf[1]);
@@ -59,6 +68,7 @@ uint32_t CANDriver::readMessage()
     else
       calibIsM = false;
 
+    sensorCalibID = msg.buf[0];
     calibVal = data;
   }
 
@@ -140,13 +150,13 @@ void CANDriver::sendSensorData(int sensorID, float sensorData1, float sensorData
   msg.len = 8;
   
   // Avoiding dealing with the binary representation of floats. Divide by ten on CANReceive.py end.
-  sensorData1 *= NO_DECIMAL;
+  //sensorData1 /= NO_DECIMAL;
   int sensorData1Mod = sensorData1;
-  sensorData2 *= NO_DECIMAL;
+  //sensorData2 /= NO_DECIMAL;
   int sensorData2Mod = sensorData2;
-  sensorData3 *= NO_DECIMAL;
+  //sensorData3 /= NO_DECIMAL;
   int sensorData3Mod = sensorData3;
-  sensorData4 *= NO_DECIMAL;
+  //sensorData4 /= NO_DECIMAL;
   int sensorData4Mod = sensorData4;
 
 
@@ -266,13 +276,13 @@ void CANDriver::sendSensorCalibration(bool isM, uint8_t sensorID, float sensorVa
   else msg.id = SEND_B_VAL;
 
   msg.buf[0] = sensorID;
-
+  uint64_t val = sensorVal * NO_DECIMAL;
   char* littleElf;
-  littleElf =  (char*)&sensorVal;
-  msg.buf[1] = littleElf[4];
-  msg.buf[2] = littleElf[3];
-  msg.buf[3] = littleElf[2];
-  msg.buf[4] = littleElf[1];
+  littleElf =  (char*)&val;
+  msg.buf[1] = littleElf[3];
+  msg.buf[2] = littleElf[2];
+  msg.buf[3] = littleElf[1];
+  msg.buf[4] = littleElf[0];
 
   Can0.write(msg);
 }

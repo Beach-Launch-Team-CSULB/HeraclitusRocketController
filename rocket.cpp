@@ -59,8 +59,8 @@ float Rocket::sensorRead(int sensorId, ADC &adc) {
     // 4/15: After we get this working - check how many times it is logging.
     // It may be worth creating a vector that contains global variables and is updated by the CANDriver.
     //return sensorMap[sensorId].getCurrentValue() * sensorMap[sensorId].getCalibrationSlope() - sensorMap[sensorId].getCalibrationIntercept();
-    //return sensorMap[sensorId].readDataRaw(adc);
-    return sensorMap[sensorId].getCurrentValue(adc);
+    return sensorMap[sensorId].readDataRaw(adc);
+    //return sensorMap[sensorId].getCurrentValue(adc);
 }
 
 bool Rocket::ignitionRead(int igniterID) {
