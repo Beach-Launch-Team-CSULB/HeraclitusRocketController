@@ -200,7 +200,7 @@ void executeCommand(uint32_t commandID) {
     {
         if(calibratedPTs == true)
         {
-            myRocket.zeroSensors(alara);
+            myRocket.zeroSensors(alara, *adc);
             calibratedPTs = false; 
         }
         else

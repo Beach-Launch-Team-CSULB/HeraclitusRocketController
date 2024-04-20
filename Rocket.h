@@ -41,7 +41,7 @@ class Rocket{
 
         // 4/9/2024
         uint8_t getState();
-        void zeroSensors(int node); // 4/11/2024
+        void zeroSensors(int node, ADC); // 4/11/2024
         void calibrateSensor(int sensorId, bool isM, float val);
         float getSensorCalibration(int sensorId, bool isM);
         

@@ -201,33 +201,33 @@ bool Rocket::initializeLowerSensors()
 }
 
 // 4/14: New attempt
-void Rocket::zeroSensors(int node)
+void Rocket::zeroSensors(int node, ADC adc)
 {
     if(node == 1)
     {
         // ******* 4/15: Put this back to how it was before. Right now - this works - but I was initially using the sensor class
         // and not global variables. I messed something up in the main logic and the function was not getting called correctly.
         // Propulsion Node
-        /*zeroPTOne   = sensorRead(PT_LOX_HIGH_ID);
-        zeroPTTwo   = sensorRead(PT_FUEL_HIGH_ID);
-        zeroPTThree = sensorRead(PT_LOX_DOME_ID);
-        zeroPTFour  = sensorRead(PT_FUEL_DOME_ID);
+        zeroPTOne   = sensorRead(PT_LOX_HIGH_ID, adc);
+        zeroPTTwo   = sensorRead(PT_FUEL_HIGH_ID, adc);
+        zeroPTThree = sensorRead(PT_LOX_DOME_ID, adc);
+        zeroPTFour  = sensorRead(PT_FUEL_DOME_ID, adc);
 
-        zeroPTFive  = sensorRead(PT_LOX_TANK_1_ID);
-        zeroPTSix   = sensorRead(PT_LOX_TANK_2_ID);
-        zeroPTSeven = sensorRead(PT_FUEL_TANK_1_ID);
-        zeroPTEight = sensorRead(PT_FUEL_TANK_2_ID);
+        zeroPTFive  = sensorRead(PT_LOX_TANK_1_ID, adc);
+        zeroPTSix   = sensorRead(PT_LOX_TANK_2_ID, adc);
+        zeroPTSeven = sensorRead(PT_FUEL_TANK_1_ID, adc);
+        zeroPTEight = sensorRead(PT_FUEL_TANK_2_ID, adc);
     }
     else
     {
         // Engine Node
-        zeroPTOne   = sensorRead(PT_PNUEMATICS_ID);
-        zeroPTTwo   = sensorRead(PT_LOX_INLET_ID);
-        zeroPTThree = sensorRead(PT_FUEL_INLET_ID);
-        zeroPTFour  = sensorRead(PT_FUEL_INJECTOR_ID);
+        zeroPTOne   = sensorRead(PT_PNUEMATICS_ID, adc);
+        zeroPTTwo   = sensorRead(PT_LOX_INLET_ID, adc);
+        zeroPTThree = sensorRead(PT_FUEL_INLET_ID, adc);
+        zeroPTFour  = sensorRead(PT_FUEL_INJECTOR_ID, adc);
 
-        zeroPTFive  = sensorRead(PT_CHAMBER_1_ID);
-        zeroPTSix   = sensorRead(PT_CHAMBER_2_ID);*/
+        zeroPTFive  = sensorRead(PT_CHAMBER_1_ID, adc);
+        zeroPTSix   = sensorRead(PT_CHAMBER_2_ID, adc);
     }
 }
 
