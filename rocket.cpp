@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <map>
 #include <utility>
@@ -7,182 +6,154 @@
 #include "Igniter.h"
 #include "Sensor.h"
 #include "PressureTransducer.h"
-#include "DelayedAction.h"
+#include "Config.h"
+#include <ADC.h>
 
-void Rocket::setLED(int ledID, Color newColor)
-{
-    ledArray.setLed(ledID, newColor);
+
+void Rocket::setLED(int ledID, Color newColor){
+    allOfTheLights.setLed(ledID, newColor);
 }
 
 // Constructor definition
-Rocket::Rocket()
-{
-    currentState = Standby;
-    //ledArray.init();
-    if (ALARA == 0) // Lower ALARA Setup
-    { 
+Rocket::Rocket(int ALARA){
+    if (ALARA == 0){                             // Lower ALARA Setup 
         initializeIgniters();
         initializeLowerValves();
         initializeLowerSensors();
     }
-    if (ALARA == 1) // Upper ALARA Setup
-    {
+    if (ALARA == 1){                             // Upper ALARA Setup
         initializeUpperValves();
         initializeUpperSensors();
     }
-    manualOverrideEnabled = false;
+    //allOfTheLights.init();
+    //TJ 4/12 changed state map WIP*****
+    // 4/13:
+                                          // Abort, Vent, Fire, Tank Press, High Press, Standby, Ignite, Test 
+                                           //  A    V    F    TP    H    S    I    TE 
+    stateMap.emplace(HP_ID,   std::vector<int>{0,   0,   1,   1,    1,   0,   1,   0});
+    stateMap.emplace(HV_ID,   std::vector<int>{0,   1,   0,   0,    0,   0,   0,   0});
+    stateMap.emplace(LV_ID,   std::vector<int>{0,   1,   0,   0,    0,   0,   0,   0});
+    stateMap.emplace(LMV_ID,  std::vector<int>{0,   0,   0,   0,    0,   0,   0,   0});
+    stateMap.emplace(LDR_ID,  std::vector<int>{0,   0,   1,   1,    0,   0,   1,   0});
+    stateMap.emplace(LDV_ID,  std::vector<int>{0,   1,   0,   0,    0,   0,   0,   0});
+    stateMap.emplace(FV_ID,   std::vector<int>{0,   1,   0,   0,    0,   0,   0,   0});
+    stateMap.emplace(FMV_ID,  std::vector<int>{0,   0,   0,   0,    0,   0,   0,   0});
+    stateMap.emplace(FDR_ID,  std::vector<int>{0,   0,   1,   1,    0,   0,   1,   0});
+    stateMap.emplace(FDV_ID,  std::vector<int>{0,   1,   0,   0,    0,   0,   0,   0});
+    stateMap.emplace(IGN1_ID, std::vector<int>{0,   0,   1,   0,    0,   0,   1,   0});
+    stateMap.emplace(IGN2_ID, std::vector<int>{0,   0,   1,   0,    0,   0,   1,   0});
+
+    LEDstateMap.emplace(LED0,    std::vector<Color>{GREEN, PURPLE, RED, ORANGE, ORANGE, WHITE, ORANGE, GREEN});
+    LEDstateMap.emplace(LED1,    std::vector<Color>{PURPLE, PURPLE, RED, GREEN, BLUE, WHITE, ORANGE, GREEN});
+
+    // Begins in the Test state
+    changeState(STANDBY);
+    manualVent = false;
 }
 
 /*float Rocket::sensorRead(Sensor sensor) {
     return sensor.readDataRaw();
 }*/
 
-float Rocket::sensorRead(int sensorId) {
-    return sensorMap[sensorId].getCurrentValue(); }
-
-void Rocket::pollSensors()
-{
-    for(int sensorID : sensorIDArray)
-    {
-        // TODO: do something with this
-        int pressureReading = sensorRead(sensorID);
-    }
+float Rocket::sensorRead(int sensorId, ADC &adc) {
+    // 4/15: After we get this working - check how many times it is logging.
+    // It may be worth creating a vector that contains global variables and is updated by the CANDriver.
+    //return sensorMap[sensorId].getCurrentValue() * sensorMap[sensorId].getCalibrationSlope() - sensorMap[sensorId].getCalibrationIntercept();
+    return sensorMap[sensorId].readDataRaw(adc);
+    //return sensorMap[sensorId].getCurrentValue(adc);
 }
 
 bool Rocket::ignitionRead(int igniterID) {
-    return igniterMap[igniterID].getIgniterOn(); }
+    return igniterMap[igniterID].getIgniterOn();
+}
 
 bool Rocket::valveRead(int valveID) {
-    return valveMap[valveID].getValveOpen(); }
+    return valveMap[valveID].getValveOpen();
+}
 
 bool Rocket::setIgnitionOn(int igniterID, bool ignitionOn) {
-    return igniterMap[igniterID].setIgniterOn(ignitionOn); }
-
-bool Rocket::setValve(int valveID,bool valveOpen) {
-    return valveMap[valveID].setValveOpen(valveOpen); }
-
-void Rocket::setValveOpen(int valveID) {
-    valveMap[valveID].setValveOpen(true); }
-
-void Rocket::setValveClosed(int valveID) {
-    valveMap[valveID].setValveOpen(false); }
-
-void Rocket::setValveOpenIfFire(int valveID) 
-{
-    if(currentState == Fire)
-        valveMap[valveID].setValveOpen(true); 
+    return igniterMap[igniterID].setIgniterOn(ignitionOn);
 }
 
-bool Rocket::getExecuting(){
-    return this->executingCommand; }
+bool Rocket::setValveOn(int valveID, bool valveOpen) {
+    return valveMap[valveID].setValveOpen(valveOpen);
+}
 
-// Verifies if the rocket can enter that state, then proceeds to do so
-bool Rocket::enterState(E_RocketState stateToEnter)
-{
-    if(!canEnterState(stateToEnter))
-        return false;
-    switch(stateToEnter)
-    {
-        /*
-        case Vent:
-            enterVent();
-            return true;
-        case Abort:
-            enterAbort();
-            return true;
-        */
-        case Fire:
-            enterFire();
-            return true;
-        case TankPress:
-            enterTankPress();
-            return true;
-        case HighPress:
-            enterHighPress();
-            return true;
-        case Test:
-            enterTest();
-            return true;
-        case FireArm:
-            enterFireArm();
-            return true;
-        case TankPressArm:
-            enterTankPressArm();
-            return true;
-        case HighPressArm:
-            enterHighPressArm();
-            return true;
-        case Standby:
-            enterStandby();
-            return true;
+void Rocket::calibrateSensor(int sensorId, bool isM, float val) {
+    if (isM) sensorMap[sensorId].setCalibrationParametersM(val);
+    else sensorMap[sensorId].setCalibrationParametersB(val);
+}
+
+float Rocket::getSensorCalibration(int sensorId, bool isM) {
+    if (isM) sensorMap[sensorId].getCalibrationSlope();
+    else sensorMap[sensorId].getCalibrationIntercept(); 
+}
+
+bool Rocket::changeState(int state) {
+    for (std::map<int,Valve>::iterator valve = valveMap.begin(); valve != valveMap.end(); ++valve) {
+        setValveOn(valve->first, stateMap[valve->first][state]);
     }
-    return false;
-}
-
-// Determines if the next state is valid from the current state
-bool Rocket::canEnterState(E_RocketState stateToEnter)
-{
-    switch(stateToEnter)
-    {
-        /*
-        case Vent: // Vent is always valid
-            return currentState != Vent;
-        case Abort: // Abort is always valid
-            return currentState != Abort;
-        */
-        case Standby: // Standby is allowable in any other neutral state
-            return (/*currentState == Vent || currentState == Abort || */currentState == Fire || currentState == Test || currentState == Standby);
-        case Test: // Can only be entered from Standby
-            return currentState == Standby;
-
-        // Procedural State Check Operations, ordered by importance
-        case HighPress:
-            return currentState == HighPressArm;
-        case TankPress:
-            return currentState == TankPressArm;
-        case Fire:
-            return currentState == FireArm;
-        case HighPressArm:
-            return currentState == Standby;
-        case TankPressArm:
-            return currentState == HighPress;
-        case FireArm:
-            return currentState == TankPress;
+    for (std::map<int,Igniter>::iterator Igniter = igniterMap.begin(); Igniter != igniterMap.end(); ++Igniter) {
+        setIgnitionOn(Igniter->first, stateMap[Igniter->first][state]);
     }
-}
 
-bool Rocket::canActuateValve(){
-    return manualOverrideEnabled || currentState == Test; }
 
-// Sets up the Igniters on the Lower Engine Node
-bool Rocket::initializeIgniters() 
-{
-    Igniter Igniter1(IGN1_ID, IGN1_PIN_PWM,IGN1_PIN_DIG);
-    Igniter Igniter2(IGN2_ID, IGN2_PIN_PWM,IGN2_PIN_DIG); 
+    // 4/14:*************************************
+    //setLED(LED0, LEDstateMap[LED0][state]);
+    //allOfTheLights.setLed(LED1, LEDstateMap[LED1][state]);
+    //*******************************************
 
-    igniterMap.insert({IGN1_ID, Igniter1});
-    igniterMap.insert({IGN2_ID, Igniter2});
+    this->state = state;
+    Serial.println(state);
     return true;
 }
 
-// Sets up the Valves on the Lower Engine Node
-bool Rocket::initializeLowerValves() 
-{
+bool Rocket::getExecuting(){
+    return this->executingCommand;
+}
+
+bool Rocket::getManualVent() {
+    return this->manualVent;
+}
+
+void Rocket::setManualVent(bool isEnabled) {
+    this->manualVent = isEnabled;
+}
+
+// 4/8/'24
+uint8_t Rocket::getState() {
+    return this->state;
+}
+
+
+bool Rocket::initializeIgniters(){
+    
+    Igniter Igniter1(IGN1_ID, IGN1_PIN_PWM,IGN1_PIN_DIG);
+    //Igniter Igniter2(IGN2_ID, IGN2_PIN_PWM,IGN2_PIN_DIG); 
+
+
+    igniterMap.insert({IGN1_ID, Igniter1});
+    //igniterMap.insert({IGN2_ID, Igniter2});
+
+    return true;
+}
+
+bool Rocket::initializeLowerValves(){
     Valve HP(HP_ID,HP_PIN_PWM,HP_PIN_DIG);      // High Press Valve
     Valve HV(HV_ID,HV_PIN_PWM,HV_PIN_DIG);      // High Vent Valve 
     Valve FMV(FMV_ID,FMV_PIN_PWM,FMV_PIN_DIG);  // Fuel Main Valve
     Valve LMV(LMV_ID,LMV_PIN_PWM,LMV_PIN_DIG);  // Lox Main Valve
 
+    
     valveMap[HP_ID] =  HP;
     valveMap[HV_ID] = HV;
     valveMap[FMV_ID] = FMV;
     valveMap[LMV_ID] = LMV;
+
     return true;
 }
 
-// Sets up the Valves on the Upper Prop Node
-bool Rocket::initializeUpperValves() 
-{
+bool Rocket::initializeUpperValves(){
     Valve LV(LV_ID,LV_PIN_PWM,LV_PIN_DIG);      // Lox Vent Valve
     Valve LDV(LDV_ID,LDV_PIN_PWM,LDV_PIN_DIG);  // Lox Dome Vent Valve
     Valve LDR(LDR_ID,LDR_PIN_PWM,LDR_PIN_DIG);  // Lox Dome Reg Valve
@@ -196,25 +167,27 @@ bool Rocket::initializeUpperValves()
     valveMap.insert({FV_ID, FV});
     valveMap.insert({FDV_ID, FDV});
     valveMap.insert({FDR_ID, FDR});
+
     return true;
 }
 
-// Sets up the Sensors on the Upper Prop Node
-bool Rocket::initializeUpperSensors() 
+bool Rocket::initializeUpperSensors()
 {
-    sensorMap.insert({PT_LOX_HIGH_ID, Sensor(PT_LOX_HIGH_ID, PT_LOX_HIGH_PIN, PT_LOX_HIGH_CAL_M, PT_LOX_HIGH_CAL_B)}); //autovent high possible
-    sensorMap.insert({PT_FUEL_HIGH_ID, Sensor(PT_FUEL_HIGH_ID, PT_FUEL_HIGH_PIN, PT_FUEL_HIGH_CAL_M, PT_FUEL_HIGH_CAL_B)}); //autovent highif possible
-    sensorMap.insert({PT_LOX_DOME_ID, Sensor(PT_LOX_DOME_ID, PT_LOX_DOME_PIN, PT_LOX_DOME_CAL_M, PT_LOX_DOME_CAL_B)}); //autovent lox dome and close reg
-    sensorMap.insert({PT_FUEL_DOME_ID, Sensor(PT_FUEL_DOME_ID, PT_FUEL_DOME_PIN, PT_FUEL_DOME_CAL_M, PT_FUEL_DOME_CAL_B)}); //autovent fuel dome and close reg
-    sensorMap.insert({PT_LOX_TANK_1_ID, Sensor(PT_LOX_TANK_1_ID, PT_LOX_TANK_1_PIN, PT_LOX_TANK_1_CAL_M, PT_LOX_TANK_1_CAL_B)}); //autovent lox side and close reg
-    sensorMap.insert({PT_LOX_TANK_2_ID, Sensor(PT_LOX_TANK_2_ID, PT_LOX_TANK_2_PIN, PT_LOX_TANK_2_CAL_M, PT_LOX_TANK_2_CAL_B),}); //autovent lox side and close reg
-    sensorMap.insert({PT_FUEL_TANK_1_ID, Sensor(PT_FUEL_TANK_1_ID, PT_FUEL_TANK_1_PIN, PT_FUEL_TANK_1_CAL_M, PT_FUEL_TANK_1_CAL_M)}); //autovent fuel side and close reg
-    sensorMap.insert({PT_FUEL_TANK_2_ID, Sensor(PT_FUEL_TANK_2_ID, PT_FUEL_TANK_2_PIN, PT_FUEL_TANK_2_CAL_M, PT_FUEL_TANK_2_CAL_B)}); //autovent fuel side and close reg
+    
+    sensorMap.insert({PT_LOX_HIGH_ID, Sensor(PT_LOX_HIGH_ID, PT_LOX_HIGH_PIN, PT_LOX_HIGH_CAL_M, PT_LOX_HIGH_CAL_B)});
+    sensorMap.insert({PT_FUEL_HIGH_ID, Sensor(PT_FUEL_HIGH_ID, PT_FUEL_HIGH_PIN, PT_FUEL_HIGH_CAL_M, PT_FUEL_HIGH_CAL_B)});
+    sensorMap.insert({PT_LOX_DOME_ID, Sensor(PT_LOX_DOME_ID, PT_LOX_DOME_PIN, PT_LOX_DOME_CAL_M, PT_LOX_DOME_CAL_B)});
+    sensorMap.insert({PT_FUEL_DOME_ID, Sensor(PT_FUEL_DOME_ID, PT_FUEL_DOME_PIN, PT_FUEL_DOME_CAL_M, PT_FUEL_DOME_CAL_B)});
+    sensorMap.insert({PT_LOX_TANK_1_ID, Sensor(PT_LOX_TANK_1_ID, PT_LOX_TANK_1_PIN, PT_LOX_TANK_1_CAL_M, PT_LOX_TANK_1_CAL_B)});
+    sensorMap.insert({PT_LOX_TANK_2_ID, Sensor(PT_LOX_TANK_2_ID, PT_LOX_TANK_2_PIN, PT_LOX_TANK_2_CAL_M, PT_LOX_TANK_2_CAL_B),});
+    sensorMap.insert({PT_FUEL_TANK_1_ID, Sensor(PT_FUEL_TANK_1_ID, PT_FUEL_TANK_1_PIN, PT_FUEL_TANK_1_CAL_M, PT_FUEL_TANK_1_CAL_B)});
+    sensorMap.insert({PT_FUEL_TANK_2_ID, Sensor(PT_FUEL_TANK_2_ID, PT_FUEL_TANK_2_PIN, PT_FUEL_TANK_2_CAL_M, PT_FUEL_TANK_2_CAL_B)});
+    
+
     return true;
 }
 
-// Sets up the Sensors on the Lower Engine Node
-bool Rocket::initializeLowerSensors() 
+bool Rocket::initializeLowerSensors()
 {
     sensorMap.insert({PT_PNUEMATICS_ID, Sensor(PT_PNUEMATICS_ID, PT_PNUEMATICS_PIN, PT_PNUEMATICS_CAL_M, PT_PNUEMATICS_CAL_B)});
     sensorMap.insert({PT_LOX_INLET_ID, Sensor(PT_LOX_INLET_ID, PT_LOX_INLET_PIN, PT_LOX_INLET_CAL_M, PT_LOX_INLET_CAL_B)});
@@ -222,126 +195,39 @@ bool Rocket::initializeLowerSensors()
     sensorMap.insert({PT_FUEL_INJECTOR_ID, Sensor(PT_FUEL_INJECTOR_ID, PT_FUEL_INJECTOR_PIN, PT_FUEL_INJECTOR_CAL_M, PT_FUEL_INJECTOR_CAL_B)});
     sensorMap.insert({PT_CHAMBER_1_ID, Sensor(PT_CHAMBER_1_ID, PT_CHAMBER_1_PIN, PT_CHAMBER_1_CAL_M, PT_CHAMBER_1_CAL_B)});
     sensorMap.insert({PT_CHAMBER_2_ID, Sensor(PT_CHAMBER_2_ID, PT_CHAMBER_2_PIN, PT_CHAMBER_2_CAL_M, PT_CHAMBER_2_CAL_B)});
+    
+
     return true;
 }
 
-// Enabled testing features, but otherwise does nothing
-bool Rocket::enterTest()
+// 4/14: New attempt
+void Rocket::zeroSensors(int node)
 {
-    currentState = Test;
-    setLED(0, GREEN);
-    setLED(1, GREEN);
-    return true;
-}
-
-// Closes all valves and sets rocket for Standby
-bool Rocket::enterStandby()
-{
-    //setValvesOpen(false, (std::vector<int>){HP_ID, HV_ID, FMV_ID, LMV_ID, LV_ID, LDV_ID, LDR_ID, FV_ID, FDV_ID, FDR_ID});
-    currentState = Standby;
-    setLED(0, WHITE);
-    setLED(1, WHITE);
-    return true;
-}
-
-// Prepares rocket for HighPress
-bool Rocket::enterHighPressArm()
-{
-    setValvesOpen(false, (std::vector<int>){HP_ID, HV_ID, FMV_ID, LMV_ID, LV_ID, LDV_ID, LDR_ID, FV_ID, FDV_ID, FDR_ID});
-    currentState = HighPressArm;
-    setLED(0, ORANGE);
-    setLED(1, TEAL);
-    return true;
-}
-
-// Opens High Press Valves
-bool Rocket::enterHighPress()
-{
-    setValvesOpen(true, (std::vector<int>){HP_ID});
-    currentState = HighPress;
-    setLED(0, ORANGE);
-    setLED(1, BLUE);
-    return true;
-}
-
-// Prepares rocket for TankPress
-bool Rocket::enterTankPressArm()
-{
-    currentState = TankPressArm;
-    setLED(0, ORANGE);
-    setLED(1, LIME);
-    return true;
-}
-
-// Opens LDR and FDR
-bool Rocket::enterTankPress()
-{
-    setValvesOpen(true, (std::vector<int>){LDR_ID, FDR_ID});
-    currentState = HighPress;
-    setLED(0, ORANGE);
-    setLED(1, GREEN);
-    return true;
-}
-
-// Prepares rocket for TankPress
-bool Rocket::enterFireArm()
-{
-    currentState = FireArm;
-    setLED(0, ORANGE);
-    setLED(1, ORANGE);
-    return true;
-}
-
-//TODO: Add igniter timings and countdown
-bool Rocket::enterFire()
-{
-    //TODO ***************************************************************************** TODO
-    currentState = Fire;
-    setLED(0, RED);
-    setLED(1, RED);
-    return true;
-}
-
-// Opens all Vent valves and closes all other valves and enters standby
-bool Rocket::vent()
-{
-    setValvesOpen(true, (std::vector<int>){LV_ID, LDV_ID, HV_ID, FV_ID, FDV_ID});
-    setValvesOpen(false, (std::vector<int>){HP_ID, LMV_ID, LDR_ID, FMV_ID, FDR_ID});
-    //currentState = Vent;
-    currentState = Standby;
-    setLED(1, PINK);
-    return true;
-}
-
-// Closes all valves and enters standby
-bool Rocket::abort()
-{
-    setValvesOpen(false, (std::vector<int>){HP_ID, HV_ID, FMV_ID, LMV_ID, LV_ID, LDV_ID, LDR_ID, FV_ID, FDV_ID, FDR_ID});
-    //currentState = Abort;
-    currentState = Standby;
-    setLED(1, YELLOW);
-    return true;
-}
-
-// Opens given list of valves iff the valve exists on this rocket node
-void Rocket::setValvesOpen(bool valvesOpenInput, const std::vector<int> &valveIDs)
-{
-    std::map<int,Valve>::iterator it;
-    for(int valveID : valveIDs)
+    if(node == 1)
     {
-        it = valveMap.find(valveID);
-        if(it != valveMap.end())
-            it->second.setValveOpen(valvesOpenInput);
+        // ******* 4/15: Put this back to how it was before. Right now - this works - but I was initially using the sensor class
+        // and not global variables. I messed something up in the main logic and the function was not getting called correctly.
+        // Propulsion Node
+        /*zeroPTOne   = sensorRead(PT_LOX_HIGH_ID);
+        zeroPTTwo   = sensorRead(PT_FUEL_HIGH_ID);
+        zeroPTThree = sensorRead(PT_LOX_DOME_ID);
+        zeroPTFour  = sensorRead(PT_FUEL_DOME_ID);
+
+        zeroPTFive  = sensorRead(PT_LOX_TANK_1_ID);
+        zeroPTSix   = sensorRead(PT_LOX_TANK_2_ID);
+        zeroPTSeven = sensorRead(PT_FUEL_TANK_1_ID);
+        zeroPTEight = sensorRead(PT_FUEL_TANK_2_ID);
+    }
+    else
+    {
+        // Engine Node
+        zeroPTOne   = sensorRead(PT_PNUEMATICS_ID);
+        zeroPTTwo   = sensorRead(PT_LOX_INLET_ID);
+        zeroPTThree = sensorRead(PT_FUEL_INLET_ID);
+        zeroPTFour  = sensorRead(PT_FUEL_INJECTOR_ID);
+
+        zeroPTFive  = sensorRead(PT_CHAMBER_1_ID);
+        zeroPTSix   = sensorRead(PT_CHAMBER_2_ID);*/
     }
 }
 
-/*
-void Rocket::testDelay()
-{
-    void (Rocket::*testfunc)(int);
-    testfunc = &setValveOpen;
-    DelayedAction::addAction(millis() + 5000, testfunc, LMV_ID);
-    //setValveOpen(LMV_ID);
-    //delay(250);
-    //setValveClosed(LMV_ID);
-}*/

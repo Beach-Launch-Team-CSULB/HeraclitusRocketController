@@ -1,5 +1,6 @@
 #include "PCA9685.h" // Standard PlatformIO file
 
+#pragma once
 //#define RED {1, 0, 0} //Testing
 struct Color{int r, g, b;}; //Custom color structure where each value is an int 0-4096
 
@@ -18,6 +19,7 @@ struct Color{int r, g, b;}; //Custom color structure where each value is an int 
 #define PURPLE Color{3072, 4096, 2048} //Led2 for Vent
 #define MAGENTA Color{1024, 4096, 1024} //                                  Vent
 #define PINK Color{64, 3584, 256} //Led 2 for Abort
+
 
 class LEDController
 {
