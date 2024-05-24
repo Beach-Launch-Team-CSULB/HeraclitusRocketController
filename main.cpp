@@ -28,7 +28,7 @@ bool sd_write = true;
 Rocket myRocket = Rocket(alara);
 LEDController allOfTheLights;
 
-const int CAN2busSpeed = 1000000;
+const int CAN2busSpeed = 125000;
 CANDriver theSchoolBus = CANDriver();
 
 uint32_t lastPing; 
