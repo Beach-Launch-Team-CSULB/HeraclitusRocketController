@@ -1,4 +1,4 @@
-#include <map>
+/*#include <map>
 #include "ExtendedIO.h"
 #include "iostream"
 #include "Config.h"
@@ -71,7 +71,7 @@ void ExtendedIO::pinModeExtended(int pin, int isGPIO, int dataDirection) {
     /*  Argument 1: Pin # designation specified on the ALARA V2.x MCU Pin Map and gets the address 
         Argument 2: Specifies if this is a General Purpose Input/Output pin or not 
         Manually writes to Registers that define given pin behaviors
-    */
+    
     
     uint32_t PCR_address = fetchRegister(pin,PCR);     // Gets the exact address of the pin control register
     if(PCR_address != uint32_t(0)){                             // If it is a valid Pin with an address 
@@ -98,7 +98,7 @@ void ExtendedIO::digitalWriteExtended(int pin, int value) {
     /*  Argument 1: Pin # designation specified on the ALARA V2.x MCU Pin Map and gets the address 
         Argument 2: 1 High, 0 Low
         Manually Writes Commands to Ports, Pinmode must be set prior
-    */
+    
     int pinBitOffset = digitalPinToBit_int(pin);                   // Gets bit offset for both PCOR & PSOR Register 
     if (value == 0){  // Clear port to 0: Low
         uint32_t PCOR_address = fetchRegister(pin,PCOR);     // Gets the exact address of the Port Clear Output Register
@@ -114,3 +114,4 @@ void ExtendedIO::digitalWriteExtended(int pin, int value) {
     }
 }
 
+*/

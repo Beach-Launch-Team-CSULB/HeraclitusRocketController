@@ -4,7 +4,7 @@
     // Constructor
     Valve::Valve(int id, int pinPWM, int pinDigital) 
         : id(id), pinPWM(pinPWM), pinDigital(pinDigital), valveOpen(false) {
-            ExtendedIO::pinModeExtended(pinDigital, 1, 1);
+            pinMode(pinDigital, 1);
         }
 
 
@@ -39,16 +39,15 @@
         Returns true if successful*/
         this->valveOpen = ValveOpenInput;
         //ExtendedIO::pinModeExtended(this->pinDigital,1,1);     // Sets Manual Pinmode to GPIO, Data Direction OUTPUT
-        pinMode(this->pinPWM,1);
+        //pinMode(this->pinPWM,1);
 
         if(ValveOpenInput == true){
-            ExtendedIO::digitalWriteExtended(this->pinDigital,1); 
-            digitalWrite(this->pinPWM,1);
+            digitalWrite(this->pinDigital,1); 
+            //digitalWrite(this->pinPWM,1);
             return true;
         }
         if(ValveOpenInput == false){
-            ExtendedIO::digitalWriteExtended(this->pinDigital,0);
-            digitalWrite(this->pinPWM,0);
+            digitalWrite(this->pinDigital,0);
             return true;
         }
         return false;

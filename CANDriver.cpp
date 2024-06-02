@@ -2,7 +2,8 @@
 #include "CANDriver.h"
 #include "Config.h"
 
-#include <FlexCAN.h>
+
+#include <FlexCAN_T4.h>
 #include <string>
 
 CANDriver::CANDriver() {};
@@ -239,12 +240,10 @@ void CANDriver::sendTiming(uint32_t getTimeID)
 void CANDriver::ping(bool prop) 
 {
   static CAN_message_t msg;
+  msg.id = PING_ENGINE_PI;
+  Can0.write(msg);
 
-  if(prop == 0)
-    msg.id = PING_ENGINE_PI;
-  else
-    msg.id = PING_PROP_PI;
-
+  msg.id = PING_PROP_PI;
   Can0.write(msg);
 }
 

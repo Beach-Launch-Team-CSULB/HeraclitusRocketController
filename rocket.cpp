@@ -10,9 +10,9 @@
 #include <ADC.h>
 
 
-void Rocket::setLED(int ledID, Color newColor){
+/*void Rocket::setLED(int ledID, Color newColor){
     allOfTheLights.setLed(ledID, newColor);
-}
+}*/
 
 // Constructor definition
 Rocket::Rocket(int ALARA){
@@ -20,17 +20,20 @@ Rocket::Rocket(int ALARA){
         initializeIgniters();
         initializeLowerValves();
         initializeLowerSensors();
+        initializeUpperValves();
+        initializeUpperSensors();
     }
     if (ALARA == 1){                             // Upper ALARA Setup
         initializeUpperValves();
         initializeUpperSensors();
     }
+
     //allOfTheLights.init();
     //TJ 4/12 changed state map WIP*****
     // 4/13:
                                           // Abort, Vent, Fire, Tank Press, High Press, Standby, Ignite, Test 
                                            //  A    V    F    TP    H    S    I    TE 
-    stateMap.emplace(HP_ID,   std::vector<int>{0,   0,   1,   1,    1,   0,   1,   0});
+    stateMap.emplace(HP_ID,   std::vector<int>{0,   0,   0,   1,    1,   0,   0,   0});
     stateMap.emplace(HV_ID,   std::vector<int>{0,   1,   0,   0,    0,   0,   0,   0});
     stateMap.emplace(LV_ID,   std::vector<int>{0,   1,   0,   0,    0,   0,   0,   0});
     stateMap.emplace(LMV_ID,  std::vector<int>{0,   0,   0,   0,    0,   0,   0,   0});
@@ -43,8 +46,8 @@ Rocket::Rocket(int ALARA){
     stateMap.emplace(IGN1_ID, std::vector<int>{0,   0,   1,   0,    0,   0,   1,   0});
     stateMap.emplace(IGN2_ID, std::vector<int>{0,   0,   1,   0,    0,   0,   1,   0});
 
-    LEDstateMap.emplace(LED0,    std::vector<Color>{GREEN, PURPLE, RED, ORANGE, ORANGE, WHITE, ORANGE, GREEN});
-    LEDstateMap.emplace(LED1,    std::vector<Color>{PURPLE, PURPLE, RED, GREEN, BLUE, WHITE, ORANGE, GREEN});
+    //LEDstateMap.emplace(LED0,    std::vector<Color>{GREEN, PURPLE, RED, ORANGE, ORANGE, WHITE, ORANGE, GREEN});
+    //LEDstateMap.emplace(LED1,    std::vector<Color>{PURPLE, PURPLE, RED, GREEN, BLUE, WHITE, ORANGE, GREEN});
 
     // Begins in the Test state
     changeState(STANDBY);
@@ -85,8 +88,8 @@ void Rocket::calibrateSensor(int sensorId, bool isM, float val) {
 }
 
 float Rocket::getSensorCalibration(int sensorId, bool isM) {
-    if (isM) sensorMap[sensorId].getCalibrationSlope();
-    else sensorMap[sensorId].getCalibrationIntercept(); 
+    if (isM) return sensorMap[sensorId].getCalibrationSlope();
+    else return sensorMap[sensorId].getCalibrationIntercept(); 
 }
 
 bool Rocket::changeState(int state) {
@@ -129,11 +132,11 @@ uint8_t Rocket::getState() {
 bool Rocket::initializeIgniters(){
     
     Igniter Igniter1(IGN1_ID, IGN1_PIN_PWM,IGN1_PIN_DIG);
-    //Igniter Igniter2(IGN2_ID, IGN2_PIN_PWM,IGN2_PIN_DIG); 
+    Igniter Igniter2(IGN2_ID, IGN2_PIN_PWM,IGN2_PIN_DIG); 
 
 
     igniterMap.insert({IGN1_ID, Igniter1});
-    //igniterMap.insert({IGN2_ID, Igniter2});
+    igniterMap.insert({IGN2_ID, Igniter2});
 
     return true;
 }

@@ -4,13 +4,12 @@
 
 
 Igniter::Igniter(): id(0), pinPWM(0), pinDigital(0), igniterOn(false) {
-    ExtendedIO::pinModeExtended(pinDigital, 1, 1);
+    pinMode(pinDigital, 1);
 };
 Igniter::Igniter(int id, int pinPWM, int pinDigital)
     : id(id), pinPWM(pinPWM), pinDigital(pinDigital), igniterOn(false) {
-    ExtendedIO::pinModeExtended(pinDigital, 1, 1); 
-    ExtendedIO::digitalWriteExtended(this->pinDigital, 1);   
-    Serial.println("IGNITER IS WORKING!");
+    pinMode(pinDigital, 1); 
+    digitalWrite(this->pinDigital, 1);   
     }
 
 // Getters
@@ -43,17 +42,17 @@ bool Igniter::setIgniterOn(bool isignitionOn){
     /*Sets the state of Igniter Objects: True (Open) | False (Close)
     Returns true if successful*/
     this->igniterOn = isignitionOn;
-    ExtendedIO::pinModeExtended(this->pinDigital,1,OUTPUT); // Sets Pinmode to GPIO, Data Direction OUTPUT
-    pinMode(this->pinPWM,OUTPUT);
+    pinMode(this->pinDigital,OUTPUT); // Sets Pinmode to GPIO, Data Direction OUTPUT
+    //pinMode(this->pinPWM,OUTPUT);
 
     if(isignitionOn == true){
-        ExtendedIO::digitalWriteExtended(this->pinDigital,1);
-        digitalWrite(this->pinPWM,1);
+        digitalWrite(this->pinDigital,1);
+        //digitalWrite(this->pinPWM,1);
         return true;
     }
     if(isignitionOn == false){
-        ExtendedIO::digitalWriteExtended(this->pinDigital,0);
-        digitalWrite(this->pinPWM,0);
+        digitalWrite(this->pinDigital,0);
+        //digitalWrite(this->pinPWM,0);
         return false;
     }
 }

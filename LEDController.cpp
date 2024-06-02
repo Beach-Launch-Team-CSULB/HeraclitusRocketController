@@ -1,30 +1,26 @@
 #include "LEDController.h"
+#include "Arduino.h"
 
-void LEDController::init()
+LEDController::LEDController() {}
+
+LEDController::LEDController(int pin1, int pin2, int pin3): pin1(pin1), pin2(pin2), pin3(pin3)
 {
-    ledArray.resetDevices();
-    ledArray.init();
-
-    setLed(0, GRAY);
-    setLed(1, GRAY);
-    //ledColor1 = GRAY;
-    //ledColor2 = GRAY;
+    pinMode(pin1, 1);
+    digitalWrite(pin1, HIGH);
+    pinMode(pin2, 1);
+    digitalWrite(pin2, LOW);
+    pinMode(pin3, 1);
+    digitalWrite(pin3, LOW);
 }
 
-void LEDController::setLed(int ledID, Color newColor)
+void LEDController::setLed(int val)
 {
-    if(ledID == 0)
-    {
-        ledArray.setChannelPWM(0, newColor.r);
-        ledArray.setChannelPWM(1, newColor.g);
-        ledArray.setChannelPWM(2, newColor.b);
-        //ledColor1 = newColor;
-    }
-    else
-    {
-        ledArray.setChannelPWM(3, newColor.r);
-        ledArray.setChannelPWM(4, newColor.g);
-        ledArray.setChannelPWM(5, newColor.b);
-        //ledColor2 = newColor;
-    }
+    if (val % 2) digitalWrite(this->pin1, LOW);
+    else digitalWrite(this->pin1, HIGH);
+    val /= 2;
+    if (val % 2) digitalWrite(this->pin2, LOW);
+    else digitalWrite(this->pin2, HIGH);
+    val /= 2;
+    if (val % 2) digitalWrite(this->pin3, LOW);
+    else digitalWrite(this->pin3, HIGH);
 }

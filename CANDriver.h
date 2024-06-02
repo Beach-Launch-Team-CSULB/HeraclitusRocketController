@@ -4,7 +4,7 @@
 #define CANDRIVER_H
 
 #include "Rocket.h"
-#include <FlexCAN.h>
+#include <FlexCAN_T4.h>
 #include <iostream>
 #include <vector>
 #include <cstdint>
@@ -13,7 +13,7 @@
 class CANDriver 
 {
     private:
-        FlexCAN CANBus;                     // Is this necessary?
+        FlexCAN_T4<CAN1, RX_SIZE_16, TX_SIZE_16> Can0 = FlexCAN_T4<CAN1, RX_SIZE_16, TX_SIZE_16>();
         std::vector<uint8_t> commands;
         
     public:

@@ -45,7 +45,7 @@ extern uint8_t sensorCalibID;
 // Propulsion is 1.
 // Engine is 0.
 
-#define ALARA_ID 1
+#define ALARA_ID 0
 
 // Constant define for specifying the number of times per second sensor data & state reports are to be transmitted over CAN (ms).
 #define CAN_INTERVAL ((uint32_t) 333)
@@ -124,48 +124,9 @@ extern uint8_t sensorCalibID;
 #define GET_B_VAL                     ((uint32_t) 47)
 #define SET_B_VAL                     ((uint32_t) 48)
 
+#define START_SD_LOG                  ((uint32_t) 49)
 
-/*
-#define SET_CALIB_LOX_HIGH            ((uint32_t) 45)  // Adjust "m value" of linear approximation for PTs.
-#define SET_CALIB_FUEL_HIGH           ((uint32_t) 46)
-#define SET_CALIB_LOX_DOME            ((uint32_t) 47)
-#define SET_CALIB_FUEL_DOME           ((uint32_t) 48)
 
-#define SET_CALIB_LOX_TANK_ONE        ((uint32_t) 49)
-#define SET_CALIB_LOX_TANK_TWO        ((uint32_t) 50)
-#define SET_CALIB_FUEL_TANK_ONE       ((uint32_t) 51)
-#define SET_CALIB_FUEL_TANK_TWO       ((uint32_t) 52)
-
-#define SET_CALIB_PNEUMATICS          ((uint32_t) 53)
-#define SET_CALIB_LOX_INLET           ((uint32_t) 54)
-#define SET_CALIB_FUEL_INLET          ((uint32_t) 55)
-#define SET_CALIB_FUEL_INJECTOR       ((uint32_t) 56)
-
-#define SET_CALIB_CHAMBER_ONE         ((uint32_t) 57)
-#define SET_CALIB_CHAMBER_TWO         ((uint32_t) 58)
-#define SET_CALIB_RESERVED            ((uint32_t) 59)
-#define SET_CALIB_RESERVED            ((uint32_t) 60)
-
-#define GET_CALIB_LOX_HIGH            ((uint32_t) 61)
-#define GET_CALIB_FUEL_HIGH           ((uint32_t) 62)
-#define GET_CALIB_LOX_DOME            ((uint32_t) 63)
-#define GET_CALIB_FUEL_DOME           ((uint32_t) 64)
-
-#define GET_CALIB_LOX_TANK_ONE        ((uint32_t) 65)
-#define GET_CALIB_LOX_TANK_TWO        ((uint32_t) 66)
-#define GET_CALIB_FUEL_TANK_ONE       ((uint32_t) 67)
-#define GET_CALIB_FUEL_TANK_TWO       ((uint32_t) 68)
-
-#define GET_CALIB_PNEUMATICS          ((uint32_t) 69)
-#define GET_CALIB_LOX_INLET           ((uint32_t) 70)
-#define GET_CALIB_FUEL_INLET          ((uint32_t) 71)
-#define GET_CALIB_FUEL_INJECTOR       ((uint32_t) 72)
-
-#define GET_CALIB_CHAMBER_ONE         ((uint32_t) 73)
-#define GET_CALIB_CHAMBER_TWO         ((uint32_t) 74)
-#define GET_CALIB_RESERVED            ((uint32_t) 75)
-#define GET_CALIB_RESERVED            ((uint32_t) 76)
-*/
 
 // State Reports
 #define SR_PROP   ((uint32_t) 127)
@@ -195,92 +156,62 @@ extern uint8_t sensorCalibID;
 #define SEND_B_VAL         ((uint32_t) 143)
 
 
-/*
-// PT Calib. Response to "Get" request from GUI
-#define SEND_CALIB_LOX_HIGH            ((uint32_t) 142)     // ALARA response to 61.
-#define SEND_CALIB_FUEL_HIGH           ((uint32_t) 143)     // ALARA response to 62.
-#define SEND_CALIB_LOX_DOME            ((uint32_t) 144)     // ALARA response to 63.
-#define SEND_CALIB_FUEL_DOME           ((uint32_t) 145)     // ALARA response to 64.
-
-#define SEND_CALIB_LOX_TANK_ONE        ((uint32_t) 146)     // ALARA response to 65.
-#define SEND_CALIB_LOX_TANK_TWO        ((uint32_t) 147)     // ALARA response to 66.
-#define SEND_CALIB_FUEL_TANK_ONE       ((uint32_t) 148)     // ALARA response to 67.
-#define SEND_CALIB_FUEL_TANK_TWO       ((uint32_t) 149)     // ALARA response to 68.
-
-#define SEND_CALIB_PNEUMATICS          ((uint32_t) 150)     // ALARA response to 69.
-#define SEND_CALIB_LOX_INLET           ((uint32_t) 151)     // ALARA response to 70.
-#define SEND_CALIB_FUEL_INLET          ((uint32_t) 152)     // ALARA response to 71.
-#define SEND_CALIB_FUEL_INJECTOR       ((uint32_t) 153)     // ALARA response to 72.
-
-#define SEND_CALIB_CHAMBER_ONE         ((uint32_t) 154)     // ALARA response to 73.
-#define SEND_CALIB_CHAMBER_TWO         ((uint32_t) 155)     // ALARA response to 74.
-#define SEND_CALIB_RESERVED            ((uint32_t) 156)     // ALARA response to 75.
-#define SEND_CALIB_RESERVED            ((uint32_t) 157)     // ALARA response to 76.
-*/
-
-
-// Data Direction Inputs 
-#define INPUT  (uint32_t)0
-#define OUTPUT (uint32_t)1
-//4/14: See if everything still works after removing this^.
-
-
 
 // Igniter Digital Pin Designations and IDs | ALARA LOWER 
 
 #define IGN1_ID         (uint32_t)4  // Igniter A / ENG-IGNA / ALARA Lower
-#define IGN1_PIN_DIG    (uint32_t)83  //ALARA: DIG5 | Teensy 3.6 MCU Pin: PTC16
-#define IGN1_PIN_PWM    (uint32_t)2 
+#define IGN1_PIN_DIG    (uint32_t)28  //ALARA: DIG5 | Teensy 3.6 MCU Pin: PTC16
+#define IGN1_PIN_PWM    (uint32_t)28 
 
 
 #define IGN2_ID         (uint32_t)5  // Igniter B / ENG-IGNB
-#define IGN2_PIN_DIG    (uint32_t)80  // ALARA: DIG5 | Teensy 3.6 MCU Pin: PTC14
-#define IGN2_PIN_PWM    (uint32_t)9  // In Dan's Code they are both 2?  
+#define IGN2_PIN_DIG    (uint32_t)29  // ALARA: DIG5 | Teensy 3.6 MCU Pin: PTC14
+#define IGN2_PIN_PWM    (uint32_t)29  // In Dan's Code they are both 2?  
       
 
 // Valve Digital Pin Designations and IDs | ALARA LOWER 
 
 #define HP_ID           (uint32_t)7  // High Press valve / SV HI PRES  
-#define HP_PIN_DIG      (uint32_t)87  // ALARA: DIG1 | Teensy 3.6 MCU Pin: PTD10
-#define HP_PIN_PWM      (uint32_t)5
+#define HP_PIN_DIG      (uint32_t)2  // ALARA: DIG1 | Teensy 3.6 MCU Pin: PTD10
+#define HP_PIN_PWM      (uint32_t)2
 
 #define HV_ID           (uint32_t)6  // High Vent valve / SV HI PRES V 
-#define HV_PIN_DIG      (uint32_t)86  // ALARA: DIG2 | Teensy 3.6 MCU Pin: PTC19
-#define HV_PIN_PWM      (uint32_t)6
+#define HV_PIN_DIG      (uint32_t)3  // ALARA: DIG2 | Teensy 3.6 MCU Pin: PTC19
+#define HV_PIN_PWM      (uint32_t)3
 
 #define FMV_ID          (uint32_t)15  // Fuel Main valve / SV MV FUEL 
-#define FMV_PIN_DIG     (uint32_t)85  // ALARA: DIG3 | Teensy 3.6 MCU Pin: PTC18
-#define FMV_PIN_PWM     (uint32_t)8  
+#define FMV_PIN_DIG     (uint32_t)4  // ALARA: DIG3 | Teensy 3.6 MCU Pin: PTC18
+#define FMV_PIN_PWM     (uint32_t)4  
 
 #define LMV_ID          (uint32_t)14  // Lox Main valve / SV MV LOX
-#define LMV_PIN_DIG     (uint32_t)84  // ALARA: DIG4 | Teensy 3.6 MCU Pin: PTC17
-#define LMV_PIN_PWM     (uint32_t)7
+#define LMV_PIN_DIG     (uint32_t)5  // ALARA: DIG4 | Teensy 3.6 MCU Pin: PTC17
+#define LMV_PIN_PWM     (uint32_t)5
 
 // Valve Digital Pin Designations and IDs | ALARA UPPER 
 
 #define LV_ID           (uint32_t)12  // Lox Vent valve / SV LOX V
-#define LV_PIN_DIG      (uint32_t)87  // ALARA: DIG1 | Teensy 3.6 MCU Pin: PTD10
-#define LV_PIN_PWM      (uint32_t)5
+#define LV_PIN_DIG      (uint32_t)6  // ALARA: DIG1 | Teensy 3.6 MCU Pin: PTD10
+#define LV_PIN_PWM      (uint32_t)6
 
 #define LDV_ID          (uint32_t)8  // Lox Dome Vent valve / SV DREG L
-#define LDV_PIN_DIG     (uint32_t)84  // ALARA: DIG3 | Teensy 3.6 MCU Pin: PTC18
+#define LDV_PIN_DIG     (uint32_t)7  // ALARA: DIG3 | Teensy 3.6 MCU Pin: PTC18
 #define LDV_PIN_PWM     (uint32_t)7
 
 #define LDR_ID          (uint32_t)10  // Lox Dome Reg valve / SV DREG LV
-#define LDR_PIN_DIG     (uint32_t)85  // ALARA: DIG4 | Teensy 3.6 MCU Pin: PTC17
+#define LDR_PIN_DIG     (uint32_t)8  // ALARA: DIG4 | Teensy 3.6 MCU Pin: PTC17
 #define LDR_PIN_PWM     (uint32_t)8
 
 #define FV_ID           (uint32_t)13  // Fuel Vent valve / SV FUEL V 
-#define FV_PIN_DIG      (uint32_t)83  // ALARA: DIG5 | Teensy 3.6 MCU Pin: PTC16
-#define FV_PIN_PWM      (uint32_t)2
+#define FV_PIN_DIG      (uint32_t)9  // ALARA: DIG5 | Teensy 3.6 MCU Pin: PTC16
+#define FV_PIN_PWM      (uint32_t)9
 
 #define FDV_ID          (uint32_t)9  // Fuel Dome Vent valve / SV DREG F V 
-#define FDV_PIN_DIG     (uint32_t)80  // ALARA: DIG7 | Teensy 3.6 MCU Pin: PTC14
-#define FDV_PIN_PWM     (uint32_t)9
+#define FDV_PIN_DIG     (uint32_t)10  // ALARA: DIG7 | Teensy 3.6 MCU Pin: PTC14
+#define FDV_PIN_PWM     (uint32_t)10
 
 #define FDR_ID          (uint32_t)11  // Fuel Dome Reg valve /  SV DREG F
-#define FDR_PIN_DIG     (uint32_t)81  // ALARA: DIG8 | Teensy 3.6 MCU Pin: PTC13
-#define FDR_PIN_PWM     (uint32_t)10
+#define FDR_PIN_DIG     (uint32_t)11  // ALARA: DIG8 | Teensy 3.6 MCU Pin: PTC13
+#define FDR_PIN_PWM     (uint32_t)11
 
 
 
@@ -288,74 +219,78 @@ extern uint8_t sensorCalibID;
 
 //Upper Prop Node:
 #define PT_LOX_HIGH_ID          ((uint8_t) 0)
-#define PT_LOX_HIGH_PIN         A21
+#define PT_LOX_HIGH_PIN         A0
 #define PT_LOX_HIGH_CAL_M       0.0956f
 #define PT_LOX_HIGH_CAL_B       -615.0f
 
 #define PT_FUEL_HIGH_ID         ((uint8_t) 1)
-#define PT_FUEL_HIGH_PIN        A22
+#define PT_FUEL_HIGH_PIN        A1
 #define PT_FUEL_HIGH_CAL_M      0.0939f
 #define PT_FUEL_HIGH_CAL_B      -614.0f
 
 #define PT_LOX_DOME_ID          ((uint8_t) 2)
-#define PT_LOX_DOME_PIN         A3
+#define PT_LOX_DOME_PIN         A2
 #define PT_LOX_DOME_CAL_M       0.0197f
 #define PT_LOX_DOME_CAL_B       -143.0f
 
 #define PT_FUEL_DOME_ID         ((uint8_t) 3)
-#define PT_FUEL_DOME_PIN        A2
+#define PT_FUEL_DOME_PIN        A3
 #define PT_FUEL_DOME_CAL_M      0.0191f
 #define PT_FUEL_DOME_CAL_B      -123.0f
 
 #define PT_LOX_TANK_1_ID        ((uint8_t) 4)
-#define PT_LOX_TANK_1_PIN       A14
+#define PT_LOX_TANK_1_PIN       A4
 #define PT_LOX_TANK_1_CAL_M     0.02f
 #define PT_LOX_TANK_1_CAL_B     -131.0f
 
 #define PT_LOX_TANK_2_ID        ((uint8_t) 5)
-#define PT_LOX_TANK_2_PIN       A11
+#define PT_LOX_TANK_2_PIN       A5
 #define PT_LOX_TANK_2_CAL_M     0.02f
 #define PT_LOX_TANK_2_CAL_B     -134.0f
 
 #define PT_FUEL_TANK_1_ID       ((uint8_t) 6)
-#define PT_FUEL_TANK_1_PIN      A15
+#define PT_FUEL_TANK_1_PIN      A6
 #define PT_FUEL_TANK_1_CAL_M    0.0191f
 #define PT_FUEL_TANK_1_CAL_B    -126.0f
 
 #define PT_FUEL_TANK_2_ID       ((uint8_t) 7)
-#define PT_FUEL_TANK_2_PIN      A10
+#define PT_FUEL_TANK_2_PIN      A7
 #define PT_FUEL_TANK_2_CAL_M    0.0192f
 #define PT_FUEL_TANK_2_CAL_B    -125.0f
 
 //Lower Engine Node:
 #define PT_PNUEMATICS_ID        ((uint8_t) 8)
-#define PT_PNUEMATICS_PIN       A15
+#define PT_PNUEMATICS_PIN       A8
 #define PT_PNUEMATICS_CAL_M     0.0195f
 #define PT_PNUEMATICS_CAL_B     -121.0f
 
 #define PT_LOX_INLET_ID         ((uint8_t) 9)
-#define PT_LOX_INLET_PIN        A21
+#define PT_LOX_INLET_PIN        A9
 #define PT_LOX_INLET_CAL_M      0.0195f
 #define PT_LOX_INLET_CAL_B      -129.0f
 
 #define PT_FUEL_INLET_ID        ((uint8_t) 10)
-#define PT_FUEL_INLET_PIN       A22
+#define PT_FUEL_INLET_PIN       A10
 #define PT_FUEL_INLET_CAL_M     0.019f
 #define PT_FUEL_INLET_CAL_B     -120.0f
 
 #define PT_FUEL_INJECTOR_ID     ((uint8_t) 11)
-#define PT_FUEL_INJECTOR_PIN    A14
+#define PT_FUEL_INJECTOR_PIN    A11
 #define PT_FUEL_INJECTOR_CAL_M  0.0194f
 #define PT_FUEL_INJECTOR_CAL_B  -118.0f
 
 #define PT_CHAMBER_1_ID         ((uint8_t) 12)
-#define PT_CHAMBER_1_PIN        A10
+#define PT_CHAMBER_1_PIN        A12
 #define PT_CHAMBER_1_CAL_M      0.0194f
 #define PT_CHAMBER_1_CAL_B      -126.0f
 
 #define PT_CHAMBER_2_ID         ((uint8_t) 13)
-#define PT_CHAMBER_2_PIN        A11
+#define PT_CHAMBER_2_PIN        A13
 #define PT_CHAMBER_2_CAL_M      0.0195f
 #define PT_CHAMBER_2_CAL_B      -106.0f
+
+#define LED_PIN_1              ((uint8_t) 33)
+#define LED_PIN_2              ((uint8_t) 34)
+#define LED_PIN_3              ((uint8_t) 35)           
 
 #endif
